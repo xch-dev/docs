@@ -2,71 +2,26 @@
 slug: /getting-started
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 # Getting Started
 
 The goal of this website is to provide documentation for Sage and the Wallet SDK it's built with. It will cover a wide range of topics, from configuring and using Sage and its RPCs to building your own applications that utilize the Wallet SDK library to connect to the Chia blockchain.
 
 :::info
-If you are looking for download instructions for the app, visit the [Sage Website](https://sagewallet.net).
+If you are looking for download instructions for the sage app, visit the [Sage Website](https://sagewallet.net).
 :::
 
-## Source Installation
+## **Sage Wallet**
+Sage is a high-performance Chia light wallet that provides a user-friendly interface for managing your Chia assets. It can connect directly to peers on the Chia Network or optionally connect to a trusted full node.
 
-Sage is built with [Tauri v2](https://tauri.app/), a framework for building efficient cross-platform applications that work on both desktop and mobile devices. You will need to follow the [Prerequisites](https://tauri.app/start/prerequisites/) section of the Tauri docs before proceeding with a source installation.
+**[Get started with Sage →](/sage)**
 
-You will also need to have both [Rustup](https://rustup.rs/) and [PNPM](https://pnpm.io/installation) installed.
+## **Chia Wallet SDK**
+The Chia Wallet SDK is a Rust library that powers Sage and enables building applications that need to interact with coins on the [Chia Blockchain](https://www.chia.net/), including wallets and dApps (decentralized apps).
 
-Clone the repo and run the following command to install the frontend dependencies:
+**[Explore the Wallet SDK →](/wallet-sdk)**
 
-```bash
-pnpm install
-```
+## Quick Links
 
-This is how you can compile and start the app in debug mode, for development or testing purposes:
-
-<Tabs groupId="tauri-builds">
-  <TabItem value="desktop" label="Desktop">
-  ```bash
-  pnpm tauri dev
-  ```
-  </TabItem>
-  <TabItem value="ios" label="iOS">
-  ```bash
-  pnpm tauri ios dev
-  ```
-  </TabItem>
-  <TabItem value="android" label="Android">
-  ```bash
-  pnpm tauri android dev
-  ```
-  </TabItem>
-</Tabs>
-
-:::note
-This will create an unoptimized build of the app, which can result in some performance issues. If needed, you can use the `--release` flag to run a release optimized version instead.
-:::
-
-### Production Build
-
-If you need to compile the app into a production binary, you can do that as well:
-
-<Tabs groupId="tauri-builds">
-  <TabItem value="desktop" label="Desktop">
-  ```bash
-  pnpm tauri build
-  ```
-  </TabItem>
-  <TabItem value="ios" label="iOS">
-  ```bash
-  pnpm tauri ios build
-  ```
-  </TabItem>
-  <TabItem value="android" label="Android">
-  ```bash
-  pnpm tauri android build
-  ```
-  </TabItem>
-</Tabs>
+- **[Download Sage](https://sagewallet.net)** - Get the latest release
+- **[Sage Source Code](https://github.com/xch-dev/sage)** - View the wallet implementation
+- **[Wallet SDK Source](https://github.com/xch-dev/chia-wallet-sdk)** - Explore the core library
