@@ -1,0 +1,71 @@
+---
+id: rename-key
+title: "Rename Key"
+description: "Change the display name of a wallet key."
+sidebar_label: "Rename Key"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVdtu40YM/RWCD70EiuNks73oLRu0wDZtNoiz6IM3KGiJkmd3NKPlzCRxDf17QUmO7TgoUKB+MijqHJLnkFpjpDpgPseLFJfsoikoGu/gG7jiVcD7DEsOhZhWo5jj5ZJczRCXDKUJraUVOGoYfAUEj2QtR/jCqwlmKPw1cYjvfLnCfP0C53Z4CC0JNRxZAlReelxhRfzrC6+AXdl64yJmWHgX2UVFora1Y50nn4PCrTEUS25I/8VVy5ijX3zmQl98yduXu1vrWKoRLnUQlXE1SysDrWbrFFrxLUs0HJRjN2dLaVzkmgUzrLw0FIfQm7ODIv4cuPeZ+Ima1jLmp2dvzt/+8ONPP08zbIwzTWown3ZjLVu6EMW4+gD8mh/3pMGuyzCaqNBj+1e8wk7D276jJO4DofUuDF2eTaeHws1SUXAIVbKwSYZKfLMj2/+p1obBi0o1kuArDW1StbEuw/PXan9HJYyuhGMw7oGsKXct6AUasqoel/Db7MM19lCnh1AfHaW49GL+5hKOwfmNoUyAIomwi3YF1tc1l2BcptC0v2ImwPP8e5rzQ5prH6HyySnHWDlrD8EnKRhKz8F9G4GfTIjwHU/qSQbXv95l4KuKJYMo5AIViva9krx9bSzvXWRxZCGwPLAAi3iBY0iOn1oulLEiY5MwGLfpU9eh7yP0Bms4Ln2JObY+qI4txSXmeLLnCpX/dnsVftk4/sVC7S7A4PmN17sMjat8b5zRADOqGcaFur25hIub94c2GuK9i/r8oYcJXFj7fGMCUFFwG3vdn22y8KXhAOR06jGJ2zwe92TyyX1yR0f71/PoKB94lDgFDvBHioks3P0+64vYd4IeyweWMBQ7nZyeTc61VR1lQ/3CjGMYr9dVP829HtfblfsvN3pcv8hP8aS1ZJzyJrEKOEg4xx0J7zNcqr75HNfrBQX+KLbrNPw1sawwn99n+EBiaKHizO+7DJdMJQvm8zUqRI6XQ6HHd8qt6TZpDQd3oss2b1z0wvxr7v2OBW8+zO4ww8X44Wl8qe8IPeqlp0fMETP07WDefD3E1mjJ1YlqzR0w9fcPRcp14g==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Rename Key"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/rename_key"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Change the display name of a wallet key.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the rename_key endpoint","content":{"application/json":{"schema":{"type":"object","description":"Rename a wallet key","required":["fingerprint","name"],"properties":{"fingerprint":{"type":"integer","format":"int32","description":"Wallet fingerprint","example":1234567890,"minimum":0},"name":{"type":"string","description":"New display name"}},"title":"RenameKey"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from rename_key","content":{"application/json":{"schema":{"type":"object","description":"Response for key rename","title":"RenameKeyResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

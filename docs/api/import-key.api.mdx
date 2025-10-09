@@ -1,0 +1,71 @@
+---
+id: import-key
+title: "Import Key"
+description: "Import a wallet using a mnemonic phrase or private key. Optionally saves secrets and automatically logs in."
+sidebar_label: "Import Key"
+hide_title: true
+hide_table_of_contents: true
+api: eJy9Vttu20YQ/ZXBPPRi0LLsOL3wzUkbwE1jG7aDPCiCsSKH4trLXWZ2V7Yq6N+LISmRqgwHvaB6EvYyc2bmnLNcYVBzj+kEz2IoyQadqaCdhW/gPS09ThPMyWesa1nFFM+r2nEABY/KGAoQvbZzUFBZqpzVGdQlK0/gGGrWCxUIHmg5gssmgDJmCV4tyIOnjCl4UDYHFYOrlOSWfePmHrQdYYJMXyL58MblS0xXf4Fy3W5CrVhVFIg9FI4hlAS6QXn3QEsgm9dO24AJZs4GskEiqbo2XalH917CrdBnJVVK/oVlTZiim91TJhdfbsEDLTuomimXXlpVESYoG9MEa3Y1cdDk2xqatmhn77TN6WmQT9tAc2JMsHBcqdAuvTrZQ3ATFAfpex8M2mByslDRBEzHCVba6ipWmI7XCVLl7nWfbYI+sLZzTNBGY/YnvZkYNBdB58KOQhPjOsFScU5Wqu3jzZwzpOzXA24uD+FnLtogkaVpfUu2GHdDfXiRbRLGuLm2g0A9uN1In0oKJTEEt89CbUEVgbij07C5gSOtk3bQX0X7i/a1UUuQ01uKtuQRqKKHu04Ofw+x3NwKKTipPSuVts8gjfZfjay//szQ1gkGHQxttfFeZiDLvSg6GEy+dta3UjgZj/dVfROzjLwvooHNYSjYVQNN/3dSvt5keNSh7DJQLn2EQts5cc2tdQzVPdzZk/dw8x8o+11/HVwx8LIWFSZIT6qqpdfHJ69OX//w408/7wr9uWFsypShrBM8fa7vb1QOnd3CIWi7UEbnQ291DJUygp9y+O3m8gKbUMf7oT5aFUPpWP9BORyCdRun1B6yyEw2tAKbUw7aJhJa7T4/2sO25U2a0/00Fy5A4aKVHB1ykhq8i5wR5I68/TYAPWkf4DsazUcJXLy7TcAVBXECgZX1KpNo30uS18+15dwGYlGAJ14QAzE7hkOIlp5qyiRjobSJTKDtpk4hRFOHb8RRUShdjinWzguZahVKTPFoh9FC3ev+uft1M+bnXozx1s17y+nlLVLrfLTf7vyw3Wttq9/cdaD2zNAwOvFqW7iG1B2/btSc4FNb8vXVWzi7Ot9XWLve2F5zvm3RCM6M2b7NHlSWUR0aWm1ZOHO5pvYDgSlEtpvtzkJGn+1ne3Cw++FycJC2eSRx9OThQwxRGbj9/aYBsUs0+chYEPsW7Hh0fDI6FS7IpCrVeEnXrO7Vf98Ma6fGVe9G//PnUecugZ7CUW3E+MXp2QimlmQTHJBsmmApDEwnuFrNlKePbNZrWf4SiZeYTqYJLhRrNZP5Tqby0JPKiTGdrDpGvW1rPbyV3HLcRMGw58LrZHPjrJnti2enA5FcXd7cYoKz7puvcrncYfUoNqweMUVM0NWtvNJVu7ZCo+w8qrmcbWPK70+Pj8/9
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Import Key"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/import_key"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Import a wallet using a mnemonic phrase or private key. Optionally saves secrets and automatically logs in.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the import_key endpoint","content":{"application/json":{"schema":{"type":"object","description":"Import a wallet key","required":["name","key"],"properties":{"derivation_index":{"type":"integer","format":"int32","description":"Starting derivation index","default":0,"minimum":0},"emoji":{"type":["string","null"],"description":"Optional emoji identifier"},"hardened":{"type":["boolean","null"],"description":"Optional hardened derivation count"},"key":{"type":"string","description":"Mnemonic phrase or private key"},"login":{"type":"boolean","description":"Whether to automatically login after import","default":true},"name":{"type":"string","description":"Display name for the wallet"},"save_secrets":{"type":"boolean","description":"Whether to save secrets to keychain","default":true},"unhardened":{"type":["boolean","null"],"description":"Optional unhardened derivation count"}},"title":"ImportKey"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from import_key","content":{"application/json":{"schema":{"type":"object","description":"Response with imported key fingerprint","required":["fingerprint"],"properties":{"fingerprint":{"type":"integer","format":"int32","description":"Fingerprint of the imported key","example":1234567890,"minimum":0}},"title":"ImportKeyResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

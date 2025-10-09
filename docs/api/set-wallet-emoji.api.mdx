@@ -1,0 +1,71 @@
+---
+id: set-wallet-emoji
+title: "Set Wallet Emoji"
+description: "Set an emoji identifier/avatar for a wallet to make it easier to distinguish."
+sidebar_label: "Set Wallet Emoji"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVU1z20YM/SsYHNrUs5Zlx+kHb07GnUk/HI/lTA+KJgORILUOuctgd2WrGv33DkhKsiq3p+ikwQJ4eMADuMZIVcBsilcpLthFm1O03sF38DuvAs4MFhxysa1aMcMJRyAH3PgHC7bQiNKynNGSIgmUXoDgkeqaI0QPDX1hsBGYgmVRS2FDtK5KNixGaFD4a+IQ3/pihdn6X2B3/SO0JNRwZAkdQFwwBI6fe5jPfS3sitZbF9Fg7l1kFzUftW09UDp7CJp0jSFfcEP6L65axgz9/IFzDTymOjDpIIZqrXChDSutq1haUcyZwVZ8yxItB83cB+wgphiiWFehQZfq+rit1x2HfEFCeWSBV+qm7RJu/JJ/wI05ANwXb13kigUNll4air3p9cURnb96Ks+zGOQnatqaMTu/eH355seffv5lbLCxzjapwWy82RiMNqqDtqNP0dWKG33b9yNK4s4QWu9C34SL8fh4ppOU5xxCmWrYOkMpvjma6Lcb5N0Ox8ug3NQWFBn/i902QlluDF6+ROQtFTCoF07BuiXVtnguVS/QUK1T4QJ+m3y4wS7V+XGqj45SXHixf3MBp+D8Vnc2QJ5E2MV6BbWvKi7AOqOp6XBfbYDdMDqYy2OYGx+h9MkpxlA5K4fgk+QMhefgvo/ATzZEeMWjamTg5td7A74sWQxEIRco12ydIN+81Jb3LrI4qiGwLFmARbzAKSTHTy3niliSrZMwWLflqavT8Qio/W44LnyBGbY+6DhbigvM8OwFiagW7vY35Hqr590K7jfvYH/2et8YtK70nYy2YqCKYdiXu9t3cHX7/lhUvb3TVOffFzaCq7reHaMAlOfcxm78O7XMfWE5ADltfkzits/D7ow+uU/u5OTwIp+cZD2OAqfAAf5MMVEN939M+rN74K63dckS+mLHo/OL0aXOTDvaULc+jppB+Vuu10NTD5iu92v4za//sLeRn+JZW5N1WmKSWlH7oU/xaOgzgwvVRTbF9XpOgT9Kvdmo+WtiWWE2nRlcklia6zSns43BBVPBgtl0jV94hRm+6zmd3msF6l4nreTozGzMNuKqm+T/+s6eSff2w+QeDc6HD1vjC40RetTPCD1ihmjQt73os3VvW2NNrkpUqW+fU3//AHRNqV8=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Set Wallet Emoji"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/set_wallet_emoji"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Set an emoji identifier/avatar for a wallet to make it easier to distinguish.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the set_wallet_emoji endpoint","content":{"application/json":{"schema":{"type":"object","description":"Set wallet emoji","required":["fingerprint"],"properties":{"emoji":{"type":["string","null"],"description":"Emoji character (null to remove)"},"fingerprint":{"type":"integer","format":"int32","description":"Wallet fingerprint","example":1234567890,"minimum":0}},"title":"SetWalletEmoji"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from set_wallet_emoji","content":{"application/json":{"schema":{"type":"object","description":"Response for emoji update","title":"SetWalletEmojiResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

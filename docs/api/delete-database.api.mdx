@@ -1,0 +1,71 @@
+---
+id: delete-database
+title: "Delete Database"
+description: "Delete the wallet database for a specific fingerprint and network."
+sidebar_label: "Delete Database"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVdty2zYQ/ZWdfejFA8uy4/TCNyduZ9JpHI/lTB8UTQcilxQSEGAWgG2Vw3/vLEldLLl9ip40wGLPnt1zli1GXQXM5jhbh0g1fAeztctxobCgkLNpovEOM7wmS5EgrggetbUUodBRL3UgKD2DhtBQbkqTQ2lcRdywcRG0K8BRfPT8ZYIKmb4mCvGNL9aYtQcId8MlNJp1TZE49JkFsejB/94ikisab1xEhbl3kVyUdLpprMm1pDv7HCRniyFfUa3lX1w3hBn65WfK5eGL9PQhubFow1RIk/a4ocKRmTSrYd8QR0NBsPbDdtDGRaqIUWHpudZxOHp1cVTMX0MNz8HoSdeNJczOL15dvv7p519+nSqsjTN1qjGbdrtydoghsnHVUf6bIRCcrgm7TmE0UTKPXbjecO/kbkc/cqL+IDTehYHpxXR6PMlZynMKoUwWNsFQsq8P5/jtxne3hfG8E2YPJwH/xXDzTJh2Ci9fIvNGFzDqFk7BuAdtTbEvUs9QaysjpQL+mH24wT7V+XGqj06nuPJs/qECTsH5jdpMgDwxk4t2DdZXFRVgnJLU8oJcHBsjkduB9DCXxzA3PkLpkxOMsXISDsEnzgkKT8F9H4GeTIjwA02qiYKb3+8V+LIkVhBZu6BzyfajgLx+qS3vXCR22kIgfiAGYvYMp5AcPTWUC2KpjU1MYNyGp3ik5xF62dUUV77ADBsfZKaNjivM8OxYJqKHu93y+G3jhQOr7Vtj64aNCzqFxpW+F9OohpmuCEa33d2+havbd8fSGs57ZfXxA5cJXFm7XUQBdJ5TE/v5b+Wy9IWh0C9BppjYba5HA00+uU/u5OTq2YhPTrIBR4BToADvU0zawv2fs2HVPguXtfpAHIZip5Pzi8mlUJWW1ro3UW/z7Yq73nX1GdF258Vvs+xHx0Z6imeN1cZJWYmtQA2TnuPhpBcKV6KFbI5tKycf2XadHH9NxGvM5guFD5qNXsoA54tO4Yp0QYzZvMUvtMYM3w48Tu+lAAm3SQo52i+d2ry46of3v7GLPbnefpjdo8Ll+BmrfSFvWD/K10I/Yoao0DeD0LN2OGvRalclXUnskFN+/wJEk5wL
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Delete Database"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/delete_database"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Delete the wallet database for a specific fingerprint and network.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the delete_database endpoint","content":{"application/json":{"schema":{"type":"object","description":"Delete a wallet database","required":["fingerprint","network"],"properties":{"fingerprint":{"type":"integer","format":"int32","description":"Wallet fingerprint","example":1234567890,"minimum":0},"network":{"type":"string","description":"Network name"}},"title":"DeleteDatabase"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from delete_database","content":{"application/json":{"schema":{"type":"object","description":"Response for database deletion","title":"DeleteDatabaseResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

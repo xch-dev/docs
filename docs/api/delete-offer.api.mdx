@@ -1,0 +1,71 @@
+---
+id: delete-offer
+title: "Delete Offer"
+description: "Delete an offer from the wallet (doesn't cancel on-chain)."
+sidebar_label: "Delete Offer"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVcFuGzkM/RWCl22DsZMW2cvc0nYXyGI3CeIUe3CNgp7h2OpqpCklJXEH/vcFNWM7qYNeWp8MkeIj33vU9BhpFbCc43XTsARcFFhzqMR00XiHJX5gy5GBHHjNgEZ8C3HN8EDWcoRXtefgfotQkavYgneTak3GvZ5igcJfE4f4ztcbLPvvKt8OQehIqOXIEqDxkmvXGfTzgMiu7rxxEQusvIvsotairrOmIq11+iVowR5DteaW9F/cdIwl+uUXrvTiD2caGzXCtTKRzz6bWrnoxHcs0XDQqvvIASFEMW51hJDZhMsPEP04DG63BUYTLe8byEm41cABP0rifBA678KA+/bs7Ji+WaoqDqFJFnbJgzhPyft1nN3uMbyMVshAGn1xsN0FHXBb4PlLM7yjGkaPwASMuydr6qeG8AIt2cZLyzX8Nbu+wlzqzXGpj45SXHsx37iGCTi/M6gJUCURdtFuwPrVimswrtDSeoNdHCnRzL0OGeb8GObKR2h8cooxds46Q/BJKobdMvCjCRFe8XQ1LeDqz7tioKyAKOQCVVrttYL8/hItly6yOLIQWO51A0S8wASS48eOK0VsyNgkDMbt5lSj5jlCtlrLce1rLLHzQdXsKK6xxNPv3KE2uD1s6R+P1Haq5FOz70y+LdC4xmevjHrPaMXw79DA7c17uLi5PHbOcJ6Nk/OHhqdwYe1+uQNQVXEXs8h7Tyx9bTgAOaU4JnG78Lgc00/ukzs5uXim48lJOeAocAoc4J8UE1m4+3uWm3guu75T9yxhaPZs+ubt9FxHVd5ayjviqD2YG65H6p5N2R/27OeezHELIz/G086ScdpLEqsQg4ZzfKbhosC1SlzOse+XFPij2O1Wj78mlg2W80WB9ySGlirZfLEtcM1Us2A57/E/3mCJ74fmJ3eKruk2aRdHD8a22N24yHL9MHfxxIU317M7LHA5fglaX+sdoQd9fOkBS8QCfTf4t+yHsx4tuVWileYONfX3P/nSU8w=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Delete Offer"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/delete_offer"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Delete an offer from the wallet (doesn't cancel on-chain).
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the delete_offer endpoint","content":{"application/json":{"schema":{"type":"object","description":"Delete an offer","required":["offer_id"],"properties":{"offer_id":{"type":"string","description":"Offer ID to delete"}},"title":"DeleteOffer"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from delete_offer","content":{"application/json":{"schema":{"type":"object","description":"Response for offer deletion","title":"DeleteOfferResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

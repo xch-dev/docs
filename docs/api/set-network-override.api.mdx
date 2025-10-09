@@ -1,0 +1,71 @@
+---
+id: set-network-override
+title: "Set Network Override"
+description: "Override network settings with custom values."
+sidebar_label: "Set Network Override"
+hide_title: true
+hide_table_of_contents: true
+api: eJylVU1vGzcQ/SuDuTQxaFlynKbdmxOkQIrWNiwHOShCQO3OrphwyQ05lKwI+u/F7IclW27RojoJ5PC9NzNvZrfIuoqYzfCKeO3DN5gSs3FVxLnCgmIeTMPGO8zwekUhmILA9aGxD4W14SXkKbKvYaVtojhChYG+J4r81hcbzLZPwG67S2h00DUxhQilD8BLEtgvPcUXP3CSKxpvHKPC3Dsmx4Kpm8aaXAvm2dcowFuM+ZJqLf940xBm6BdfKZeH/zYdEaIhNpSb0uSw1tYS9wmZQIWUqzSuotAEkTRX2ATfUGBDUYgPL/c6jGOqKKDC0odac3f06vxI2aeWEA5QgD34p3pLL1h0r+vGEmaT81cXr39+88uvY4W1caZONWbjnUKna9rLmGHkYFyFCl2y9rjNgxHkGbyQGGEPFKmVUVCpk+WXh9TIFNkRTya42ylkw+3plLgHG2qNO7nf15FDovYgNt7Frnjn4/GxXaYpzynGMlkYgqEMvn7WLP/HI4P293XDm9ueSmTvFF48p+ytLqB3OpyCcSttTXFoax+g1lZaTgX8Pr2+whZqcgz10enESx/MDyrgFJzvrQcmQp5CIMd2A9ZXFRVgnBJoeUGO+wQl8qG6Lc3FMc2VZyh9csLRKyfJIfoUcoLCU3Q/MdC9iQwvaFSNFFz9dqfAlyUFBRy0izoXtJdC8vq5snxwTMFpC5HCigJQCD7AKSRH9w3lwlhqY1MgMG7IU2aozSO2PqqJl77ADBsfpTeN5iVmePY3PZfm3u53zvvBnU/m8XBOutE4tK9C40rfOmNwsa4I+pG8vXkHlzcfjia2P283RxvfJTSCS2sfVlcEnefUcGuCB88sfGEognbSAk7BDdf9SIw+u8/u5OTyUZ9PTrKOR4hTpAh/Jk7awt0f0259PQqXbbyiEDux49HkfHQhqUpda91ORF+JKTEMC+B6X9pH2W730/Wfvwn9uDHd81ljtXEiIwUrqF17Z/hse+cKl+KCbIbb7UJH+hjsbifH3xOFDWazucKVDkYvpGuz+U7hknRBAbPZFr/RBjN81+k+vRMVEm6TqDnaEDs1vLhsO/aPsfMDo95cT+9Q4aL/5NW+kDdBr+XrodeYISr0TWfxbNudbdFqVyVdSWyHKb+/ABv6qXg=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Set Network Override"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/set_network_override"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Override network settings with custom values.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the set_network_override endpoint","content":{"application/json":{"schema":{"type":"object","description":"Override network settings for a specific wallet","required":["fingerprint"],"properties":{"fingerprint":{"type":"integer","format":"int32","description":"Wallet fingerprint to override network for","example":1234567890,"minimum":0},"name":{"type":["string","null"],"description":"Network name (null to reset to default)","example":"testnet11"}},"title":"SetNetworkOverride"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from set_network_override","content":{"application/json":{"schema":{"type":"object","title":"EmptyResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

@@ -1,0 +1,71 @@
+---
+id: get-spendable-coin-count
+title: "Get Spendable Coin Count"
+description: "Get the total count of spendable coins in the wallet."
+sidebar_label: "Get Spendable Coin Count"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVVFv20YM/isEX9YGFyfN0he9pV67ZdiSIE6xAa4RnCVKvu50p97xkriG/3vBk2wnddIBw/wkU+RH8uNHaoWsm4jFFMfeuIgzhRXFMpiOjXdY4K/EwAsC9qwtlD45Bl9D7MhVem4JSokD47LXvbaWeIQKA31JFPmdr5ZYrL4Dve5fQqeDbokpRKh9yAgN8e0W/FbAb/uk5KrOG8eosPSOybHg6q6zptSCe/Q5CvgKY7mgVssTLzvCAv38M5US+HxrLzWFCrvgOwpsKOZkMRLfmmoHPcXIwbgGFbpk7T59l/lBW8ixcP4LsIfaWKYA8yW8kqjc+9/j317jeq2QDVvqq5ts6pHZjKVKXIuLcGsCVVhwSJQNsfMu9lWeHB/vMz5JZUkx1snCxhnq4NsX+f7/aL7e5Ls3vMjMwibDrpEp9rbZ95z35l0S45gaCqiw9qHV3Jt+PtlLe5HaOYXnx9oaZ9rUYnH8r4xvqhfm1wpPnyP3na5g0DscgnF32prqsbh9gFZbKZgq+H1yeYEZ6s0+1EenEy98MF+pgkNwflgpMBHKFAI5tkuwvmmoAuOUQEsEOR7mI55bXnOa0/00F56h9slJjqFykh6iT6EkqDxF9xMDPZjI8IpGzUjBxYcbBb6uKSjgoF3UpaC9liRvn6Pl3DEF0X6kcEcBKAQf4BCSo4eOSslYa2NTIDkfQ58y+9xHzNvQEi98hQV2PopiOs0LLPDoB7IVfV7vrs/7B912Mt/H+7tZ27VC42qf9TWoYKIbgr/6Yq6vxnB2db4v6d6eFzf7D3cPzqzdHqoIuiyp4zzwrT7mvjIUQTuhm1Nwm9fDBo8+uU/u4ODsyUwPDoo+jyROkSL8mThpCzd/THIRTyUg9/eOQuyLPR69ORmdSqvCYavz8jrdDpKHreZBRA/jgcYnHa92x+A/fxGGBWZ64KPOauOkpBSsoPdjneKLY50pXIgCiimuVnMd6WOw67WYvyQKSyymM4V3OhgJlH9rhQvSFQUspiv8h5ZY4Ljv4fBGKhF3m6SiveO2VpuIszzBH/rOHon06nJygwrnw0ev9ZXEBH0vt07fY4Go0He9vItVb1uh1a5JuhHfHlN+3wCUDqiP
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Spendable Coin Count"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_spendable_coin_count"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get the total count of spendable coins in the wallet.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_spendable_coin_count endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get the count of spendable coins","properties":{"asset_id":{"type":["string","null"],"description":"Optional asset ID to filter by (null for XCH)"}},"title":"GetSpendableCoinCount"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_spendable_coin_count","content":{"application/json":{"schema":{"type":"object","description":"Response with coin count","required":["count"],"properties":{"count":{"type":"integer","format":"int32","description":"Number of spendable coins","minimum":0}},"title":"GetSpendableCoinCountResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

@@ -1,0 +1,71 @@
+---
+id: view-offer
+title: "View Offer"
+description: "View the details of an offer without accepting it."
+sidebar_label: "View Offer"
+hide_title: true
+hide_table_of_contents: true
+api: eJztWd1v2zYQ/1eIe9kWKG7aZXvQW1psQPeRFHG6PbiBQUsnmw1FquTJiWvofx+OlG3ZVpwtaIEVcF7iHI/38bvjkc5vCSSnHtIRXBUFOg+3CeToM6cqUtZACn8pvBc0Q5EjSaW9sIWQRlhWF/eKZrYmIbMMK1JmKhQNIAGHn2r09NrmC0iXOxav46KopJMlEjovCuuCj7nC+3E0jSavrDIECWTWEBpiS7KqtMokW3rx0bO5JfhshqXkT7SoEFKwk4+Y8caeTB4PvQ1bOcwZj6DFcFTOVuhIoWcXUbzx5cnFvdu+ApoiLgqyITFomgRIkcY2mKAEDYs3nsnVGAS+ssZHp6/OzvZhHNZZht4XtRYrZVE4W3ZA/HLYXa88MGwtgm1D9OKWgCdJtX8awLXDrpECERIo5V0wReH3niV8qJQL6YxnqKYz2lgdgTKE07Db1Frz5sK6UhKkvPTjKzavjCrrEtKzJukaI1WiJ1lW/97ez+e79jgDztbgVQHpaLdfmmQt2Vg+ZPF20zoXpa0NQbMCaIOldE4uIAFFWPqnMJbeI8tkNJeAswupabEPdKvx1dOJET0RduUwU567MgHlxx6NV6TmOF51ehDPlVcTzU10p0zekxK7Gqu8W+L1UY4VbnbOwCFFlVkzrp1+Qqsv3E26E2s1SgPNVga96yGpniGEhuEdAdk7ZIBMEY6yyiEBG/PoIs8g/M6mmgSMLPFw+Bvk0yeqvX+8HM5tHD1jmecOvT/si1S21dr7Os1OHiGHgsarLu7r1rC106u9DdYaWMe5PhjjifTKj8Ot1DPYdvftlad5xNJ/RbOT+WVB122+DcMWazwO3e2fD0FtcnR6ocx0vJoSXdFqYHBed7hWWf25Wu6MVI+ZNXkPaD06T8GxP2u3HX/1MbWV9nFaHafVM6fV/pH66q27d7CP7Xts32e1b0dyFXK9iHdOuIYO3cFfsJ+7MfC3ik5ox4fx8awez+rxYXx8GB8fxsdp9Y1Nq+PD+Ni+32z7/p8fxrvyYV2W0i0eYy/a1Wb9z/wDta7Q5FEiM+6sQD2UlUZCLnsmTYZah8/hasO82wPB4TVm1uXD6OoxQiUs9hIpK4qC82wSOO/jTF7LXLTclDgVysylVnmXiLJOlFIz3JiL34ZXlxBMvdw39d7ImmbWqc+Yi1NhrLiXWiMJ5UVWO4eG9EJoO51iLpRJ2DTvQEMtCcOa65kS3Jzvu7m0JApbG/bRRo6cg7e1y1DkFr35jgQ+KE/iexxMB4m4/PUmiRxNIshJ47kk1vzATn7qg+WtIXRGauHRzZl7c846cSpqgw8VZuyxkErXDoUyqzx5kIU8Yj1KpJnNIYXKej7ulaQZpPBii41i2ul6ww3+8iC5RTq0UOdJqExhQ8e1hR7KKYq/o+/rd2/Exbu3+zRVlAc+MejHWAfiQus1o+hbzi/Ud90OE5sr9EIaRpdqZ1bLLQ83+GA+mJOTi60Snpyk0Q87rj168WdNtdTi5o9hCGK74kyNztHF6QVng5evBuecKkNWyjDR4gCMXOVVi9rOBbCe2c/jZtsTTPhALyotVRjl7a0RizaCTtFuE5hxRdMRLJcT6fG9003D4k81ugWko9sE5tIpGe6JEY+5Gcqcqzlawh0uIIU3MeTTG/bN6roOX8t3GUkefnHHRYj6oO5tp+neXQ1vIIFJSziXNuc9Tt7zvS3vIYX13RO/k7BsCVqaaS2nrBtt8s8/0WC+pQ==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"View Offer"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/view_offer"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+View the details of an offer without accepting it.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the view_offer endpoint","content":{"application/json":{"schema":{"type":"object","description":"View an offer without accepting","required":["offer"],"properties":{"offer":{"type":"string","description":"Offer string to view"}},"title":"ViewOffer"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from view_offer","content":{"application/json":{"schema":{"type":"object","description":"Response with offer details","required":["offer","status"],"properties":{"offer":{"type":"object","required":["fee","maker","taker"],"properties":{"expiration_height":{"type":["integer","null"],"format":"int32","minimum":0},"expiration_timestamp":{"type":["integer","null"],"format":"int64","minimum":0},"fee":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"maker":{"type":"array","items":{"type":"object","required":["asset","amount","royalty"],"properties":{"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"nft_royalty":{"oneOf":[{"type":"null"},{"type":"object","required":["royalty_address","royalty_basis_points"],"properties":{"royalty_address":{"type":"string"},"royalty_basis_points":{"type":"integer","format":"int32","minimum":0}},"title":"NftRoyalty"}]},"option_assets":{"oneOf":[{"type":"null"},{"type":"object","required":["underlying_asset","underlying_amount","strike_asset","strike_amount","expiration_seconds"],"properties":{"expiration_seconds":{"type":"integer","format":"int64","minimum":0},"strike_amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"strike_asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"underlying_amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"underlying_asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"}},"title":"OptionAssets"}]},"royalty":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"}},"title":"OfferAsset"}},"taker":{"type":"array","items":{"type":"object","required":["asset","amount","royalty"],"properties":{"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"nft_royalty":{"oneOf":[{"type":"null"},{"type":"object","required":["royalty_address","royalty_basis_points"],"properties":{"royalty_address":{"type":"string"},"royalty_basis_points":{"type":"integer","format":"int32","minimum":0}},"title":"NftRoyalty"}]},"option_assets":{"oneOf":[{"type":"null"},{"type":"object","required":["underlying_asset","underlying_amount","strike_asset","strike_amount","expiration_seconds"],"properties":{"expiration_seconds":{"type":"integer","format":"int64","minimum":0},"strike_amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"strike_asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"underlying_amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"underlying_asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"}},"title":"OptionAssets"}]},"royalty":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"}},"title":"OfferAsset"}}},"title":"OfferSummary","description":"Offer summary"},"status":{"type":"string","enum":["pending","active","completed","cancelled","expired"],"title":"OfferRecordStatus","description":"Offer status"}},"title":"ViewOfferResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

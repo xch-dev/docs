@@ -1,0 +1,71 @@
+---
+id: get-minter-did-ids
+title: "Get Minter Did Ids"
+description: "Get DIDs that have minting capabilities for NFTs or tokens."
+sidebar_label: "Get Minter Did Ids"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVU1vG0cM/SsEL22Ntay4zmVvTtwWLmLHsBz0oBgGtUOtJpmd2XBmbSuC/nvB/ZAsSyiKtDoJ3Bk+ku/xzQoTlRHzKV5cXkS8z9BwLMTWyQaPOf7BCfQLpAUlWNAjQ2V9sr6EgmqaWWeT5QjzIHD9+12EIJDCV/ZxhBkKf2s4pnfBLDFfvUp9232EmoQqTixdlrRgKDk9KAzLg7HmwZoI7E0drE+YYRF8Yp80I9W1swVpxpMvUdOuMBYLrkj/pWXNmGOYfeFCL+631oF0HT7ZtICaSuvbfH35VtjoeMJ8HlmTOFvZpIOqJdQs2r1ideEtqCYuWTDDeZCKUhf69XSvjOummrFAmGsV0I46gHBqREvgZ6pqx5i/HWdYWW+rpsJ8vM6Ggn4AcZJIWga7FO3Ud/regO5irjNMNmlcZ3fVju7CmksTca0ft+NK0nAbiHXwsRvQ6Xi8r4FJUxQc47xxMByGuYTqgAL+P+JvB6SW8a0EdPivWN9ip5DI7dM+HNiCkggtMUObuHoZj0msL3H9upoPNiZl/1Ud6wHyBwi+04vgN8J6oXL8l4wOM1Jm1xmeHSLvHRnoNxyOwfpHcta8XOcgUJHTYtnAn5OP19imerOf6pOnJi2C2O9s4Bh8gCdyjhPYCEUjwj65JbhQlmzA+kxT6w32qVeBntww18Kc7cNcB1V74xWjr5y1hxgaKRhM4Oh/SsDPysnPPCpHmbpappvCkkES8pEKzfaLgrw9NJZLnaInB5HlkQVYJAgcQ+P5ueZCEedkXSMM1g99qqbaPnSXMqw4LYLBHOsQVcA1pQXmeHJwLVT/t1un/W3Y3o0pqXcMdqHWYf08tLrquZ9QyfBXV8jtzXs4v7ncX5ou3ppFe74rfATnzm3MOQIVBdepJXujjVkw+kSQN72vDZ97dxh99p/90dH5Dp9HR3mHo8BN5AhXTWrIwd2HSVvELv362jyyxK7Y8ejN6ehMGdL5VdTag6eqFzpc9QthDVy2I9zpdbU1mv/4/vWLm/g5ndSOrNeSGmmXuqN0igcovc9wobznU1ytZhT5k7j1WsPfGpYl5tP7DB9JLM2Uv+n9OsMFk2HBfLrCr7zEHN93PRzfaQ163DWtPb02znU23DhvufvHs/cvpHnzcXKHGc76x70KRu8IPamH0hPmiBmGuhN1vupiK3Tky4ZKPdvl1N/fj0Dw5g==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Minter Did Ids"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_minter_did_ids"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get DIDs that have minting capabilities for NFTs or tokens.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_minter_did_ids endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get minter DIDs with pagination","required":["offset","limit"],"properties":{"limit":{"type":"integer","format":"int32","description":"Number of DID IDs to return","example":50,"minimum":0},"offset":{"type":"integer","format":"int32","description":"Starting offset for pagination","example":0,"minimum":0}},"title":"GetMinterDidIds"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_minter_did_ids","content":{"application/json":{"schema":{"type":"object","description":"Response with minter DID IDs","required":["did_ids","total"],"properties":{"did_ids":{"type":"array","items":{"type":"string"},"description":"List of minter DID IDs"},"total":{"type":"integer","format":"int32","description":"Total number of minter DIDs","minimum":0}},"title":"GetMinterDidIdsResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

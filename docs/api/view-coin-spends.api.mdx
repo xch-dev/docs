@@ -1,0 +1,71 @@
+---
+id: view-coin-spends
+title: "View Coin Spends"
+description: "View coin spends without signing, useful for transaction inspection."
+sidebar_label: "View Coin Spends"
+hide_title: true
+hide_table_of_contents: true
+api: eJzNV0tv4zYQ/ivEXNoGjJNNsz3olg1aINs2WcTe9uA1DFoa29xQpJYPO46h/14MJVm2pToouls0J4dDzvObmU9b8GLhIBnDyArtROql0Q4mHDJ0qZUF/Q8J/CFxzVIjNXMF6syxtfRLEzxzcqGlXnAWHM6DYnNjmW9VMaldgfHnADhY/BLQ+Xcm20CyPbLxWAlZIazI0aN1lbYlspXE9ZTMT2vzqLPCSO2BQ2q0R+1JnygKJVNB+i4+O1K6BZcuMRf0y28KhATM7DOm9PCfRVh7Ly1mlK49ZyhbhTUFWi/RkaV9YWtYWCs2wEF6zF2fQ8f6gUMRXl4UTi2uUCjg4IwK0eFem68pLYRF7atESj03rYGlcEvgIHITtO8qr8+TLRiND3NIxjtDzlvKTsl3J1J7XKAFDnNjc+Gro5+ugUMutcxDDsllOeHgpVf04KbSXvKug0nXzoHLXXnZ6r01Ur8nGJTHiexTu0vtqzqHVNlG8SGKbvcA5E3E7cFzQtlOhYOSZG2FvA0YD1xhtKtSf3V52W2VYUhTdI4arrnM5tbknUb5ev3x2NihvjhocRfyXNjNEdaa0w6WGkEnqFGvzlN4niNSP+ki+J4uJOk3R2xt/F90+VRmbedxEFlm0VHhTPD9gTVX+lD8X3WqcA77zeig1L6R/klkMZWO6s5BuqlD7aSXK5w2aI3HK+nkTFGNn6TOehJBTlD+dpkYN1Hyyo/JcYeeuihTo6fBqldu9bnblmJmjEIRR8NeBL3yGFSniBxQU+LH4M0TUoL0PLZjxIkpmvG/qwkl4VdSVXLQIsfT7reZT17BwY9XhzigCq5MNT6mHQz22fIyfUJ76k55FAeU9K5piz6AN13xLTrOYopyVTk4Czau/f9l9zXO9cLqVPbaCHue7hVjbxY/xIRXq6pHfKdPSYf1HP/7HdjsFVJRcrjuW3fvRMZq6sjOmdQroWS2zxONZblQlEbM2Pvhwz1EVW+6qj5qEfzSWPmCGTtn2rC1UAo9k46lwRL9UBumzGKBGZOak2p6gdrXm5Nu7hAVzVx3zdwbz+YmaLJRe44UgzPBpsgyg05/5xk+S+fZ9zhYDDi7/2XEmZnP0fL9/foDGXnbl5Y77dFqoZhDu0LL0Fpj2TkLGp+JdGPG5kKqYJFJ3cRJUBYVy6d85+iXJoMECuOoGQrhl5DARQ+RIMbw2BL4n59FXlSj7YDvjlsu2rRD2/Zdgrcn2+d1Xb7XULf2QcvYdrfjgG6IY423oVgg+7OK/vHDLbv5cNdlN9V5/OCI96tsDdiNUruPDcdEmmLhI8J2gJyZTKJjQlN9fbC6EdckbvBJf9JnZzcHIDo7Syo7ZDg4dOz34INQbPTbMDpxiDn6dlqhrcY2XA7eXA2uY2qM87mIua4mf/UZE1nosKnb0f7brayv9VFXjxGPz/6iUELGIVSv0QpOY+jAacJhSYhLxrDdzoTDj1aVJR1/CUjscDzhsBJWirg+x1TYJYqM1sl4C0+4iWw7hnI+Ig/ougpxIRzTXBq61YubWMCTdyd7TfHhYTiiXVB/r+YmozdWrGlZiDUksFvJcSHEsy0ooRdBLOhupZP+/gJlyGBU
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"View Coin Spends"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/view_coin_spends"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+View coin spends without signing, useful for transaction inspection.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the view_coin_spends endpoint","content":{"application/json":{"schema":{"type":"object","description":"View coin spends without signing","required":["coin_spends"],"properties":{"coin_spends":{"type":"array","items":{"type":"object","required":["coin","puzzle_reveal","solution"],"properties":{"coin":{"type":"object","required":["parent_coin_info","puzzle_hash","amount"],"properties":{"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"parent_coin_info":{"type":"string"},"puzzle_hash":{"type":"string"}},"title":"CoinJson"},"puzzle_reveal":{"type":"string"},"solution":{"type":"string"}},"title":"CoinSpendJson"},"description":"Coin spends to view"}},"title":"ViewCoinSpends"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from view_coin_spends","content":{"application/json":{"schema":{"type":"object","description":"Response with transaction summary","required":["summary"],"properties":{"summary":{"description":"Transaction summary","type":"object","required":["fee","inputs"],"properties":{"fee":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"inputs":{"type":"array","items":{"type":"object","required":["coin_id","amount","address","outputs"],"properties":{"address":{"type":"string"},"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"asset":{"oneOf":[{"type":"null"},{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"}]},"coin_id":{"type":"string"},"outputs":{"type":"array","items":{"type":"object","required":["coin_id","amount","address","receiving","burning"],"properties":{"address":{"type":"string"},"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"burning":{"type":"boolean"},"coin_id":{"type":"string"},"receiving":{"type":"boolean"}},"title":"TransactionOutput"}}},"title":"TransactionInput"}}},"title":"TransactionSummary"}},"title":"ViewCoinSpendsResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

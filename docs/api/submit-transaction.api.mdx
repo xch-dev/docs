@@ -1,0 +1,71 @@
+---
+id: submit-transaction
+title: "Submit Transaction"
+description: "Submit a signed transaction (spend bundle) to the blockchain network."
+sidebar_label: "Submit Transaction"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVk1v2zgQ/SuDuWwbME5aZPegW1LsAi12kyBxsQfXMMbSWGZCkSo/kjiG//uClGwplrq99GaTw3kzj28etUVPpcNshlNL2lHupdEO5wILdrmVdfyPGd6HZSU9EDhZai7Ad9HwztWsC1gGXSh+D96AXzMslckf8zVJDZr9s7GPExRo+Xtg569MscFsewRy12xCTZYq9mwdrIxN2VzCX/RhWRe1kdqjwNxoz9rHjFTXSuYUI84eXEy7RZevuaL4y29qxgzN8oHzePAHTfZh2nbaHtoWpOUikpY6XzSdR9Jqa2q2XrJLuP3dQbf3PdYiStMiikGRfcDcSL1IeR0KpLK0XJLnYhHvhXywI2WMRnVkOG+lLnEn3iTv9sla2qBA6blyYyQe14cC6/D6qnhh+YlJoUBnVEhtD4pLB36StCbL2i9SeVKvTAewJreOPFQmaD/SebOebdFovllhNht2fViR2nPJFgWujK3IN0t/XKDASmpZhQqz891coJc+3ideNtl3YljgGLv9kof7uy7vJyP1lyjd3TGRY2kP1P40ZxJck7i/lZavkgzbzd5e0mTPGpqj3eV4GzgtuNpo17D+8fx8RO0hz9m5VVCwD4aVNdXIZP+6gb47IEUb6Q11AnWuAfths/vjsemdwIuxvq6ogNbU4BSkfiIli76DGQsVqSgpLuDL/c01plQfhqm+agp+bax85QJOQRt4JqXYg3SQBxslpjagTFlyAVKLmDqeYO1bgmLk4W4SzMUQ5tp4WJmgI0ZbOccenAk2ZygMO/2bB36RzsM7npQTAdd/TQWY1Yqt6PP4PoL8PkbLZ+3ZalLg2D6xBbbWWDiFoPml5jwirkiqYBmk3vcZR5eaByjyXbFfmwIzrI2Ld1uTX2OGZ6OKidK46x6XP1+oqhvXPXbhcTvcD82RC846h9qbSRc5HPveXn/ahy6wH+juQDfHh+h5ZOHgJ3uVUsnwb0PY3e0nuLz9PNR9s55kn+IbgidwqdTh3XRAec61T6I8aHhpCskOSEdJ+GD1frsd8Mk3/U2fnFy+0d3JSdbgRODg2ME/wQdSMP37PhXxVqbxQ+CJrWuKPZ98+Di5SNwY5ytKZGuqupGE6ZurftPrtvOKX/aR0pqK5xd/ViuSyYmDTf7biHCGIyKcC1xHpWYz3G6X5PirVbtdXP4e2G4wm80FPpGVtIw3OZvvBK6ZCrZJZ4+8SUadujmdxhpiuArpET52wfhwNScu0y3+b+y8N0y3N/dTFLhsv8AqU8Qzlp7jo0vPmCEKNHUzhtm2WduiIl0GKmPsQ/uE7Hb/AQ61nfY=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Submit Transaction"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/submit_transaction"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Submit a signed transaction (spend bundle) to the blockchain network.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the submit_transaction endpoint","content":{"application/json":{"schema":{"type":"object","description":"Submit a transaction to the network","required":["spend_bundle"],"properties":{"spend_bundle":{"description":"Spend bundle to submit","type":"object","required":["coin_spends","aggregated_signature"],"properties":{"aggregated_signature":{"type":"string"},"coin_spends":{"type":"array","items":{"type":"object","required":["coin","puzzle_reveal","solution"],"properties":{"coin":{"type":"object","required":["parent_coin_info","puzzle_hash","amount"],"properties":{"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"parent_coin_info":{"type":"string"},"puzzle_hash":{"type":"string"}},"title":"CoinJson"},"puzzle_reveal":{"type":"string"},"solution":{"type":"string"}},"title":"CoinSpendJson"}}},"title":"SpendBundleJson"}},"title":"SubmitTransaction"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from submit_transaction","content":{"application/json":{"schema":{"type":"object","description":"Response for transaction submission","title":"SubmitTransactionResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

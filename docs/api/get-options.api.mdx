@@ -1,0 +1,71 @@
+---
+id: get-options
+title: "Get Options"
+description: "List all options (Chia options protocol) in the wallet."
+sidebar_label: "Get Options"
+hide_title: true
+hide_table_of_contents: true
+api: eJztWE1z3DYM/SscXpp4ZMdJnR50czJtJ21qZ2xneth4drgitGJMkQoJrb316L93QOpjtVJtT9Lc4pOXBAEQeHgEdM9RrD1PF/y8QmWN59cJl+Azp8JvnvL3yiMTWjMbJdizt4US/a/KWbSZ1c+ZMgwLYLdCa8AjnnAHX2rw+MbKLU/v99RexE1WCSdKQHCe5dYFDWvAZacejKysMsgTnlmDYJBUiarSKhMk8uKzJ3333GcFlIL+w20FPOV29RkyOjhzn079rcKC5UojOGXWrc/KgaSQ2Dz3QAq0KhVSZCpnK3CowAcvfAZG0rnB6MpaDcJMrF5ahxSh/gyzToILcrmoNfI0F9pDk/BcGbncCF3DoHfBPbYemlrraZZi+oRmHoTLChbPNwlXJtO1hGWhpATzBE/fxQMsHugiNedoDMugURmEdbhTbl0pMC79/Gpi4qwuV+CYzfs8oGUOsHbkDtyJstLA09fHCS+VUWVd8vS4SbqEfIXFSxQOQ9SDigC1SqyVCRjaNbpv01uHy9JKmEI45DRsJZ1DfZbAkIIFN6Kk7cyBQJDLAtS6wGCvUi4YX3rIrJGh8lAh+dBmk/T/ReqbZtj6HbAr1YbWB8CiqyEs+MoaHyH66vh4xu86y8D7vNasE2a5s+Vu4f1/9XbRmQi11iVcK4/75dZbRotCT+utExhMCufElidcIZR+zpVd/VrUJivALZXkCd8or1Y65MYqE9eElA48eSBKWwfSqY0Ep7fKrJfCRzbYXZoRG9QRGG6gP9f97M7MQ2CPYlqPhqu1CGt6HykwBs5zni6mQo9Uyi8nfAT3HQieRu3NEJ85H/ZwvcNXg8GOsCYlOqqzThOqEjyKsnq6sv1bzIb2MdKYKtnFy9zdQ2n/N0M3+xn/7oka4e2RYqgcZMpH7lN+6cF4hWoDy67qw/JQJDfKyLkX0AOO4jMXhhEfPCSoMmuWtdOPSM25O33XmtENZvfDpSapHcgb7Q1QgEweaC0UdSShXbI+pSD8SaqeBIoh8k96x0aQdLCxkYaXE2aYs4UquwH3kEyzdw+6w5Tgvjt0JzT7A74/4Pvt8H3o6XogtM1+J3YBmXUhQHOzRN/GkkDsXb6iRb2ig8zst8bjGM42gl2HRQ1hk/CTuZ7vjZCsncfYIVNmI7SSu8OXdawUmnwEyf64PD/jQdXLqaqPRtRYWKf+AckOmbHtyMeUZ1ntHBjUW6bteg2SKZOQajoBBtsekiT7ag5mTqZmziy16bUhG63nQHfwtnYZMGnBm5+QwR3l4BkcrY8SdvbbVUItPriEoRPGi4y0PScjr+fC8s4guDg2uQ04Bs5Zxw5ZbeCugows5kLp2gENb+09iUJE14InvAQsrOQpr2zoaSuBBU/5i3E3TW3zxTAQ/9rNG6MxMkxW4wlwgPz+JNcKt1MYDUvdfHQ8GltiUYdRMLcBmS2CLsUa2N/xThcf3rLTD++m3XtcDwNTkG/He3aqdT+ceyayDCoMuOlhtrJSgWfCyHa267bb+eTok/lkDg5OR9A4OEijHTJce/DsrxprodnV+8vgxBhJ9JlhAy7yET8+evnq6ISuSqkoReCoSGlULux8Z5YdcXpPw9/wtaOtd4Q7fFFpoQJFt69BhMSC70LiOuEFASZd8Pv7lfDw0emmoeUvNbgtTxfXCd8Ip0RgqQURYgGCPhrQK3wDW57yt9HxwysyTuIRM5N5jV7peOI0ZOpB2esdTH84v7ziCV+133BaRDlxSw+yuOUp7x+VQOZh7Z5rYda1WJNs1El//wLYj2Kv
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Options"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_options"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+List all options (Chia options protocol) in the wallet.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_options endpoint","content":{"application/json":{"schema":{"type":"object","description":"List options with filtering","required":["offset","limit"],"properties":{"ascending":{"type":"boolean","description":"Sort in ascending order","default":false},"find_value":{"type":["string","null"],"description":"Optional search value"},"include_hidden":{"type":"boolean","description":"Include hidden options","default":false},"limit":{"type":"integer","format":"int32","description":"Number of options to return","example":50,"minimum":0},"offset":{"type":"integer","format":"int32","description":"Starting offset for pagination","example":0,"minimum":0},"sort_mode":{"description":"Sort mode","type":"string","enum":["name","created_height","expiration_seconds"],"title":"OptionSortMode"}},"title":"GetOptions"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_options","content":{"application/json":{"schema":{"type":"object","description":"Response with options list","required":["options","total"],"properties":{"options":{"type":"array","items":{"type":"object","required":["launcher_id","visible","coin_id","address","amount","underlying_asset","underlying_amount","underlying_coin_id","strike_asset","strike_amount","expiration_seconds"],"properties":{"address":{"type":"string"},"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"coin_id":{"type":"string"},"created_height":{"type":["integer","null"],"format":"int32","minimum":0},"created_timestamp":{"type":["integer","null"],"format":"int64","minimum":0},"expiration_seconds":{"type":"integer","format":"int64","minimum":0},"launcher_id":{"type":"string"},"name":{"type":["string","null"]},"strike_amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"strike_asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"underlying_amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"underlying_asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"underlying_coin_id":{"type":"string"},"visible":{"type":"boolean"}},"title":"OptionRecord"},"description":"List of options"},"total":{"type":"integer","format":"int32","description":"Total number of options","minimum":0}},"title":"GetOptionsResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

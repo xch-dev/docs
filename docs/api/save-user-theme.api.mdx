@@ -1,0 +1,71 @@
+---
+id: save-user-theme
+title: "Save User Theme"
+description: "Save a custom theme NFT to the wallet for use in the UI."
+sidebar_label: "Save User Theme"
+hide_title: true
+hide_table_of_contents: true
+api: eJylVMtu20oM/RWCm7aB4qRFutEufQEp7k2D2EEXjhHQEmVPO5pROTNOfAX9+wUlOS+n3dQrmcPhOeQ5nBYjrQLmc5ytueaAiwxLDoWYJhrvMMcpbRgIihSiryFqFpx/mUH0+gduyVqOUHmBFBiM66NXZxPMUPhX4hA/+HKLefus7uVwCA0J1RxZQl9Ebwfa8E0KLDcDHLuy8cZFzLDwLrKLWo6axpqCtNzRj6A1WwzFmmvSr7htGHP0yx9c6MUXm/pNNyN1I1zqZFwVb0ypk2nENyzRcFCIMf4AFqIYt9oD0/pnn8BXPUSPiV2XYTTR8kjmKrDMxpPuMXyUxH0gNN6FAfjd8fH+PKepKDiEKlnYJUMlvn4+zb8Z4ouML0c0Zd5lePISuQ9UwugGOATjNmRN+Vh6L1CTrbzUXMLX6bdz7Eu93S915SjFtRfzH5dwCM7vLGgCFEmEXbRbsH614hKMy7S03mAXx0Y1837APczJPsy5V1Mnpxgjc9Yegk9SMJSeg3sVge9MiPCaJ6tJpkbKwFcVSwZRyAUqtNobBXn/0ljOXGRxZCGwbFiARbzAISTHdw0XiliRsUn6xRr7VAv2fYTeRTXHtS8xx8YH1aihuMYcj/ZlV30vH1by8x3Vjcr54OSdg7sMjat8b4F7yVcM3wcGlxcf4fTibM/oY7zf4z5/YDyBU2vvlzgAFQU3sVf53hRLXxoOQE5nHJO43fFo+8m1u3YHB6dPhDw4yAccBU6BA/ybYiILs3+mPYmnuuuTtGEJA9njydt3kxNtVQdXU299R/XO36AGh9k4uyeNtg8b9DfP47hdke/iUWPJOCWTxCrAoOIcn6u4yHCtOudzbNslBb4S23Ua/pVYtpjPFxluSAwtVbb5ostwzVSyYD5v8SdvMcePA/vDmRLQdJuUyN5b0GW7G6e9ZH/MXTyy4sW36QwzXI4Pf+1LvSN0qy8r3WKOmKFvBhPn7RBr0ZJbJVpp7lBTf/8DsVNMFA==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Save User Theme"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/save_user_theme"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Save a custom theme NFT to the wallet for use in the UI.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the save_user_theme endpoint","content":{"application/json":{"schema":{"type":"object","description":"Save a theme NFT to the wallet","required":["nft_id"],"properties":{"nft_id":{"type":"string","description":"NFT ID of the theme"}},"title":"SaveUserTheme"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from save_user_theme","content":{"application/json":{"schema":{"type":"object","title":"SaveUserThemeResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

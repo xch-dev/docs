@@ -1,0 +1,71 @@
+---
+id: get-nft-icon
+title: "Get Nft Icon"
+description: "Retrieve the icon/avatar image for an NFT."
+sidebar_label: "Get Nft Icon"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVU1vG0cM/SsEL22NlewEbg97s9OmUNEqhqWgB0UIqF2uNOnszGaGI1td7H8vuKsPKzIKFKhOAsV5j3yPpFoUWkfMFzh9P4+4zLDkWATTiPEOc3xkCYa3DLJhMIV317QloQCmpjVD5QOQg+n7+RgzDPw1cZR7X+4wby+Q+h+hoUA1C4fYv1bcNctnV8lnxQd2ZeONE8yw8E7YiWJR01hTkGJdf4kK2GIsNlyTfpNdw5ijX33hQh+eM//KohX25Q9172s1gUttvecutfkm+IaDGI4Ku4+fCKIE49YXBApeeONg8jN2XYZixPJAPK1kUniHncZPnBIS94HYeBcHtrc3N5eqzVJRcIxVsnBIhir4+kyz/0+qxwPHk5HNUTT8Vpg+eARbnHRxydrLIbqnyD/djtgVvuTypQ+vq3WoQlXrMrx9TZh7KmE/bzAC47ZkTflyuHyAmmzlQ80l/Db7MMUe6s0l1EdHSTY+mL+5hBE4D09kLQuYCEUKgZ3YHVi/XmvxLlNofcFO9jpr5tHcnub2kmbqBSqfnHLsK2ftIfoUCobSc3TfCfCziQLf83g9ztSBDHxVcchAArlIhaL9oCQ/vibLxAkHRxYihy0H4BB8gBEkx88NF8pYkbEpMBh36FOt7fuIvSE1y8aXmGPjo45IQ7LBHK+/GTmdrcfTxv/yTHWjRp725jAXXYbGVb6fmL3ZM70efw70jw/v4O5hcjmMQ7w/E33+UO4Y7qw9nokIVBTcSG/xcSJWvjQcgZwKLCm4w8/7fRt/cp/c1dXdmYtXV/nAo8QpcoQ/kiSyMP99Nly6s3S9eFsOcSj2Zvzm7fhWW1XVaur3w1HNhwNUCUwG4c66bE+r+9+O7X6RhZ/lurFknHKnYBVycGyBZ44tM9yoofkC23ZFkT8G23Ua/po47DBfLDPcUjC0UosWyy7DDVPJAfNFi3/xDnN8NxQ7miu7ptukVVzcnC47vLjr7fnX3OWLmXv4MJtjhqv9f0jtS30T6ElvNj1hjpihb4Zpzdsh1qIlt056UXIcMPXzD1HwXxU=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Nft Icon"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_nft_icon"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Retrieve the icon/avatar image for an NFT.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_nft_icon endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get NFT icon image","required":["nft_id"],"properties":{"nft_id":{"type":"string","description":"NFT coin ID"}},"title":"GetNftIcon"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_nft_icon","content":{"application/json":{"schema":{"type":"object","description":"Response with NFT icon","properties":{"icon":{"type":["string","null"],"description":"Base64-encoded icon image"}},"title":"GetNftIconResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

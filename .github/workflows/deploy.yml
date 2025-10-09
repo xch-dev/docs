@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Build OpenAPI Pages
+        run: pnpm docusaurus gen-api-docs all
+
       - name: Build
         run: pnpm build
 

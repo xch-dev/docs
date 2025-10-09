@@ -1,0 +1,71 @@
+---
+id: get-all-cats
+title: "Get All Cats"
+description: "Get all known CAT tokens including those not in the wallet."
+sidebar_label: "Get All Cats"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVk1v40YM/SsEL20DxcmmaQ+6eYO22GKbBIkXPXiNgJYoezajGe0Mx4nX0H8vKCl2EqdugdYng37Dx89Hb1BoETGf4sV4AhN/zy7iLMOSYxFMI8Y7zPE3FiBr4d75BweKlA4JxhU2lcYtQJY+MjgvYBzIkuGBrGUZYYaBvyaO8t6Xa8w3r1zf9D9CQ4FqFg4RKh86DwuWO7L2riCJwK5svHGCGRbeCTtRX9Q01hSkvk6+RHW4wVgsuSb9JuuGMUc//8KFPvx3SWGGYsRyDxlbe0ESsW3bPhMTuMRcQuLOEBvvIkelOzs93c/vNhUFx1glC09gqIKvX2T3/yV188TxYGT5d+nt0phiRz/LsAm+4SCmT6Wz7sgoBFpjhka4jm8F8dxjE7gwUcPJcGWimVvGDOdkyRW8T0UxstyZcud2ilGCcQvM0CVrcdbunucb9I6vKsyn2ygGdJttLcYJLzhghpUPNUlv+vkcM6yNM3WqMT9tZ7tGj2ufnGD7qpyHIjKFd3cp2MMoRzUfRuzKlf9D/D+evYxfy77y/aDcUVkGjvEwl5jinsNhzFPLdtHMvbdMDtt2V7BOKW648KHcqxp+NFHAV934PRu85+93m/U0sbphbYbnby3ReyphUBE4BuNWZE35XDJ8gJqsFotL+P326hI7V+/2XX1ylGTpg/nGJRyD84NQgYlQpBDYiV2D9YsFl2Bcpq71BTsZdlKR23nvaM73aS69QOWTU44hctYcok+hYCg9R/edAD9qqb7n0WKUweWvkwx8VXHIQAK5SIV6+0FJfnqrLB+ccHBkIXJYcQAOwQc4huT4seFCGSsyNgVWUR7y1N3r8ugbUrMsfYk5Nj7qJjckS8zx5JU8qQ7d7HT8l0eqm25IdBNc5btxGXp7SwuGP3u2m+sLGF9/2Nep3t5pfYcfzgWMrd1qfQQqCm6k6+h2AOa+NByBnNZTUnBPPw9SPPrsPrujo/GLph0d5T2PEqfIEf5IksjC5ONtF8TLHuvZWnHo1xJPR+/ORufaBi1STd2q9pvdXRGN+aKv0yv52Kr6fzyhwyYKP8pJY8k4DWYQn75jU3zRsVmGS21oPsXNZk6RPwXbtmr+mjisMZ/OMlxRMNTt+lQ3f8lUqjpMN3jPa8zxoo/+eKLsCrepuwav75Mqb/9i3PXrIHb2bOaur24nehuGfwa1L/VNoAc9KfSAOWKGvumnNd/0tg1acotEC8X2PvXzF+YECBE=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get All Cats"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_all_cats"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get all known CAT tokens including those not in the wallet.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_all_cats endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get all known CAT tokens","title":"GetAllCats"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_all_cats","content":{"application/json":{"schema":{"type":"object","description":"Response with all known CAT tokens","required":["cats"],"properties":{"cats":{"type":"array","items":{"type":"object","required":["precision","visible","balance"],"properties":{"asset_id":{"type":["string","null"]},"balance":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]},"visible":{"type":"boolean"}},"title":"TokenRecord"},"description":"List of all CAT tokens"}},"title":"GetAllCatsResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

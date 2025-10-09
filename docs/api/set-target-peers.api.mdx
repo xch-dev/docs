@@ -1,0 +1,71 @@
+---
+id: set-target-peers
+title: "Set Target Peers"
+description: "Set the target number of peers to maintain connections with."
+sidebar_label: "Set Target Peers"
+hide_title: true
+hide_table_of_contents: true
+api: eJylVVFv20YM/isEX7YFFyfNMqDQW1p0QIctNWIXe3CN4ixR8nWnu+sdL4kr6L8PlOTEqY3toX4ySB6/j/xIqkPWTcJihXOimHCtsKJURhPYeIcFLoiBtwSsY0MMLrcbiuBrCBIP7KHVxrE2DkrvHJXyLsGD4e0MFUb6minxG1/tsOi+y303OiHoqFtiyVf7OMAl4s8j5OcRiFwVvHGMCkvvmBxLPh2CNaWWfBdfkiTtMJVbarX8410gLNBvvlApD09U9r9VTTWYSJV06ZCTNCtEHyiyoTQAHnqfCRjH1FBEhbWPrebR9OvVEaXlKTqHfUWF9KjbYAmL1wpb40ybWywu+14hGxa7FDYmGiXtxfdcA8dMgyEF79LI++ry8lidRS5LSqnOFvbBUEffHmnzI5LsOb9rA+/uJhih3Cu8PsXqja5gGio4B+PutTXV4QT5CK220miq4I/Fh1scUr06TvXR6cxbH803quAcnIcHbS0xmARljpEc2x1Y3zRUgXFKUssLcjwVKJFPnR1gro9hbj1D7bMTjIk5SQ3J51gSVJ6S+4mBHk1i+JlmzUzB7e9LBb6uKSrgqF3Sg/6/CMhvp9ry3jFFpy0kivcUgWL0Ec4hO3oMVApirY3NkcC4fZ0yunqcK+l3S7z1FRYYfBJtguYtFnhxQm8R9u55td/tZ/L7FXjdKzSu9oNnP566Ifh7ZHA3fws38/dHizDZh3MwxI+MZ3Bj7dMpSKDLkgIPKj8NxcZXhhJoJz3mHN3ePc377JP75M7Obl4IeXZWjDgCnBMl+Ctz1haWfy4GEi91l8t2TzGNZC9nr65m1yKNNK7Vw8g73U67CNNWz6fevai0e16dHz2102oxPfJFsHK6eoU5WgEZpVzhkZRrhVtRu1hh1210oo/R9r2Yv2aKOyxWa4X3Ohq9EfFW617hlnRFEYtVh//QDgt8O5ZwvhQGEm6zMDm6BL3av7gZhPvP2PXBQM4/LJaocDN9RVpfyZuoH+Q66wcsEBX6MI5y0Y22Dq12TdaNxI455fcv2JBuAw==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Set Target Peers"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/set_target_peers"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Set the target number of peers to maintain connections with.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the set_target_peers endpoint","content":{"application/json":{"schema":{"type":"object","description":"Set target number of peers to maintain","required":["target_peers"],"properties":{"target_peers":{"type":"integer","format":"int32","description":"Target number of peer connections","example":8,"minimum":0}},"title":"SetTargetPeers"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from set_target_peers","content":{"application/json":{"schema":{"type":"object","title":"EmptyResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

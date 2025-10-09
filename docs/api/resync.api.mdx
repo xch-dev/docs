@@ -1,0 +1,71 @@
+---
+id: resync
+title: "Resync"
+description: "Resynchronize wallet data with the blockchain. Can optionally delete coins, assets, files, offers, addresses, or blocks."
+sidebar_label: "Resync"
+hide_title: true
+hide_table_of_contents: true
+api: eJzFVttuGzcQ/ZXBPPRi0PIlTpvum+O2QIrWMSwFfVCEgtqd1TLhkpsh17Yi7L8Xw13dIiOo0ALVkzDLmTOXM4dcYdSLgNkUx8sQqYZvYLx0Oc4UFhRyNk003mGG9xSWLq/YO/OZ4FFbSxEKHTU8mlhBrAjm1ucf80obN4Ib7cAnX23tEgqyFAlyb1xQoEOgGBSUxlJQ4MuSWMxFwRRCMnEfLYxQIdOnlkJ87YslZquDvNJHaDTrmiJxgNJzyodTykCuaLxxERXm3kVyUaLoprEm1xLl7EOQUCsMeUW1ln9x2RBm6OcfKBfHf9GLoQDDVEibS+MWxA1LQjOFDfuGOBoKfWnSpr82jdhJZe69Je0Ocvm576y2dt0/YMo9FwGKlo1bDG1IjqVubcSs1DZQpzZwaRxHYonP0Uj9TI9DSj5HIyWmHQckLkfjJAofhyMuR+P0O3IcUPL550i7zNziGBdpQYwKS8+1jr3pxeUB8KQi2AkBvkyLMGxH9FtketJ1Ywmzi8sXVy9/+PHVT+cKa+NM3daYnXedwmiiHBg2DTuxbbcockvJEBrvhjW5PD8/FIdxm+cUQtlaWB+Gkn29zeW/U4SD6L0+SM+3fcAvS1s7SomdwqvnqnitCxg0EE7BuAdtTbEreJ6h1lbmQwX8Nn57iynUxWGod063sfJsPlMBp+D8ej4mQN4yk4t2CdYvFlSAcUmIxYNcHFojJzeTSDBXhzC3PkLpWycYQ+YkNQTfck5QeAru2wj0ZEKE72i0GCm4/XUyXAUKImsXdC7RvheQl8+15Y2LxE5bCMQPxEDMnuEUWkdPDeWCWGpjWyYwbl2nqG2qI6D0u6ZY+QIzbHyQ4TQ6Vpjh2YYfQoT77f3zy5q6z2l1WqQDVd23rhVw3zqo1b5xkJZ941oHBuvezm7XqVNoXOkTbwe6jfWC4M++Cfd3N3B99+aQxb09XaDpfN+0EVxbu7lGA+g8pyYmom14OfeFoQDayZhjy279eVjR0Xv33p2cXO9x6eQk63EEuA0U4I82ttrC5PdxSmKfevIWeCAOfbLno4vL0ZWwQ2ZX67SvTtc7svFFfavttv+fz5lBSSI9xbPGyguhU9iylQR7/k1x4N9MYSXEzKa4Ws11oHdsu07Mn1riJWbTmcIHzUbPZcjTWaewIl0QYzZd4UdaYoY3fdGnE8GV47YV/AO569Ta4zoN+KtnZzu7c/d2PEGF8+F9VvtCfFg/ytNHP2KGqLDvXpLqZFuh1W7R6oWc7WPK729z4bZm
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Resync"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/resync"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Resynchronize wallet data with the blockchain. Can optionally delete coins, assets, files, offers, addresses, or blocks.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the resync endpoint","content":{"application/json":{"schema":{"type":"object","description":"Resynchronize wallet data with the blockchain","required":["fingerprint"],"properties":{"delete_addresses":{"type":"boolean","description":"Delete all address records during resync","default":false},"delete_assets":{"type":"boolean","description":"Delete all asset records during resync","default":false},"delete_blocks":{"type":"boolean","description":"Delete all block records during resync","default":false},"delete_coins":{"type":"boolean","description":"Delete all coin records during resync","default":false},"delete_files":{"type":"boolean","description":"Delete all file records during resync","default":false},"delete_offers":{"type":"boolean","description":"Delete all offer records during resync","default":false},"fingerprint":{"type":"integer","format":"int32","description":"The fingerprint of the wallet to resync","example":1234567890,"minimum":0}},"title":"Resync"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from resync","content":{"application/json":{"schema":{"type":"object","description":"Response from resynchronizing the wallet","title":"ResyncResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

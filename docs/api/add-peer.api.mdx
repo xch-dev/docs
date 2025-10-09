@@ -1,0 +1,71 @@
+---
+id: add-peer
+title: "Add Peer"
+description: "Add a new peer to connect to by host and port."
+sidebar_label: "Add Peer"
+hide_title: true
+hide_table_of_contents: true
+api: eJylVFFv2zYQ/iuHe1kXKE5aeMCgN7fogAxbasQp9uAaAy2ebHYUyR7JOJ7g/z4cJTvJ3A4bpieJOn733X3fXY9JbSLWS5wTccRVhZpiwyYk4x3WONMaFDjaQSBiSB4a7xw1SV7Xe9j6mEA5DcFzmmCFTF8yxfTW6z3W/d/Q7oafEBSrjhJxhNYzpC2B0vr3koKcDt64hBU23iVySXBUCNY0SnCuPkcB6zE2W+qUvKV9IKzRrz9TIxf/fQ0jY8OkpQsmSAsC+0CcDEUBN+FZipjYuM1Zipu5FMAUI3guTXGqI9iZtC2dwQrpUXXBCobzmibj56TxXf3jdDrFw6HCZFKJmGkteuBBDp/4Jc5UDmLwLg7s3lxfn/d5kZuGYmyzhWMwtOy7U5f/T3OPJN93Ie3vRniheqhw+jU2b5WG0RZwCcY9KGv0cw94hk7Z1nNHGn5efLjFAvX6HOqjUzltPZs/ScMlOA87ZS0lMBGazEwu2T1Yv9mQBuMqgZYb5NJYoESeOlrSTM/T3PoErc9OcozMSWqIPnNDoD1F910CejQxwSuabCYV3P50X4FvW+IKEisXVSNo30uSH77WlhuXiJ2yEIkfxPjMnuESsqPHQI1kbJWxmQmMO9Ypxix1xGKYjtLWa6wx+CjaBJW2WOPVM51F0LunoXx/tOFg7G+ZsULjWl/kH+VeqA3BbwOLu/k7mM1vzsZgPC9DXeIH1hOYWXsa7AiqaSikovTJGGuvDcWySphSZnf8PXp98sl9chcXsxdiXlzUQx5JnCNF+DWnrCzc/7IoJF5qL/vpgTgOZK8nr99MSqnSvE4V28vYjitjPvTvRYX909j899U4DlKix3QVrDJOcme2AjsIt8STcKsKBUDO+n6tIn1kezjI8ZdMvMd6uarwQbFRa5FnuTpUuCWlibFe9vgH7bHGdwPZy3vJLOE2C4OzeT9UxxuzIs0/xq6e2W7+YXGPFa7Hbd95LXdY7WSvqh3WiBX6MBi27oezHq1ym6w2EjtgyvMXOvJBIQ==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Add Peer"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/add_peer"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Add a new peer to connect to by host and port.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the add_peer endpoint","content":{"application/json":{"schema":{"type":"object","description":"Add a new peer to connect to","required":["ip"],"properties":{"ip":{"type":"string","description":"IP address or hostname with port","example":"node.example.com:8444"}},"title":"AddPeer"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from add_peer","content":{"application/json":{"schema":{"type":"object","title":"EmptyResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

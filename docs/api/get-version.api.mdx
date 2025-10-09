@@ -1,0 +1,71 @@
+---
+id: get-version
+title: "Get Version"
+description: "Get the wallet software version information."
+sidebar_label: "Get Version"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVd9v2zYQ/lcO97AfAeOkRfait7TYhg5bGsRp9+AaAy2dZHYUqR7JOK6g/304SnKcOSgwYH4yjsf77rvvO6rHqJuAxQqX+xCphe9guXclrhVWFEo2XTTeYYG/UoS4JdhpaylC8HXcaSZ4IA7GOzCu9txqyV6gQqYviUJ846s9Fv2/at2Nh9Bp1i1F4gC151y+ofjXXJJc1XnjIiosvYvkopTSXWdNmYEuPgep12Mot9Rq+Rf3HWGBfvOZSrn4TRITECqMJloaEz5OwWEYRhqGqcIicqIcCJ13gYKAvb68PCW3TGVJIdTJwpwMNfv2mNr/x+huhtiZuH1JDDwmscK5gbXCjn1HHM3IZT54QgyRjWtOEJfUahdNeQA75NGjbrs8xsvFq9eLK5QJnk52blkmPCi8emmIb3QFk4XgHIx70NZUx37xDK22wpIq+G35/gZzqVenpT44neLWs/lKFZyD87P6JkCZmMlFuwfrm4YqME5JablBQjKPUDIPM8wwV6cwNz5C7ZMTjKlzEg7BJy4JKk/BfR+BHk2I8AMtmoWCm1/uFfi6JlYQWbugS6n2o4D89NJY3rlI7LSFQPxADMTsGc4hOXrsqBTEWhubmMC4maeonHmELEhLcesrLLDzQfzU6bjFAi+e21N8ePe0wz/P0vaDQnFX9skk7VI3BH+OYHe3b+H69t2pT8d43vOcPza3gGtrD4seQJcldTELetB/4ytDAbSTccbEbj6eNnHxyX1yZ2fXzzQ7OytGHAFOgQL8kWLSFu5/X+YmnkssT9ZhAw72VXlGrc5b4XQ7+Rg+Hsb0jGT/tNT/9bmcVi7SY7zorDZOwBNbKToKtMJjgdYKtyJfscK+3+hAH9gOg4S/JOI9Fqu1wgfNRm9EotV6ULglXRFjserxb9pjgW/Hbs/vBVzSbZImTp6jQc03rrM838xdHzns9v3yHhVupo9A6yu5w3onj5LeYYGo0HejN4t+jPVotWuSbiR3rCm/fwBK31ON
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Version"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_version"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get the wallet software version information.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_version endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get the wallet version","title":"GetVersion"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_version","content":{"application/json":{"schema":{"type":"object","description":"Response with version information","required":["version"],"properties":{"version":{"type":"string","description":"Semantic version string","example":"0.12.4"}},"title":"GetVersionResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

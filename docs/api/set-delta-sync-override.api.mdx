@@ -1,0 +1,71 @@
+---
+id: set-delta-sync-override
+title: "Set Delta Sync Override"
+description: "Override delta sync settings with custom configuration."
+sidebar_label: "Set Delta Sync Override"
+hide_title: true
+hide_table_of_contents: true
+api: eJylVdtuGzcQ/ZXBvDQ1aFl2nF72zbkBKVrbsBz0QREMand2xYRLbsihZVXYfy9mL5YVxQWK6EngDuecM3NmuEXWVcRsjpfEax++wIyYjasiLhQWFPNgGjbeYYZX9xSCKQgKsqwhblwOcYiGteEV5CmyryH3rjRVClouTlBhoK+JIr/2xQaz7Tdpb/qP0Oiga2IKEUofgFck2e86sDsBu/MjAXJF441jVJh7x+RY0uqmsSbvQE8+R8m9xZivqNbyjzcNYYZ++Zlyufg/tAkdDbGh3JQmh7W2lniQZQIVUr7SuIpCE4TVQmETfEOBDcVe8Khhx2SOS+8taYcKXbL2sN5vD6jAC4kE9pCiUC11svwztmoPfifWOKaKAiosfag190cvzw7k/91JgqdZFNKDrhtLmJ2evTx/9cuvv/0+VVgbZ+pUYzZtW4VsWAJwRtyxnW1cPpYSW4nY1YhDou4gNt7FvjBn0+mhIWYpzynGMlkYg6EMvn7ODj/iglHAu7rhzc2AJsxbheffI/daFzDYGY7BuHttTfHUuz5Ara3Umwr4Y3Z1iV2q08NUH51OvPLB/EMFHIPzg7PARMhTCOTYbsD6qqICjFOSWm6Q40GgRD4WuIM5P4S59AylT04wBuYkGqJPIScoPEX3EwM9mMjwgibVRMHl+1sFviwpKOCgXdS5ZOus9up7ZfngmILTFiKFewpAIfgAx5AcPTSUC2KpjU2BwLhRp4xIpyOi1LsmXvkCM2x8lN40mleY4cnzbZf+3ux2y7vRsPsTJ8b7ZkJ2jm4VGlf6zhujmXVFMEzEzfUbuLj+cDAww3m3Grr4XtIELqx9XE8RdJ5Tw50NHl2z9IWhCNpJEzgFN34e5mLyyX1yR0cXe50+Osp6HAFOkSL8lThpC7d/zvr9tBcuS/eeQuzJTienZ5Nz6Z1UttbdTDhdD5ML/aKR2YWrXXH3BG93I/YD78AwfUwPfNJYbZxwSsFK/r7bc3yu2wuFK/FFNsftdqkjfQy2beX4a6KwwWy+UHivg9FL6eJ80SpckS4oYDbf4hfaYIZvehHHt0JEwm0SQgc7o1XjjYuug/8Zu3hi3eur2S0qXA4vXe0LuRP0Wp4LvcYMUaFvetNn2/5si1a7KulKYvuc8vsXZb2rGQ==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Set Delta Sync Override"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/set_delta_sync_override"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Override delta sync settings with custom configuration.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the set_delta_sync_override endpoint","content":{"application/json":{"schema":{"type":"object","description":"Override delta sync settings for a specific wallet","required":["fingerprint"],"properties":{"delta_sync":{"type":["boolean","null"],"description":"Delta sync setting (null to use default)"},"fingerprint":{"type":"integer","format":"int32","description":"Wallet fingerprint","example":1234567890,"minimum":0}},"title":"SetDeltaSyncOverride"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from set_delta_sync_override","content":{"application/json":{"schema":{"type":"object","title":"EmptyResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

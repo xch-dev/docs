@@ -1,0 +1,71 @@
+---
+id: get-networks
+title: "Get Networks"
+description: "List available networks (mainnet, testnet, etc.)."
+sidebar_label: "Get Networks"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVNFu1EoM/RXLLxeqdFtQ70veWnRBIFiqbtF9WCrkTZzswGQmzHi2XaL8+5WTbMt2K4TQzVMysc/x8bGnQ6E6Yr7EOcutD99gwSLG1RFvMiw5FsG0YrzDHN+bKEAbMpZWlsGNCRGeNWScY8lAOMrwwlLMns8ww8DfE0e58OUW8+4R4NX4E1oK1LBwiFD5ALJmqFm+3BOwK1tvnGCGhXfCThSL2taaghTr5GtUwA5jseaG9E22LWOOfvWVC038LSmYoRixmviGZb477ft+VGICl5hLSDwcxNa7yFHpXp6eHupbpKLgGKtkYRcMVfDNnrr/WZSvntLVDxLOnirygkqYXIJjMG5D1pQ/W+IDNGQrHxou4d3i4xwHqBeHUJ8cJVn7YH5wCcfgPNyStSxgIhQpBHZit2B9XXMJxmUKrRnsZNKskfeNHmjODmnmXqDyySnHVDmrhuhTKBhKz9H9JcB32o9nPKtnGcxfX2fgq4pDBhLIRSoU7bmS/P1UW9464eDIQuSw4QAcgg9wDMnxXcuFMlZkbAoMxu10+pbDoEM7nmHDsvYl5tj6qHa1JGvM8eSR/erz1cOe/HNHTasz2PUZGlf5wflpLBdUM/w7sl1dvoLzy7cHczCdD7s0xI/VzeDc2vtdikBFwa0Mjt4PwMqXhiOQ035KCm73exr12Wf32R0dne+ZdnSUjzxKnCJH+JAkkYXr94uhiH2P9VrYcIhjsaezFy9nZ2qDNqmhYeIdNdMOwvyhT3squ4et+aOLaVol4Ts5aS0ZpyWkYBV59GmJez7dZLhWG/Mldt2KIn8Ktu/1+HvisMV8eZPhhoLRGvSrz3DNVHLAfNnhN95ijq/Gmo+vlV3DbdIqDra+z3YZ54NLv4y9+WnSLj8urjHD1XTfNr7UnEC3ehfTLeaIGfp2nNG8G886tOTqRLXGjpj6/AcBHCGS
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Networks"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_networks"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+List available networks (mainnet, testnet, etc.).
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_networks endpoint","content":{"application/json":{"schema":{"type":"object","description":"List available networks","title":"GetNetworks"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_networks","content":{"application/json":{"schema":{"type":"object","description":"List of available networks"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

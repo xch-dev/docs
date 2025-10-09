@@ -1,0 +1,71 @@
+---
+id: get-nft
+title: "Get Nft"
+description: "Get detailed information about a specific NFT by its coin ID."
+sidebar_label: "Get Nft"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVk1z4zYM/SscXNpmFCebpj3olt12O+m0TiYf04M344FFyOKWIrUkmMT1+L93IFmxHbnJ7qS+2CbBB+AB5MMSGOcR8gmMP95EuMtAUyyCadh4Bzn8Rqw0MRpLWhlX+lCjbCmc+cQKVWyoMKUp1PjjjZotlOGoCm+cOv9lBBkE+pIo8nuvF5Avn4FfdZuqwYA1MYWoSh8UV6TmxFNXsiKnG28cQwaFd0yOBQabxpqiDeTocxSsJcSiohrlFy8aghz87DMVcnCY0W7Y6zBNIC1EuJKnRgsVTfANBTYUBXa9vnEQORg3HzgQItYMwGqVARu21DkelwwrWdv445CoXYiNd7HzdHJ8PCTrOhUFxVgmq3pjVQZf91T9fwxd9fAPhqu2rl0HRNhDiXx5Rxcl5JMnYJeshVX2PAWBMqUqfXIaskEU20WwmFxRURDGM7g30cwsQQaRXDRs7mnaJytpG9fZodaBosQZ/AItL6bDFSY35cqniE5zJTsaGacpGPldE+P2f2sKcpG6v4OW6NEHPbHaRLV/z1oqhJUdi8mmpVoG73ZNHdb0inEgZNLTisy84m1b45jmFJ6MM+iuMuSy9eOJpG6cqVMN+fEWEpuaImPdfD3Yz6fPwVpCK4zVy9FveN9whiHgAjIwTPU+nlcZkDYdPameUXhL0j0Se0b7FiBTeDdNwb6c73aP7+uSvvdeZ26nS7+JvKd+f93J7tX4Ni9CYJjq15r99Q73D+5rgJ5f/330/teDsLHdlP3lcg8fpQ3GzHtL6MRhqzlopynStNt96el8LjLkxN0EnHfyEHJFNUkn9vIyLvm6c3Ab6UYOr4SJ/uncE9Fq5/AVFT5oOTTQrF4QRLtWGZzuk6f3qNVa7NWhMu4erdHbyu6DqtEKkaTV79cXY2ih3g2hbh0mrnww/5BWh8p59YDWEisTVZFCIMd2oayfz9uZJBNoOUGO15Inlk9q0ro5HboZe+6kSB32kZPkEH0KBSntKbrvWNGjiay+p9F8lIkYZsqXJYVMcUAXsX2afxAnP+2j5Vwa36FVkcI9BUUh+KAOVXL02FAhHks0NgVSxvV5isS0ecT+jlZeQw6Nj6J3DXIFORxthF8U/mozaf36iHXT1bwfWrb6Xqa4th3WNb7GOam/Os9Xlx/U2eX5cCTo1tvxrLXvIh2pM2ufZrSosCio4ba6T80w89pQVOiEW07B9dvrgWf0yX1yBwdnOwU8OMg7P+I4RYrqz8QJrbr547oNYrfeMmneU4hdsMejdyejU0lVCKuxHX66p6Wd/sblYOZZbmanN4+862vG9MhHjUXT3v21GHSlm0BfursMKilqPoHlcoaRboNdrWT5S6KwgHxyl8E9BoPtHZ7Ija4ItejcZAl/0wJy+NCFftheejG3qX2Xn4+A8qp0J87aOr1oe7fVd5cX1zIkz9ZDfO21nAn4IGMVPkAOkIFvuo7Nl93aEiy6ecK52HaY8vkXnjpMSg==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Nft"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_nft"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get detailed information about a specific NFT by its coin ID.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_nft endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get a specific NFT","required":["nft_id"],"properties":{"nft_id":{"type":"string","description":"NFT coin ID"}},"title":"GetNft"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_nft","content":{"application/json":{"schema":{"type":"object","description":"Response with NFT details","properties":{"nft":{"oneOf":[{"type":"null"},{"description":"NFT if found","type":"object","required":["launcher_id","visible","sensitive_content","coin_id","address","royalty_address","royalty_ten_thousandths","data_uris","metadata_uris","license_uris"],"properties":{"address":{"type":"string"},"coin_id":{"type":"string"},"collection_id":{"type":["string","null"]},"collection_name":{"type":["string","null"]},"created_height":{"type":["integer","null"],"format":"int32","minimum":0},"created_timestamp":{"type":["integer","null"],"format":"int64","minimum":0},"data_hash":{"type":["string","null"]},"data_uris":{"type":"array","items":{"type":"string"}},"edition_number":{"type":["integer","null"],"format":"int32","minimum":0},"edition_total":{"type":["integer","null"],"format":"int32","minimum":0},"icon_url":{"type":["string","null"]},"launcher_id":{"type":"string"},"license_hash":{"type":["string","null"]},"license_uris":{"type":"array","items":{"type":"string"}},"metadata_hash":{"type":["string","null"]},"metadata_uris":{"type":"array","items":{"type":"string"}},"minter_did":{"type":["string","null"]},"name":{"type":["string","null"]},"owner_did":{"type":["string","null"]},"royalty_address":{"type":"string"},"royalty_ten_thousandths":{"type":"integer","format":"int32","minimum":0},"sensitive_content":{"type":"boolean"},"special_use_type":{"oneOf":[{"type":"null"},{"type":"string","enum":["none","theme"],"title":"NftSpecialUseType"}]},"visible":{"type":"boolean"}},"title":"NftRecord"}]}},"title":"GetNftResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

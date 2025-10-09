@@ -1,0 +1,71 @@
+---
+id: combine-offers
+title: "Combine Offers"
+description: "Combine multiple offers into a single compound offer."
+sidebar_label: "Combine Offers"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVVFv2zYQ/iuHe9kayE5aZC96S4sNaLElQZxiD64x0NJJZkuRLHlM4gn+78NRUpzYSTEM85NBHr/v7vvuTj2yaiOWS7xqGgoRVwXWFKugPWtnscQPrltrS9Alw9obApcDQVt2oCBq2xqCynXeJVsPt3MsMND3RJHfu3qLZX8AejNcgldBdcSC17gAvMlIwvfXSEO29k5bxgIrZ5ksC5ry3uhKCdrp1yiQPcZqQ52Sf7z1hCW69Veq5OG/KmhMWQeqRQ73KIcPzlNgTVGwx/M9iwpBbbFAzdQ9PY8ctG1xd0ifdYbhNgK7qWDc7QpkzYb2OY6e7ORqnxyHRPkgemfjkNa7s7NjlRepqijGJhmYgqEJrjvQ+P+T9mZiude8mVjGnnhJ31fkPVbxFQ9HaJi0fk3BKS9Rclfg+UtivVc1jD0LM9D2ThldP21QF6BTpnGhoxo+La4uMUO9PYb6bFXijQv6b6phBtbBvTKGGHSEKoVAls0WjGtbqkHbQqDlBVkelZfIR7UyzfkxzaVjaPLQzabMSWqILoWKoHYU7U8M9KAjw880b+cFXP52WwyiFcBB2agqQXsjJL+8JMtHyxSsMhAp3FEACsEFmEGy9OCpEsZGaZMCgbZTneJoriNmTzrijauxRO+iNI1XvMEST4/aUPrtZr83fn1QnRc392O3nDpitStQ28blXhk9X6iW4M8hhZvrD3Bx/fG4RYfzvG5y/JDyHC6MeVw2EVRVkeds82NXrF2tKYKyIjKnYKfrcQ7nX+wXe3Jy8czJk5Ny4BHiFCnCH4mTMnD7+yIn8dx42Zx3FOKQ7Nn87bv5uXgjynUqD6NV3ZMGh6tJvGd19vuR/s8bfBxBpgc+9UZpK4mkYAR9sHCJBxauCtyIx+US+36tIn0OZreT4++JwhbL5arAOxW0WotjS3FxQ6qWmV/2+I22Od+c+exW+CXcpLxoDxfTrpheXGS3fhi7etKG11eLWyxwPX6aOlfLm6DuZUepeywRC3R+aOCyH856NMq2SbUSO2DK7x+IoInF
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Combine Offers"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/combine_offers"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Combine multiple offers into a single compound offer.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the combine_offers endpoint","content":{"application/json":{"schema":{"type":"object","description":"Combine multiple offers","required":["offers"],"properties":{"offers":{"type":"array","items":{"type":"string"},"description":"Offer strings to combine"}},"title":"CombineOffers"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from combine_offers","content":{"application/json":{"schema":{"type":"object","description":"Response with combined offer","required":["offer"],"properties":{"offer":{"type":"string","description":"Combined offer string"}},"title":"CombineOffersResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

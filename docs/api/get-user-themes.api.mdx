@@ -1,0 +1,71 @@
+---
+id: get-user-themes
+title: "Get User Themes"
+description: "List all custom theme NFTs in the wallet."
+sidebar_label: "Get User Themes"
+hide_title: true
+hide_table_of_contents: true
+api: eJylVMFu20gM/RWCl3YDxUmL9KJb2u4usuimQexgD65R0BIlT3c0o3JmkriC/n1BSYmTOF20qE82zXkk33tkh5HqgPkSFxtuOOAqw5JDIaaNxjvM8YMJEchaKFKIvoGoeXD+xyKAcfoLbshajjPMUPhr4hDf+nKLefcE6HL8E1oSajiyBKi8DAg1x88psHwewAOwK1tvXMQMC+8iu6hw1LbWFKRwR1+CYnYYig03pN/itmXM0a+/cKEPf3QKzDCaaPXtnxyvAsvERN/340RGuMQ8SuIhEFrvAget+fr4eH/OeSoKDqFKFu6SoRLfPJ3yV4bbtbXEeC9cK75liWZsborvXpMIbTFDE7l5GA9RjKuxf5YzX+24grP3Sst3CLuchlXi+gxPnuPmLZUwmQQOwbhrsqZ86Agv0JCtvDRcwl/zj+c4QL3ah7pylOLGi/nGJRyC85MPwQQokgi7aLdgfV1zCcZlCq0v2MWJZ828J3Ioc7Jf5txHqHxyWmPqnHWG4JMUDKXn4F5E4Fsl6yXP6lmmVGXgq4olgyjkAhWK9psWefMcLWcusjiyEFiuWYBFvMAhJMe3LRdasSJjk7Du3DSnaj3MMWrScNz4EnNsfVCLtBQ3mOPRvuvUXpe7Tf39lppW5ez6DI2r/GCNSeE51Qz/jAUvL97B6cXZ3m5N8WGbh/zpIMCptferHICKgts4iHrvgbUvDQcgp5TGJO7u72nJZp/cJ3dwcPpIt4ODfKyjhVPgAH+nmMjC4sN8aOKxzHqYrlnC2Ozx7NXr2YkqoTw1NCyao2ayM6ifYXFH1aNBu92+/tRVnNYs8m08ai0Zp9WTWEUcVVriU5VWGW5Ux3yJXbemwFdi+17DXxPLFvPlKsNrEkNr1Wm56jPcMJUsmC87/Je3mOO7sd3DhTag6TYNd+Dpqemzuxeng0b/m7t6YLWLj/MFZrie7n3jS30jdKMnim4wR8zQt6NJ826MdWjJ1YlqzR0x9fMfLfVFhg==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get User Themes"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_user_themes"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+List all custom theme NFTs in the wallet.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_user_themes endpoint","content":{"application/json":{"schema":{"type":"object","description":"List all custom theme NFTs","title":"GetUserThemes"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_user_themes","content":{"application/json":{"schema":{"type":"object","required":["themes"],"properties":{"themes":{"type":"array","items":{"type":"string"},"description":"List of theme NFT IDs"}},"title":"GetUserThemesResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

@@ -1,0 +1,71 @@
+---
+id: get-pending-transactions
+title: "Get Pending Transactions"
+description: "List all transactions that are pending confirmation on the blockchain."
+sidebar_label: "Get Pending Transactions"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVU1v20gM/SsEL7sbTJy0yO5BN7doF110kyB2sQfXCMYSJU07mlFnOElcQ/99QcmfsZNTfZI5HD6S75GzQtZVxGyG06Bd1Dkb7yLOFRYU82Ba+Y8ZfjaRQVsLvOcGXGsGHQhacoVxFeTelSY0Wo7BO+CaYGF9/j2vtXEjVBjoR6LI73yxxGz1DOVuOIRWB90QU4hQ+tBHqYjv1yj3BzmQK1pvHKPC3DsmxxJXt601eZ/HxbcowVcY85oaLV+8bAkz9ItvlMvFwyz+Jt4WtA+FCtmwpcHldvA4aFvXdUOFJlCBGYdEvSG23kWKAv328vK47knKc4qxTBY2zlAG37xY9a8r9m6D92i4fqnsXUkz5Gc6aYNvKbAZyjs43YHrEPQSFRqmJp5K6gWEe1OgwpLoGEmM2Qq9o5sSs9k2ZORgXIWd2lqMY6ooSCAv2hxMf12hwsY406QGs8tuvmN33PjkGDuFMS0aw0zFveZd2rO9kC5ZK8m9Flo9Lyk7yrbboR8L645yHwrJ58RQ+vI0a/shT8t1Q73ItlN4dUqZ73QB65GFczDuQVtT7M+nD9BoK9VTAf9Mbq6xD/XmONQXpxPXPpifVMA5OA+P2lpiMBHyFAI5tkuwvqqoAOOUhJYb5HgtbvHcCqWHuTqGufYMpU9OMNaZk9QQfQo5QeEput8Y6Ema9zuNqpGC649TBb4sKaj9Jv4hIH+eassnxxScthApPFAACsEHOIfk6KmlXBBLbWwKBMZt6hT16h05DXHtC8yw9VFGoNVcY4YXr8y8DPfdboF+eNJNKwSvOoXGlb4X1przia4I/huQ727fw/j20/HwD/Z+yfb+Q6YjGFu7XawRdJ5Tyz27WzEsfGEognbSW07BbY7Xu2701X11Z2fjAwLPzrIBR4BTpAj/Jk7awvTzpE/ikG95Lx4oxCHZy9Gbt6MroUQa1uh+zTndrAUOa4XD9LBnBxWvdmvz1z1p61FmeuKL1mrjJMcUrMANpM7wRVLnCmvhP5vharXQkb4E23Vi/pEoLDGbzRU+6GD0QmidzTuFNemCQr/0vtMSM3w/FHU+lUzE3aZ+6z5/F2QpDjfGPaWv+s73JHp7M5miwsX61W58IXeCfpTVrR8xQ1To2+3a720rtNpVSVfiO8SU3/+Bcvoh
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Pending Transactions"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_pending_transactions"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+List all transactions that are pending confirmation on the blockchain.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_pending_transactions endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get pending transactions","title":"GetPendingTransactions"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_pending_transactions","content":{"application/json":{"schema":{"type":"object","description":"Response with pending transactions","required":["transactions"],"properties":{"transactions":{"type":"array","items":{"type":"object","required":["transaction_id","fee"],"properties":{"fee":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"submitted_at":{"type":["integer","null"],"format":"int64","minimum":0},"transaction_id":{"type":"string"}},"title":"PendingTransactionRecord"},"description":"List of pending transactions"}},"title":"GetPendingTransactionsResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

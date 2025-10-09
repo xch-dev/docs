@@ -1,0 +1,71 @@
+---
+id: delete-user-theme
+title: "Delete User Theme"
+description: "Remove a custom theme NFT from the wallet."
+sidebar_label: "Delete User Theme"
+hide_title: true
+hide_table_of_contents: true
+api: eJylVE1v40YM/SsEL+0GipNdpBfdsl9AijYbxA568BoBLVH27I5mtJwZJ66g/15QkuMEyhYo6pPM4fA98r1hi5E2AfMlLrZcc8BVhiWHQkwTjXeY4y3XfsdAUKQQfQ1R8+D68wIqGf7CA1nLcYYZCv9IHOJ7X+4xbyeV+kNoSKjmyBKg8tJXKNly5PsUWO4HAHZl442LmGHhXWQXtSA1jTUFacGzb0GrthiKLdekX3HfMObo19+40Isv4T/2GEA/72BswAiXOhFXxXtT6kQa8Q1LNBwUZowfAUMU4zYTQEW4+gi+6iF6VOy6DKOJlp8I3QWWxXjWPScQJXEfCI13YYB+d34+nes8FQWHUCULh+Shs8lU/88wf8L6dkRU9l2GF68RfE8ljM6AUzBuR9aUz23gBWqylZeaS/h9/uUa+1Jvp6XuHKW49WL+5hJOwflROjABiiTCLto9WL/ZcAnGZVpab7CLY6ua+TTkHuZiCnPtI1Q+OcUYmbP2EHySgqH0HNwvEfjRhAi/8mwzy9RQGfiqYskgCrlAhVZ7oyC/vTaWKxdZHFkILDsWYBEvcArJ8WPDhSJWZGwSBuMOfaoR+z5C76Wa49aXmGPjg6rUUNxijmevSa8a3x4f6KdHqhuV9Ojog5O7DI2rfG+DUfY5bRj+Gjjc3nyAy5urieHHeP+q+/xxMcCltU8POgAVBTex1/nJFmtfGg5ATqcck7jD8Wj+2Vf31Z2cXL6Q8uQkH3AUOAUO8GeKiSws/pj3JF4qrwtqxxIGsuezt+9mF9qqjq6m3v6O6qPHQU0Oi3F6L1ptj+/ovy3I8VVFfoxnjSXjlEASqyUH7ZY41W6V4Vb1zZfYtmsKfCe26zT8I7HsMV+uMtyRGFqrWMtVl+GWqWTBfNnid95jjh8GxqcLpaDpNimVyRbossONy16of81dPbPgzZf5AjNcj8u/9qXeEXrQvUoPmCNm6JvBvHk7xFq05DaJNpo71NTfP28gSpE=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Delete User Theme"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/delete_user_theme"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Remove a custom theme NFT from the wallet.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the delete_user_theme endpoint","content":{"application/json":{"schema":{"type":"object","description":"Delete a theme NFT from the wallet","required":["nft_id"],"properties":{"nft_id":{"type":"string","description":"NFT ID of the theme"}},"title":"DeleteUserTheme"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from delete_user_theme","content":{"application/json":{"schema":{"type":"object","title":"DeleteUserThemeResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

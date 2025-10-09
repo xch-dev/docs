@@ -1,0 +1,71 @@
+---
+id: check-address
+title: "Check Address"
+description: "Validate a Chia address and check if it belongs to this wallet."
+sidebar_label: "Check Address"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVU1vG0cM/SsEL02NtWwH7mVvitECKVrHsJzmoAgFtcvVTjI7s5nh2FIF/feC+yFZlpNTdBI4HD7yvTfcLQqtIuZznJZl4Bg54iLDkmMRTCvGO8zxH7KmJGEguKkNAfWpQK6EoubiK5gKjMCSrXerCOJBahPhiaxlmWCGgb8ljvLOlxvMty/K3/eH0FKghoVDhMoHkJr76v+OeOzK1hsnmGHhnbATLUZta01BWuziS9SKW4xFzQ3pP9m0jDn65Rcu9OL3JtuPQm6cb+jbBC6VoDG6yLANvuUghmPXwHBwQIsSjFudoA0UKz+PAzBmyGtqWqvX1kV9NZlMcLfLUIx0sRttariIOz059CQhcReIrXexb+bt5eUpw7NUFBxjlSyMyVAF3xzz+/NovR9BnozUe7sMMxvvtItk5QXB3fkpvX34gLn03jK5E9BPNUvNvW9GSDOgdvq+bs/nCnSEfof8cSYVYZfh9Ws8v6MSBqvDORjXYz/ztQ/QkK18aLiEP2cfbrErdXVa6qOjJLUP5j8u4RycH9rVkYoUAjuxG7B+teISjMu0tN5gJ4Nqmrmnt4O5PoW59QKVT04xhs5ZZ4g+hYKh9BzdLwK8NlHgDU9Wkwxu/3jIwFcVhwwkkItUaLVfFeS312h574SDIwuRwyMH4BB8gHNIjtctF4pYkbEpMBg3zqkW6OaI3XtoWGpfYo6tj6pZS1JjjhcvHaxWvT9sm99HaZ8908M7y9C4ynfeGhSf0YrhU9/B/d0NTO/en7q7j3dLqssf9hxMrd3vqAhUFNxKp/LeFEtfGu4XZ2BJwY3HwwuefHaf3dnZ9EjIs7O8x1HgFDnC30kSWXj4a9Y1cay77ttHDrFv9nJy9XZyraMqcQ1179hRs7c3TPfcHY25PSyDn/ABGN6u8FouWkvGaUcpWMXppZzjsZSLDGuVOp/jdrukyB+D3e00/C1x2GA+X2T4SMHQUpWbL3YZ1kwlB8znW/zKG52wH+H8QeE13SZt42S37bLxxrRT7Ye5i2duvPswe8AMl8OHrfGl3gn0pLuNnjBHzNC3vY/zbR/boiW3SrTS3L6m/v4HURGf/w==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Check Address"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/check_address"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Validate a Chia address and check if it belongs to this wallet.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the check_address endpoint","content":{"application/json":{"schema":{"type":"object","description":"Validate and check an address","required":["address"],"properties":{"address":{"type":"string","description":"Address to validate","example":"xch1..."}},"title":"CheckAddress"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from check_address","content":{"application/json":{"schema":{"type":"object","description":"Response with address validation result","required":["valid"],"properties":{"valid":{"type":"boolean","description":"Whether the address is valid and belongs to this wallet","example":true}},"title":"CheckAddressResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

@@ -1,0 +1,71 @@
+---
+id: get-database-stats
+title: "Get Database Stats"
+description: "Retrieve statistics about the wallet database (size, table counts, etc.)."
+sidebar_label: "Get Database Stats"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVk1z20YM/SsYHNrEQ8tOxu2BNydtOumkjsdSJgdF41mRoLTpcpfZxUqWNfzvHSypr0jOwY1OIrh4Dw/AAlwjq1nAfIzDVWCq4RcYrmyBkwxLCoXXDWtnMcc7Yq9pQRBYsQ6siwBq6iIDzwmWyhhiKBWrqQoEL4J+pAxYTQ1B4aLlkAFxMXg5wAw9fYsU+I0rV5ivj4jSS2iUVzUx+QCV84llRny/obiXOAKQLRunLWOGhbNMlgVRNY3RhRLEi69BYNcYijnVSv7xqiHM0U2/UiGOTwjditkpxgxZsxHvv4j/6A8MJRJs27ZTpj2VmLOPlAyhcTZQEOLXl5fHeoexKCiEKhrYHIbKu/qE2p8psmdaap4/oXSnZYzsWJn7Rs1I3lSe6LsH8gVZVjPCDOXNvTSA0G4F6Ee6n6545xMaVexMyy3+JMPGu4Y86y5tpzB2CrVlmpEXVOdrxZ3p96sjzSPRsKdVPxJoCx1ee6DqGeg3sZ6SB1eB4ECH0x6nZwdtk8c+cuni1NAR9O3WewufcreF38/kM0J/t0U8yMeujM/AHEp2XQWkinlKxgH0fjs9u5LJXWA3JRXk5f/B3dXw8/WHTQnbp+/85hbJ3W8zvDp1vd+oEvp5B+eg7UIZXe4PN+ehVkYioxL+Hn68wQT16hjqk1WR587rRyrhHKzbjF0doIjek2WzAuNmMypB20ygxYMs93NCTm6vdaK5Oqa5cQyVi1Y4+shJNAQXfUFQOgr2VwZ60IHhBQ1mgwxu3o0ycFVFPgP2ygZVCNpLIfntVFreWyZvlYFAfkEeyHvn4RyipYeGCmGslDbRp8bpdcpQSDq6stTEc1dijo0LnOYOzzHHi5ODUybk3W7v/Pmg6kaKum4z1LZyqV/6Og+lXz93nHe3b+H69v3xBO3saTel812MA7g2ZruVAqiioIZTXbdtMHWlpgDKSlY5ert53a+KwRf7xZ6dXR+U7uws73iEOAYK8E/kqAyMPgxTEIeVljW7IB+6YC8Hr14PrtKldoFrlXaFVXXf1LDpahj22TrQut5tnZ/6GdBfT6YHvmiM0lYCjN4IY1fLMZ6o5STDuRQ8H+N6LfZP3rStmL9F8ivMx5MMF8prYZWnNsM5qZI85uM1/ksrzPFtp+h8JDHIcRMllqOd2mYbj+tUyR+enez15O3H4QgznPbfOLUrxcerpWxWtcQcMUPXdN2crzvbGo2ys5j2BHaY8vsPz4hdiQ==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Database Stats"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_database_stats"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Retrieve statistics about the wallet database (size, table counts, etc.).
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_database_stats endpoint","content":{"application/json":{"schema":{"type":"object","description":"Retrieve database statistics","title":"GetDatabaseStats"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_database_stats","content":{"application/json":{"schema":{"type":"object","description":"Response with database statistics","required":["total_pages","free_pages","free_percentage","page_size","database_size_bytes","free_space_bytes","wal_pages"],"properties":{"database_size_bytes":{"type":"integer","format":"int64","description":"Total database size in bytes"},"free_pages":{"type":"integer","format":"int64","description":"Number of free pages"},"free_percentage":{"type":"number","format":"double","description":"Percentage of free space"},"free_space_bytes":{"type":"integer","format":"int64","description":"Free space in bytes"},"page_size":{"type":"integer","format":"int64","description":"Size of each page in bytes"},"total_pages":{"type":"integer","format":"int64","description":"Total pages in database"},"wal_pages":{"type":"integer","format":"int64","description":"Number of WAL pages"}},"title":"GetDatabaseStatsResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

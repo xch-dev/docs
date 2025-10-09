@@ -1,0 +1,71 @@
+---
+id: delete-key
+title: "Delete Key"
+description: "Permanently delete a wallet key from the system. This action cannot be undone."
+sidebar_label: "Delete Key"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVVFv20YM/isEH9YtuDhOmm6d3tJuA7puaRC76INrDGeJsq473am8uySeoP8+UJJjOw761DwFPIofP34f6RajXgfMFniVYkUumlxH4x38AO9pE3CpsKCQs2kkihneENfakYt2AwVZigQa7rW1FOFf2kDJvoZYEYRNiFRPYF6ZADrvi+baOR9hRZBc4R1NUCHT10QhvvHFBrP2Cdrt8AiNZl1TJA5Qeu7rD+D/CCa5ovHGRVSYexfJRamkm8aObM6+BCnXYsgrqrX8FzcNYYZ+9YVy+fAQ97djZmOrhqmQcZXGrYkbFtilwoZ9QxwNBSm+/7jDMi7SmhgVlp5rHYfQy4sj9E8D6F4ViH4kjArpQdeNJczOL15evvr5l9e/ThXWxpk61ZhNu05hNFESRh7vaYOdhHcEIifqA6HxLgxdX0ynxwrMUp5TCGWysE0eNN7N//uN/fYRwXPvph5E3p6htE0Wap3Cy+e6f6MLGA0Gp2Dcnbam2HeTZ6i1FT2ogD9nH66xL3V+XOqj0ylWns1/VMApOL/1hgmQJ+ZhJaxfr6kA45SU1oc7ZQI8KtDDXB7DXPsIpU9OMMbOSTgEnzgnKDwF9yICPZgQ4UearCcKrv+YK/BlSawgsnZhWLefBOTVc2N55yKx0xYC8R0xELNnOIXk6KGhXBBLbWxiAuO2PMXgPY+AMu+aYuULzLDxQZRsdKwww7MDX4gBbncL/vvWuU9WZGfkTqFxpe+tMgo+02uCcSVub97C1c27Y+MM8d43ff7Q8wSurH08D3KGcmpir/OjLVa+MBRAO5lyTOy2z+NmTD67z+7k5PA8npxkA44Ap0AB/k4xaQvzv2Z9E4fKy527Iw5Ds9PJ+cXkUsSR0dW6XxGn65275fY+5djuluz7H+FxLSM9xLPGauOku8RWYAdhF7gn7FJhJapnC2zblQ70kW3XSfhrIt5gtlgqvNNs9EokXCw7hRXpghizRYtSIsO3A53TuWBLuk3Sw9H96NT2i6tevm/mLveMefNhNkeFq/GXpfaFfMP6Xk65vscMUaFvBktn7RBr0Wq3TnotuUNN+fsfFlt7xA==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Delete Key"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/delete_key"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Permanently delete a wallet key from the system. This action cannot be undone.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the delete_key endpoint","content":{"application/json":{"schema":{"type":"object","description":"Delete a wallet key","required":["fingerprint"],"properties":{"fingerprint":{"type":"integer","format":"int32","description":"Wallet fingerprint to delete","example":1234567890,"minimum":0}},"title":"DeleteKey"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from delete_key","content":{"application/json":{"schema":{"type":"object","description":"Response for key deletion","title":"DeleteKeyResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

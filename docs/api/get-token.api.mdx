@@ -1,0 +1,71 @@
+---
+id: get-token
+title: "Get Token"
+description: "Get detailed information about a specific token by its asset ID."
+sidebar_label: "Get Token"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVttu4zYQ/ZXBvHQ3kJ1smvZBb970lqJNAtuLFvAaAS2NbG4oUsuLE9fQvxdDypYTBy4KbJ4CajjnzDkzQ2/Ri6XDfIbXoylMzSNph/MMS3KFlY2XRmOOv5KHkryQikqQujK2FvwJxMIEDwJcQ4WsZAGeM8BiA9I7EM6Rh5ufhpihpa+BnP9oyg3m21f5x+kjNMKKmjxZB5Wx4FcES/IPKSnpsjFSe8ywMNqT9pxINI2SRWRz/sVxti26YkW14P/8piHM0Sy+UMEXT5SVQA6KwwwbaxqyXpKLUFzOgyz7xDN03kq9xAx1UOpYuFGnAJgqVpNA3nFwrPDv69/eY9tm6KVXlChFE7DlUxZNWiox9zZQPHCN0S7xuby4OJZyEoqCnKuCgl0wVNbUvZDfTr/xDuBJ+lVXW9LTHYmXoPMtGk13FeazffKoXJsdg/XVz7CxVEiXXFlLJxeKMMOFUEIXxLr/b6va/vpbrLroA15Se1qSxQxTi6SjH68ww1pqWYca84t23ns5qk3QHttXsp1iJAujH4JVp6O0qOl0RC9X/h/8v798yZ9lX5vUEA+iLC05dxrLy+KR7OmYnWU9m4UxioR+0fyx88dUGFse9dr09XiCrKAyQZfYzt+aoF1z8iS1GV69NSwfRQndYoIBSL0WSpaHW8hYqIViTCrh98ndLcZUH45TfdIi+JWx8h8qYQDawJNQijxIB0WwlrRXG1BmuYwrNOPUfIO078aPI/ctH2GujmFujU9Vw2DHnLgGZ4ItCEpDTn/ngZ6l8/COhsthBre/TDMwVUU2A2+FdqLgbO8Z5Ie3ZLnRnqwWChzZNVkga42FAQRNzw0VjFgJqYIlkHpXJ49frMNFT2vyK1Nijo1xPMyN8CvM8fxwDfG+Gffvws/Pom5Sk/Tz2w8isvmxgzqnJ2JJ8FdCH99fw+j+5nhFpfO4bGN8YjuEkVL7F8WBKApqfHR43xALU0pyIDTr64PVu8/dCh5+1p/12dnohYlnZ3nCYeDgyMGfwQehYPrHJJJ46Tm/jGuyaVLxYvjhcnjFpbJotYjTm4Y9vlXTTrdX62S/zb/FO92Np6dnf94oITXT6TZS8nCGvYfzDFfsbz7D7XYhHH2yqm35+Gsgu8F8Ns9wLawUcfpnvAtWJEreF7MtPtIGc7xO/AdThuZwFZjC0cvEuzjdGEW7TsbOD1rw/m4y5dei++1Rm5LvWPHEj4x4whwxQ9Ok5s236WyLSuhlEEuOTTn571+rlC55
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Token"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_token"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get detailed information about a specific token by its asset ID.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_token endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get detailed token information","properties":{"asset_id":{"type":["string","null"],"description":"Asset ID of the token (null for XCH)"}},"title":"GetToken"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_token","content":{"application/json":{"schema":{"type":"object","description":"Response with token details","properties":{"token":{"oneOf":[{"type":"null"},{"type":"object","required":["precision","visible","balance"],"properties":{"asset_id":{"type":["string","null"]},"balance":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]},"visible":{"type":"boolean"}},"title":"TokenRecord","description":"Token information if found"}]}},"title":"GetTokenResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

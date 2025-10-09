@@ -1,0 +1,71 @@
+---
+id: get-nft-thumbnail
+title: "Get Nft Thumbnail"
+description: "Retrieve the thumbnail preview image for an NFT."
+sidebar_label: "Get Nft Thumbnail"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVU1v20YQ/SuDubQxKNkJ3B54s9MmcNEqhqUgB0UIVuRQ2nS5y+zOSlYJ/vdg+GFapZFDUQEChN3ZeTPvvRnVyGoXMF3j4t0q4CbBnELmdcXaWUzxgdhrOhDwXr6x3FqlDVSeDpqOoEu1IyicB2Vh8W41xwQ9fYsU+NblJ0zrSb72EirlVUlMPrSvJfuO+Ist+MuIQjavnLaMCWbOMlmWhKqqjM6UJLz8GiRrjSHbU6nkF58qwhTd9itl8vAc/j2xlPmsk7aDvmrtKRcqpAqdCxmVdxV51hQkd38+ogT22u4mKIKQOW3h7jdsmgRZs6EOfVHwasDGRi5HYPaR2oNQORs6yDdXV1MSlzHLKIQiGhiCofCunFL4/zH3MAAdNe/POcR/8zTePKVdj1zZaMzUaLcq0K/XM7KZyymfCPQDGofKhM4mweuXGLtVOfS+hBloe1BG589N6DyUyhTOl5TDH8sPC2xTvZ6m+mhV5L3z+h/KYQbWwVEZQww6QBa9J8vmBMbtdpSDtomklhdkuedeIp9Ub2GupzALx1C4aAWjr5ykh+CizwhyR8H+xECPOjD8TPPdPBFVEnBFQT4B9soGlUm2VwLyy0u03Fkmb5WBQP5AHsh752EG0dJjRZkgFkqb6Am0HfoUpds+QqtKSbx3OaZYuSC2qRTvMcXLl7wopnsY18Pvj6qsRNJxtAabNAlqW7jWQL3sS1k1n7oaHu7fws393dSl3Xm7U9r4ruY53JhxnQRQWUYVtzo/2WLrck0BlBWWOXo7XPfTOP9sP9uLi5szKS8u0g5HgGOgAH9FjsrA6s9ltxbPwmU9HsiHrtir+es382tpVagrVTuPVpU0LKqCYfWMvbNW63Gw/8uS7oed6ZEvK6O0lTKibye2U3CNUwU3Ce5F5XSNdb1VgT560zRy/C2SP2G63iR4UF6rrUi23jQJ7knl5DFd1/g3nTDFt13ds5WUIOEmSimT5dQkw4ubVq4fxm6eGfH+w3KFCW77P6DS5fLGq6OseXXEFDFBV3UWTuvurEaj7C7Krkmxyymf78P/e1w=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Nft Thumbnail"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_nft_thumbnail"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Retrieve the thumbnail preview image for an NFT.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_nft_thumbnail endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get NFT thumbnail image","required":["nft_id"],"properties":{"nft_id":{"type":"string","description":"NFT coin ID"}},"title":"GetNftThumbnail"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_nft_thumbnail","content":{"application/json":{"schema":{"type":"object","description":"Response with NFT thumbnail","properties":{"thumbnail":{"type":["string","null"],"description":"Base64-encoded thumbnail image"}},"title":"GetNftThumbnailResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

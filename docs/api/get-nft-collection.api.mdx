@@ -1,0 +1,71 @@
+---
+id: get-nft-collection
+title: "Get Nft Collection"
+description: "Get detailed information about a specific NFT collection."
+sidebar_label: "Get Nft Collection"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVk1vGzcQ/SuDuTQx1rITuJe9OW5TuGhlw3LQg2IY1HJWYsolN+RQtiLsfy+GK1mfNgq0Okmc4Xy8efOoJbKaRizHOPx8H/GhQE2xCqZl4x2W+BsxaGJlLGkwrvahUWICNfGJQUFsqTK1qWD4+R4qby1VYh9ggYG+J4r8yesFlsu9wHe9EVoVVENMIULtA/CMYEr86Gp+3EQDcrr1xjEWWHnH5Fgiqra1psr1nH2LEnaJsZpRo+QbL1rCEv3kG1Vy8bCxV6vHAtvgWwpsKEqsjenR6E3wMUYOxk2xQJesPYTvatPC9S/wTpxym8mtIpKW1PE9dl2BbNhSX9uw5s1d7MQqcJpAGksOifJBbL2LfYUfz88PQR6lqqIY62Rh7Qx18M0RiP8/ZO/WmZ4Mz/aAXXEpvgGw/PKObmosxy+pMrpdsd/fFrymhtonp7E4KG8D3HhvkAVqo/svDbHSitXjvsfcRDOxJLP9V5xYU6J7CX7MZKq+01d41L1a0LFgTjX0drB1E5vbE+8tKbfDux3S3VHlg8bu4S1mrmctDO0KvDhGwk9Kw0oK4BSMmytr9Pbe+wCNsiItpOH30c0Qc6gPh6G+OJV45oP5QRpOwXl4UtYSg4lQpRDIsV2A9dNpVqtCQssNcrxis3i+8CGnuThMM/TckwlO15WT9BB9ChWB9hTdTwz0bCLDOxpMB4XwvABf1xQK4KBcVBmg95Lk52OwXDum4JSFSGFOASgEH+AUkqPntleGWhmbAoFx6z6Ff7mPmAfXEM+8xhJbH4XpreIZlnh2dL1lj+82kvzrs2ranhJ7DNumqat9Js1q/iM1Jfirr+Xu9goub68P978/zzqX/fvaB3Bp7YuQR1BVRS3neb/QY+K1oQjKCdqcglubV0I3+Oq+upOTy52RnpyUfR5JnCJF+DNxUhbu/xjlInYZIC/TnELsiz0ffPg4uJBWBcJG5aXs9yk/EcOa4WobxZ1elxvN/E8v5WonmZ75rLXKOCkoBSsZ+pmO8chMHwqcyeDLMS6XExXpS7BdJ8ffE4UFluOHAucqGJV3fyxKMCOlKWRt/ZsWWUNzB6f3UoO42yS1HLwAor79jcs8uTd9H7a4eXszuscCJ6u/AY3XcieoJ5Fm9YQlYoG+7VldLvuzJVrlpklNxbePKZ9/AOXeCi8=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Nft Collection"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_nft_collection"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get detailed information about a specific NFT collection.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_nft_collection endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get a specific NFT collection","properties":{"collection_id":{"type":["string","null"],"description":"Collection ID (null for uncollected NFTs)"}},"title":"GetNftCollection"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_nft_collection","content":{"application/json":{"schema":{"type":"object","description":"Response with NFT collection details","properties":{"collection":{"oneOf":[{"type":"null"},{"description":"Collection if found","type":"object","required":["collection_id","did_id","metadata_collection_id","visible"],"properties":{"collection_id":{"type":"string"},"did_id":{"type":"string"},"icon":{"type":["string","null"]},"metadata_collection_id":{"type":"string"},"name":{"type":["string","null"]},"visible":{"type":"boolean"}},"title":"NftCollectionRecord"}]}},"title":"GetNftCollectionResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

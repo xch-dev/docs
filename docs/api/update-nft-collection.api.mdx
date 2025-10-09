@@ -1,0 +1,71 @@
+---
+id: update-nft-collection
+title: "Update Nft Collection"
+description: "Update NFT collection metadata and settings."
+sidebar_label: "Update Nft Collection"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVU1v4zYQ/SuDuWwbKEqySC+6ZdMGSNF6g8TBHrxGlpZGErcUqSWHSbyG/3sxlPyR2l2gQH0yqJn3Zt68IVfIqglYzHByMw04z7CiUHrds3YWC3zsK8UEk5splM4YKuUcOmJVKVagbAWBmLVtQo4ZevoWKfAHVy2xWP0D6374CL3yqiMmH6B2HrgliInmydb8tEdDtuqdtowZls4yWRZQ1fdGl0oizr4GQV5hKFvqlPzjZU9YoFt8pVISj7ajLHyZ3Ey/7PX0LsCzDnqhjebltqexJe2pEo124U+6wgxThiGRrfeuJ8+aglTxNnBXVmCvbXNQ1rSlfXlvfwV2oyaYIb2qrjeSXjpzkec5rnfUO+yFc4aUPQD/1BK3NOi8RxJaF00FC4IRCrRNMY+3+5zsI63XGbLmVMKg4KTm6y0UriVgp1NKkYPQOxsGQd6fnx8a4iGWJYVQRwObYKi9647b4f9zwf2GTNVMfmDTtjlmC/xh5xsgUWCd4eWxJj+oCsa1gFPQ9lkZXe3vgPPQKVM731EFvz98nGCCujiEerQqcuu8/k4VnIJ18KKMIQYdoIzek2WzBOOahirQNhNoySDLo1QSuR1Uork8pJk4htpFKxxj5SQ9BBd9SVA5CvYdA73qwPAT5U2eyQWRgatr8hmwVzaoJNDPQvLLMVluLZO3ykAg/0weyHvn4RSipdeeSmGslTbRJ1+OfcqKpT4Cit4dcesqLLB3QabcK26xwLN/s4/45H53Q/228fjBvm4XbW/PRldrW7vksNEVD6oh+DSUd393DVd3t4d+G87TbZfih3ZyuDJme8kFUGVJPScLbB2zcJWmkO5ZTxy93Xwedyv/bD/bk5OrN1M+OSkGHiGOgQL8GTkqA9M/HlIRb02R2iQfhmLP84v3+aXMTVTtVNosqzraew1qhut9Yd+0u9qt6X99Psa1ZXrls94obaWM6I2ADsOd4fHhzjNsxQTFDFerhQr06M16LcffIvklFrN5hs/Ka5WGOZuvM2xJVeSxmK3wL1pigddD3adTKUPCTZRyDq6adbbJuEoj+2HsfM+ndx8fppjhYnweO1dJjlcv8s6oFywQM3T94PBiNZyt0CjbRNVI7IApv78BNju0xw==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Update Nft Collection"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/update_nft_collection"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Update NFT collection metadata and settings.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the update_nft_collection endpoint","content":{"application/json":{"schema":{"type":"object","description":"Update an `NFT` collection's visibility settings","required":["collection_id","visible"],"properties":{"collection_id":{"type":"string","description":"The collection ID to update","example":"col1..."},"visible":{"type":"boolean","description":"Whether the collection should be visible in the UI","example":true}},"title":"UpdateNftCollection"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from update_nft_collection","content":{"application/json":{"schema":{"type":"object","description":"Response after updating an `NFT` collection","title":"UpdateNftCollectionResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

@@ -1,0 +1,71 @@
+---
+id: redownload-nft
+title: "Redownload Nft"
+description: "Re-download NFT data and metadata from URIs."
+sidebar_label: "Redownload Nft"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVcFuG0cM/RWCl6TGam0H7mVvTloDLlrFkGT0oAjJaIcrTTo7s+FwbauC/r3g7kqyq7hAgOokzZB8fHyPoy2KWSUs5ji+mSVcZGgplewacTFggRMa2fgYfDQWxjczsEYMmGChJjHdj4pjDfeT25RjhkzfWkryPtoNFtuTWt0lNIZNTUKcoIoMsiZg2qN8DpUABdtEFwQzLGMQCqLVTNN4Vxqtdv41acktpnJNtdFvsmkIC4zLr1Rq4us8TIAv45vZlzfpNTpOUkdpYOSYrI4oVPLZWR1Sw7EhFkdJoYfzYxNJ2IXVSROzNfXIcPsLSAQ+NoUZ0pOpG6/poZLLPM9xt8tQnHRnk8OExpXgTq+OrQm31B2kJobUN/Xu4uJUgmlblpRS1XrYB/eMXwrwf859QDGVED9n7MLqoAS+wnOfrXx3GV59j9J7Y2GwHYzAhQfjnX3uschQG19FrsnCb9OPY+xKXZ6Wug+mlXVk9zdZGEGI8Gi8JwGXoGyZKYjfgI+rFVlwIdPSmkFBhvlo5EGWDubqFGYcBarYBsUYOiflkGLLJYGNlMIbAXpySeAt5as8093LIFYVcQbCJiRTarWfFOTn743lNghxMB4S8QMxEHNkGEEb6KmhUhEr43zLBC7seaqpOx6p815Nso4WC2xiUmkbI2ss8PzELOqKyXH1f907+bgaR09n6EIVO+cMkk/NiuDPvoPJ3Qe4vrs99VF/3j0YXXzfcQ7X3h+eiwSmLKmRTuWDKZbROkrdljNJy2F/PSxL/il8Cmdn1y+EPDsrehwFbhMl+KOV1niY/T7tmnipu759D8Spb/Yiv3yXXylVHVxtuo0Jpn7pbxhXJ/uyPe7djz69wx4KPcl5440Lit+y16K9cHP8l3CLDNeqbDHH7XZpEt2z3+30+FtLvMFivsjwwbAzSxVqvthluCZjibGYb/Ev2mCBH/qGRzPF13Dfah8nj8Yu22dcdyL9Z+zimfnuPk5nmOFy+E+po9UcNo/6OptHLBAzjE1v22Lbn23Rm7BqzUpj+5r6+Qe4c2XN
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Redownload Nft"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/redownload_nft"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Re-download NFT data and metadata from URIs.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the redownload_nft endpoint","content":{"application/json":{"schema":{"type":"object","description":"Re-download an `NFT`'s data and metadata from its URIs","required":["nft_id"],"properties":{"nft_id":{"type":"string","description":"The `NFT` ID to re-download","example":"nft1..."}},"title":"RedownloadNft"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from redownload_nft","content":{"application/json":{"schema":{"type":"object","description":"Response after re-downloading an `NFT`","title":"RedownloadNftResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

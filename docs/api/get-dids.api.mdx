@@ -1,0 +1,71 @@
+---
+id: get-dids
+title: "Get Dids"
+description: "List all DIDs (Decentralized Identifiers) controlled by this wallet."
+sidebar_label: "Get Dids"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVU1v20YQ/SuDuTQxaNlx3R54c6KkcJHahu2gB0UwVtwhuelyl5ldylYE/fdiltRXJPgUnYThzLz5em+XGFUVMJ/g+HoccJqhplCwaaPxDnP8bEIEZS3IZ3gzpoJcZGXND9JwrclFUxri8BYK7yJ7a0nDbAGxNgGelbUUR5gh0/eOQnzv9QLz5U8Y9/1HaBWrhiJxgNIzxJqgovikjQ5ATrfeuIgZChC5KHlU21pTKMlz9i1IsiWGoqZGyb+4aAlz9LNvVEjga50Zl/D6ijHDaKKV4L8ojo0OuFqt+i4Mk8Y8ckfJEFrvAgWBuzg/P+ztoSsKCqHsLKydoWTfbDr7dQ3dr/M/m1hLV2BNiLhb9gQT5DTDln1LHE1ferJuARSzWmCGJlITjgHvZrSqc0VN/GQ0Zjg3wcwspa6M621Ka6YgnarGdy4e4q89tlAhsnEVrjYx+RK9o9sS88mh08ZiXKSKGDMsPTcq9qY/LzHDxjjTdA3m56vpdr9XffbVtt5jNRRMKpJ+qslUddy6THYAXWetdLYL/PvFPnC2N61jSE41tJt/+LJOn26u8HPixVOtQv2663oZW6CZ95aUQ7nm9QjGRt9T4VkL/hGO+DJRZC9moMX65IQeqwwvjzHgvdIw0B9Owbi5skbvct0zNMrK2EjD3w+3N5hSvTtM9cWpLtaek/icgvMDX8EEKDpmctEuwPqqIg3GZZJaIkSlelKJ5+Z4E8zlIcyNj1D6zgnGUDlJD8F3XBBoT8H9FoFeZDpvaFSNMrj59JiBL0viDCIrF1Qh2d4KyB/HxnLtIrFTFgLxnBiI2TOcQufopaVCEEtlbMck2jT0KZxJffTbaCjWXmOOrU9Eb1WsMcezHW0REbnfiu/HF9W06SJWGRpX+nQbw1IfVEXwb490f/cBru6uD0WmtyeBTv6DxsOVtRuRDqCKgtqYtrlZ/sxrQwGUk1nGjt3686Cho6/uqzs5udpb2MlJ3uMIcBcowD9d7JSFx88PqYj9/cpbMycOfbHno3cXo0tZgQyoUUlOe4bJBcO4n9Feh8utHP+qx2/gXqSXeNZaZZxU1LEVsH5lE9ysbJphLdvMJ7hczlSgL2xXKzF/74gXmE+mGc4VG5WYPRGe16Q0cVLG/2iBOX7oWzh9FGRxt13S9Z9fF1HOPuIqLexV3+nOwd3dPjxihrPhPW+8lhhWz/I4qGfMETP0bX+q+bK3LdEqV3WqEt8+p/z+B2bU7kA=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Dids"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_dids"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+List all DIDs (Decentralized Identifiers) controlled by this wallet.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_dids endpoint","content":{"application/json":{"schema":{"type":"object","description":"List all DIDs in the wallet","title":"GetDids"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_dids","content":{"application/json":{"schema":{"type":"object","description":"Response with DID list","required":["dids"],"properties":{"dids":{"type":"array","items":{"type":"object","required":["launcher_id","visible","coin_id","address","amount"],"properties":{"address":{"type":"string"},"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"coin_id":{"type":"string"},"created_height":{"type":["integer","null"],"format":"int32","minimum":0},"launcher_id":{"type":"string"},"name":{"type":["string","null"]},"recovery_hash":{"type":["string","null"]},"visible":{"type":"boolean"}},"title":"DidRecord"},"description":"List of DIDs"}},"title":"GetDidsResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      
