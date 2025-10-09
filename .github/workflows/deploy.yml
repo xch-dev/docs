@@ -32,12 +32,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build
-        run: pnpm build
-        
       - name: Build OpenAPI
         run: pnpm docusaurus gen-api-docs all
 
+      - name: Build
+        run: pnpm build
+        
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
