@@ -7,7 +7,7 @@ const config: Config = {
   title: "xch.dev",
   tagline: "Build our decentralized future on the Chia blockchain",
   favicon: "img/favicon.ico",
-  url: "https://xch.dev",
+  url: "https://dkackman.github.io/",
   baseUrl: "/docs/",
   organizationName: "xch-dev",
   projectName: "docs",
