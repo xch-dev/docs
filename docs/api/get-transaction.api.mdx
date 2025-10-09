@@ -1,0 +1,71 @@
+---
+id: get-transaction
+title: "Get Transaction"
+description: "Get detailed information about a specific transaction by ID."
+sidebar_label: "Get Transaction"
+hide_title: true
+hide_table_of_contents: true
+api: eJztV0tz4zYM/iscXNpmFCebpj3ols22nfSxySTe6cHr8dASJHNDkVo+nLge/fcOSMmSH+tsp701uSShIHzAB/ATsAbHSwvpBMaGK8szJ7SyME0gR5sZUdP/kMIv6FiOjguJOROq0Kbi9IjxufaOcWZrzEQhMuZ6P2y+YjfvRpCAwc8erXur8xWk6x3f9/Ehq7nhFTo0lhXaMLdAVqKbDR2iymstlIMEMq0cKkfueF1LkYV4zj5Z8rkGmy2w4vSXW9UIKej5J8zoxf3Evhz9AkW5cG0CwmBOTLWH0wRqo2s0TqAloPa8hxTKYYkGEoh8xaPvL/aCGHDfQp7dvIMEKqFE5StIz5smASecxBjy4AVo6FkfnzMew4GttbIxsovz833aH3yWobWFl6wzZoXR1S7p/x3X9x3Mk3CLLapja1nYpXQYRroGrfC2gHSyAVJeSmiS3dSGfIqCFdqrHJK96A4UNQFbY+wvg9xhvl/m7kGfLjeGryAB4bCyh2gYAmVaqJmgcHilfYDieW7Q2tmjCGFya/FAe7VWvf8JWGeEKiGJPEybHVd9JBtDVNROE9BPVNe5N/RLcq+yRWhUXRThNz47NIpLSMCrR0Xm074DryLKbwTSbBI5VKAWmEp09FL8eLnd7kOw6L3piHmB39pgJmzsW2FnFpUVTixx1jVxOF4KK+YSIYHA1D7ZBEVlOsr2VtcdMxSZVjNv5AtWh8Lt051rLZEraLYyOPj8pfI7/YhEkCrCLQ3tqGMeQ+aJhK7Iild4PPye+a+SwEG1qYJLHVVl9lV97kT2iOaYTbOTB+XQ3b09ZobWA/G41kLdY6ZNHiz+icBvZRc15VUwXgXjVTD+T4LhRIXW8aoe4vYZRuDjfX0Yp8OYfnku7IYtmg+bBC4PjYBvec7a0ZydMqGWXIp8OIdrwyouKT7M2a8Pt+8huHqz7+qD4t4ttBF/Yc5OmdLsiUuJjgnLMm8MKidXTOqyDAtEQq7pDVSuHSfJcnMvA8zlPsx77eI4x067yJFysNqbDFmu0apvHMNnYR37FkflKGHvfx4nLOhUMhw6vyOQHw7RcqOiljGLZomGoTHasFPmFT7XmBFiwYX0BplQXZ4kBjxuT8R3hW6hc0ih1pauTM3dAlI42x+uaYq+7/ejn555Vcdr2n1vqN9p5wpd1Bb7gZfI/ozQ93fX7OruZn/ejudhmwr2MdQRu5Jys0pZxrMMaxfKu+mGuc4FWsYVkeu8Ud3jdqsYfVQf1cnJ1VYFT07SiEPA3qJlf3jnuWTj3x9CENsFp8VwiSYKAJyP3lyMLqkmxFjFgyhEDQlL2niLtB0h3Wjfv11U21vu8Nmd1ZKLII6tDscSTmC3hNMEFlTkdALr9Zxb/GBk09DxZ49mBelkmsCSG8GD/E6mYZTgOcnRZA2PuIIUrmMGp2MKgMylD5PC7rpFH8b4xlUo21Hb6aAP724fxvQFb1fwSuf0juFP9DnkT5DCRtKDlIazNUiuSs9Lso0+6edvlXWZkg==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Transaction"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_transaction"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get detailed information about a specific transaction by ID.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_transaction endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get a specific transaction by height","required":["height"],"properties":{"height":{"type":"integer","format":"int32","description":"Transaction height/ID","minimum":0}},"title":"GetTransaction"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_transaction","content":{"application/json":{"schema":{"type":"object","description":"Response with transaction details","properties":{"transaction":{"oneOf":[{"type":"null"},{"description":"Transaction if found","type":"object","required":["height","spent","created"],"properties":{"created":{"type":"array","items":{"type":"object","required":["coin_id","amount","address_kind","asset"],"properties":{"address":{"type":["string","null"]},"address_kind":{"type":"string","enum":["own","burn","launcher","offer","external","unknown"],"title":"AddressKind"},"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"coin_id":{"type":"string"}},"title":"TransactionCoinRecord"}},"height":{"type":"integer","format":"int32","minimum":0},"spent":{"type":"array","items":{"type":"object","required":["coin_id","amount","address_kind","asset"],"properties":{"address":{"type":["string","null"]},"address_kind":{"type":"string","enum":["own","burn","launcher","offer","external","unknown"],"title":"AddressKind"},"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"coin_id":{"type":"string"}},"title":"TransactionCoinRecord"}},"timestamp":{"type":["integer","null"],"format":"int64","minimum":0}},"title":"TransactionRecord"}]}},"title":"GetTransactionResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

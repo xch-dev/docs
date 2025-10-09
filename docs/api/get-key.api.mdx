@@ -1,0 +1,71 @@
+---
+id: get-key
+title: "Get Key"
+description: "Get information about a specific wallet key by fingerprint."
+sidebar_label: "Get Key"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVslu40YQ/ZVCHZIZoyXLHk8W3jyDJHCU2IblQQ4aw2iRRartZjenF8uKwH8PqqnVFHJJdBJ6ebW8V6+5wiArj9kUL2OYkwkql0FZA9/BmJYeHwQW5HOnGl7FDH+jAMqU1tXdOTmzMYAE31CuSpXDQmpNAZ5pCbMllMpU5BqnTBiiQEffIvnwyRZLzFZvoO+6TWikkzUFch5K6yDMCSoKj4xIpmisMgEF5tYEMoFhZNPodd6nT56xVujzOdWS/4VlQ5ihnT1Rzhf79RzNHgU2zjbkgiLPOHul7GCnqEygihwKNFFrbljXHMx468N5L+JfXYg9OHgXPXnIo3Nkgl6CtlVFBSgDqgSGfY8C6VXWjSbMzs4/XHz84ceffh4JrJVRdawxG7WtwKACH+CixrTElte45cpRgVlwkdKCb6zxXVHno1GfiEnMc/K+jBo2h6F0tt7Q8P91/24Dv1BhnjSzp60eAxw6W6E1dFNiNt2Cp8a34m0Z40M47mVpoylQ9LLaNWmKRtaE4oBugU2caZWvi39WCWQu/aOn3FHwzD6FhXXPj6pgDRwmTrV9Uvui8cEpU20104rj6toTV09Ue8wfprK7PbNWkzTYrlPe7Wzjk2GIKc50mvWNgMa0HPONVnTt6N1sDwo+tr3Xsf52exDqypQW24e+gjfyYCW3Ai+OifWTLGBtKzAAZV6kVsW+h1gHtdTcPyrg98nNNSaosz7UFyNjmFun/qYCBmDsxg7U0eEUDC0PbVN52Gophbnoh7m2oRMiDDaZE9fgbXQ5QWHJm+8D0KvyAd7RsBoKuP71XoAtS3ICgpPGy5zR3nOQj8facmUCOSM1eHIv5ICcsw4GEA29NpRzxFIqHR2xzazrZM2mOnyiqKYwtwVm2FifhkCGOWZ4urMBnve7naf/srGoN265c6xWII9kksSa6omsCNameHf7GS5vr/o+0a2n9yCd7xIewqXW20fBg8xzakIieauJmS0UeZCGWxyiM5vttQsOv5qv5uTk8Pk7Ocm6OBw4mfOfMUSp4f6PSUrikHZ+2l7I+S7Z0fDsfHiRZsD6UMvkiN0YpedmnFp3UOBqZ6j/8YVdD1qg13DaaKnS9EenOUbH3xQ3/D0InDOz2RRXq5n09MXptuXlb5HcErPpg8AX6ZScMVNT9qk5yYJcct802vi5S3xwz4H5uI6cQO9VYH/ublwmlv717MOe+G5vJvcocLb+ZqhtwXecXLBvywVmiAJt08k2W3VrK9TSVFFWfLbD5N8/PI0W9g==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Key"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_key"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get information about a specific wallet key by fingerprint.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_key endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get a specific wallet key","properties":{"fingerprint":{"type":["integer","null"],"format":"int32","description":"Wallet fingerprint (uses currently logged in if null)","example":1234567890,"minimum":0}},"title":"GetKey"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_key","content":{"application/json":{"schema":{"type":"object","description":"Response with key information","properties":{"key":{"oneOf":[{"type":"null"},{"description":"Key information if found","type":"object","required":["name","fingerprint","public_key","kind","has_secrets","network_id"],"properties":{"emoji":{"type":["string","null"]},"fingerprint":{"type":"integer","format":"int32","minimum":0},"has_secrets":{"type":"boolean"},"kind":{"type":"string","enum":["bls"],"title":"KeyKind"},"name":{"type":"string"},"network_id":{"type":"string"},"public_key":{"type":"string"}},"title":"KeyInfo"}]}},"title":"GetKeyResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

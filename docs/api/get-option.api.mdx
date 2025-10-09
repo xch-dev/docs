@@ -1,0 +1,71 @@
+---
+id: get-option
+title: "Get Option"
+description: "Get detailed information about a specific option."
+sidebar_label: "Get Option"
+hide_title: true
+hide_table_of_contents: true
+api: eJztV0tz2zYQ/iuYvbT10LLjOj3w5qSPcR+Wx3amB0WjgcglhRgEGDxkqxr+984ClEiJHCd95BadpMViv91vH1pswfHSQjqDae2EVhbmCeRoMyPCb0jhF3QsR8eFxJwJVWhTcTpifKm9Y5zZGjNRiIzpcGUCCRj86NG6NzrfQLo9MngXD1nNDa/QobGs0Ia5FbIS3SJaYajyWgvlIIFMK4fKkSVe11JkAf/sgyVzW7DZCitO39ymRkhBLz9gRheHgQy8bZ0VBnNiIQoXIiceaqNrNE6gJePdUYdknRGqHCBFLtn1j9A0CTjhJEb8eAANiTtYZzwGga21shHt4vx8yNy9zzK0tvCS7ZRZYXTV4+3/o+tuh/Ak3Kplqy0EC+PkhG8KpwWks7155aWEJjmOpeWoX1CiYIX2Kodk4Fo/R5J7la3QUCoSWAsrlhJD3EJFGc9zg5a85JX2oYa8ytHIjVDlgluLx6IRtc4cZfkR9/d2P3d38LkWJkSwsJhpldth8ew8GpROs/dxjLu90l4ilMMSDSQQeYuiHy4hgUooUfkK0vNm3lXdVbTedPyM+ZAZ5A7zxQpFuXKdyqwHGBI5PwT+/uIQuLPkRIXW8ar+fGPHUYxSm/5DKpKDehmLXfEK+07umzr62Bxn/Isn6qDeRvq03wy1wUzY2PjCLiwqK5xY42I3BYK4a5JHoUZmW4A64GeMhoMGfklRZFotvJGf0Bpztwt3qbVErqA5iGD0PAQ1MpVREcszcPoRiSBVhDEXmrqdWP0EEAm/kanPKoqO+U+V5LBJDK51HMuLwWQYw3Iie0Tzkk5zFAfFMBxwX7x0B2P2a/l+Ld//Xr4v/XW9QG3Palw37jDTJodmPrqX7TYe2s+aBC7HVrA3PGftdstOmVBrLkXeX2W1YRWXxB/m7Nf76Q0EU6+Gpt4p7t1KG/EX5uyUKc2euJTomLAs88agcnLDpC7LsHgnZJpuoHLtTkea+24KMJdDmBvt4lrFTneeI8VgtTcZslyjVd84hs/COvYtTspJwm5+fkiYLgo0CXOGK8szsvYdgbweo+VaOTSKS2bRrNEwNEYbdsq8wucaM0IsuJDeIBNqFye1MI+vDuK7QrfSOaRQa0uFXnO3ghTODpZb2mLvutfFT8+8qmPye/t5rzpovwyl0Sb7npfI/oz4d7dv2dXt9XDzjfLwKgn60d8Ju5Jy/y6xjGcZ1i7keF8SS50LtIwrYth5o3bH7Wo/ea/eq5OTq4M0npykEYeAvUXL/vDOc8kefr8PThxmnR5YazSxd+F88upickmhEm0VD/0c2z+8eKY75o7G335i/asHXttpDp/dWS25CHOsHZkxbzPo5W2ewIqSms5gu11yi++MbBoSf/RoNpDO5gmsuRE8dPKMhsYKeU5DY7aFR9xACm+jx6cPhE3q0pMPgzcO/ZPFG1chQy/qznt1dzu9f4AElu2rtdI53TH8if60+BOksB+8YeAF2RYkV6XnJelGm/T5G6PKUtY=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Option"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_option"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get detailed information about a specific option.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_option endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get a specific option","required":["option_id"],"properties":{"option_id":{"type":"string","description":"Option ID"}},"title":"GetOption"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_option","content":{"application/json":{"schema":{"type":"object","description":"Response with option details","properties":{"option":{"oneOf":[{"type":"null"},{"description":"Option information if found","type":"object","required":["launcher_id","visible","coin_id","address","amount","underlying_asset","underlying_amount","underlying_coin_id","strike_asset","strike_amount","expiration_seconds"],"properties":{"address":{"type":"string"},"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"coin_id":{"type":"string"},"created_height":{"type":["integer","null"],"format":"int32","minimum":0},"created_timestamp":{"type":["integer","null"],"format":"int64","minimum":0},"expiration_seconds":{"type":"integer","format":"int64","minimum":0},"launcher_id":{"type":"string"},"name":{"type":["string","null"]},"strike_amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"strike_asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"underlying_amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"underlying_asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"underlying_coin_id":{"type":"string"},"visible":{"type":"boolean"}},"title":"OptionRecord"}]}},"title":"GetOptionResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

@@ -1,0 +1,71 @@
+---
+id: get-peers
+title: "Get Peers"
+description: "List all network peers the wallet is connected to."
+sidebar_label: "Get Peers"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVcFu40YM/RWCl7aB4mTT9KJbdtEWW2yzhp1FD14joCVKns1oZpYzSuIa+veCkhzb66Boi/pkz5DvkfMe6S0mqiPmC5wyS8RlhiXHQkxIxjvM8YOJCchacJyevDxA0DhIa4YnspYTmAiFd46LxCUkP8EMhb+2HNNbX24w336DOBsuIZBQw0nRKi89Ys3pfsBnVwZvXMIMC+8Su6RAFII1BSnQxZeoaFuMxZob0m9pExhz9KsvXGjiP2kEM0wmWc37ldPwBl3XDS0Y4RLzJC33BzF4Fzkq1dXl5Wlj87YoOMaqtbALhkp8s2/r/+tmtiNQPDLOuLpvCKyJCQ/LX2DYKRvEB5Zkhh6G4z0TidAGMzSJm/haBYeYJtxTWQpmGLzoZWB6uF+zqdf6q40s9w05qrk8Zd4l7zliEuNq7I5x9vfGJa5Z6SovDaXh6McrzLAxzjRtg/llNxbz79OOyt2nr7y3TA7VDzuXqEVmXHgptdpXLOarg3EIo6FOXbYTUN3WZXj9mqHeUgnjKME5GPdI1pSHc+MFGrLaG5fw2/zjLfZQb06hPjlq09qL+ZNLOAfnD6e3FWGX7Aasr2suwbhMoTWDXRotqpEvDuhprk9pbn2CyrdOOcbKWXuIvpWCofQc3XcJ+Flf6nue1JMMbn+5y8BXFUsGSchFKhTtByX56bVnee8SiyMLkeWRBVjEC5xD6/g5DO9ekbGtMBi361P91/cxyNFwWvsScwy+n5dAaY05XhyOqs7kbL/Jfn6mJqiG2y5D4yrfO2WUdU41wx8D1Wz6Dm6m709ndjjvt10fP5Q2gRtrXxZeBCoKDqmX80X9lS8NRyCnj5lacbvrcSdNPrvP7uzs5kixs7N84FHiNnKE39vUkoW7D/O+iGOBdXE/ssSh2MvJm6vJdT+RPqaG+u3kqBk9DNPxkY5a3O7X23/74xgHL/FzugiWjNMCWrH9vuolWuBeomWGa5UvX+B2u6LIn8R2nR5/bVk2mC+WGT6SGFqpSItll+GaqWTBfLHFB95gju+Gis/vlFrDbdtvw2+Xc5ftMm56gf42dnngsOnH+R1muBr/DBtfao7Qk65UesIcMUMfBm/m2+Fsi5Zc3VKtsQOmfv4C3UaqHQ==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Peers"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_peers"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+List all network peers the wallet is connected to.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_peers endpoint","content":{"application/json":{"schema":{"type":"object","description":"List all network peers","title":"GetPeers"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_peers","content":{"application/json":{"schema":{"type":"object","description":"Response containing peer list","required":["peers"],"properties":{"peers":{"type":"array","items":{"type":"object","required":["ip_addr","port","peak_height","user_managed"],"properties":{"ip_addr":{"type":"string"},"peak_height":{"type":"integer","format":"int32","minimum":0},"port":{"type":"integer","format":"int32","minimum":0},"user_managed":{"type":"boolean"}},"title":"PeerRecord"},"description":"List of connected peers"}},"title":"GetPeersResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

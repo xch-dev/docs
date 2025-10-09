@@ -1,0 +1,71 @@
+---
+id: get-transactions
+title: "Get Transactions"
+description: "List all transactions with optional filtering, sorting, and pagination."
+sidebar_label: "Get Transactions"
+hide_title: true
+hide_table_of_contents: true
+api: eJztWN9v2zYQ/leIe9kWKG7apXvQW1psQ7cuCWIXe3ANg5ZONhuKVMmTk8zQ/z4cKdmWZThd0bc1L7HJI+/Xdx/vvAGSSw/pFCZOGi8zUtZ4mCWQo8+cqvg7pPBeeRJSa0F7YuJB0UrYICO1KJQmdMosE+Gto/BBmlxUcqmMZKERJODwc42e3tj8CdLNgZq7uCkq6WSJhM6LwjpBKxRLpHlPOZq8ssoQJJBZQ2iI75NVpVUWtL345PnSDfhshaXkT/RUIaRgF58w44NHnBw6uPWrtV45zDlitig88i1alYr/S5+hyVlwlkDlbIWOFPpg1nZrZ8XCWo3SDMwYW0dCGbE9I6zL0UEC+CjLSiOkhdQemwQKZfL5Wuoad/dOwVNrram1HubypkuYR+mylYjnm86PnYHKEC6D4sK6UlJc+vnVwOLrulygE7boR4+scEi1M/umv75IoFRGlXUJ6UWTdGH8CrVjkgFmIl4RoLID277Svs4mAVLE6/A7Ug/4DW/ukkyuxrDgK2t8TOWri4shcMd1lqH3Ra1FJywKZ8sBbL8dWu86PQGkvcBr5ekArAc2kCWphzCNy1+RigkfFOYoDuAg4b29nS7pnHyCBBRh6Y+5v+/OCtVyxYu+wkgBDiVhPnSp2/hKRZlVZq5yru7S1kGVzHOH3s/vlQnrnuE7rPgodaIum4OrdpZsBdFw0KZgHxjOi1hKWtYmW4Ws2KJoiYHQGakhgdrcGxaf7UB+FbX8yUqarSPpBqzBmwLS6aHiJnkGAb9c9pO6ryze3nSBeSa+lcNM+Viuys89Gq9IrXHeVUlYXiuvFhohgRCpI/TqkThNJ6Pdg+wpQZVZM6+dfkbqmLlDem96Hhzdfy79ZO+RA2SKQAMBjvHZ7aWZg9Al2cjy1JvQJHuR/6J675Www7WNtDX/IpyTyu7RnZJpDvxgH7raG0RmX3qPvt9aZe4wsy4PEi1H/HfvIqd8J4zvhPGdMP5PhEGqRE+yrPb17jzsuulTuD6up9NxdOA47JZOtKddy8dtapPA5bFO9I3MRTtjiXOhzFpqle8PVNaJUmp2AnPxx/jmGsJVL4dXfTCyppV16h/MxbkwVjxIrZGE8iKrnUND+klou1xiLpRJ+Go+gYbappYlt8Ub1FwO1Vxbbt1rwzpay5F98LZ2GYrcojc/kMBHjtaPOFqOEnH92yQRgcyS/ej9xEpeHwvLOxMJT3h0a3QCnbNOnIva4GOFGWsspNK1Qx69Wj+ZMeQuKyXSyuaQQmVDf11JWkEKL470+NzM3+0m3V+7QaQ3CYYprj/E7WDeDmM8LnUTEheSMoUN8GwRMpZLFH9Hc+9u34qr23fDSSGuh/koyEf3RuJK6+0Y7YXMMqwoQGKLoIXNFfowxsdRrttuB6LRR/PRnJ1d9bJ+dpZGPay49ujFXzXVUovJ+3Ewog8S/lVgjS4yC1yMXr4aXXIeOcqlDGwTyYnLQUz6gT6g6C2rfsNfLFoqIXykF5WWKjBwS/YRAlMYQGCWwIpRkk5hs1lIjx+cbhpe/lyje4J0OktgLZ2SgeSns9CwSJ7z+Xm9xydI4W305nzCFrB4xMhgauTnN564Cjk8KTvbA/LtzXjCfUL7Y0xpcz7j5AM/uvIBUtg+HIGww9oGtDTLWi5ZNt7Jf/8CtU5VHg==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Transactions"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_transactions"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+List all transactions with optional filtering, sorting, and pagination.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_transactions endpoint","content":{"application/json":{"schema":{"type":"object","description":"List transactions with filtering","required":["offset","limit","ascending"],"properties":{"ascending":{"type":"boolean","description":"Sort in ascending order","example":false},"find_value":{"type":["string","null"],"description":"Optional search value"},"limit":{"type":"integer","format":"int32","description":"Number of transactions to return","example":50,"minimum":0},"offset":{"type":"integer","format":"int32","description":"Starting offset for pagination","example":0,"minimum":0}},"title":"GetTransactions"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_transactions","content":{"application/json":{"schema":{"type":"object","description":"Response with transactions list","required":["transactions","total"],"properties":{"total":{"type":"integer","format":"int32","description":"Total number of transactions","minimum":0},"transactions":{"type":"array","items":{"type":"object","required":["height","spent","created"],"properties":{"created":{"type":"array","items":{"type":"object","required":["coin_id","amount","address_kind","asset"],"properties":{"address":{"type":["string","null"]},"address_kind":{"type":"string","enum":["own","burn","launcher","offer","external","unknown"],"title":"AddressKind"},"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"coin_id":{"type":"string"}},"title":"TransactionCoinRecord"}},"height":{"type":"integer","format":"int32","minimum":0},"spent":{"type":"array","items":{"type":"object","required":["coin_id","amount","address_kind","asset"],"properties":{"address":{"type":["string","null"]},"address_kind":{"type":"string","enum":["own","burn","launcher","offer","external","unknown"],"title":"AddressKind"},"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"coin_id":{"type":"string"}},"title":"TransactionCoinRecord"}},"timestamp":{"type":["integer","null"],"format":"int64","minimum":0}},"title":"TransactionRecord"},"description":"List of transactions"}},"title":"GetTransactionsResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

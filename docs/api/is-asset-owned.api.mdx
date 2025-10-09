@@ -1,0 +1,71 @@
+---
+id: is-asset-owned
+title: "Is Asset Owned"
+description: "Check if a specific asset (by ID) is owned by this wallet."
+sidebar_label: "Is Asset Owned"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVcFu20YQ/ZXBXJoYtOwE7oU3JWkBFa1tWA5yUIRgRQ7FTZa7zO6sZVXgvxezJC1bTHppdRJ2Z+fNvPdmeEBW24D5CuchEAdcZ1hSKLxuWTuLOb6vqfgGugIFoaVCV7oAJbHwarOHxYfXoAO4naUSNnvgWgfYKWOIZ5ihp++RAr9z5R7zw0nmu/4SWuVVQ0w+QOU8cE2gw5eE8aVPTLZsnbaMGRbOMlmWbKptjS6UZLv4GiTlAUNRU6PkH+9bwhzd5isV8vBnXdmhm7GLoWrtqRRa+jJ0KcS03rXkWVNI8OPNESyw13Y7AUvUwuIDsINCgLHrMmTNRh4tQrq/SeCd3Bzx2UdKB6F1NvS4by8vp1wuY1FQCFU0MAZD5V1zwuT/R+DdiLLTXA8UCoQPtW4hsOIYTqjsK5jw2B8fATfOGVJ2gvipJq6p98dLyU6MhxnSo2paYTcR+BOyxxaE9C7Dqx/x+k6VMJgYzkHbB2V0+dyxzkOjTOV8QyX8sby5xpTqzTTVR6si187rv6mEc7BuKFfaKKL3ZNnswbjtlkrQNpPU8oIsDyJJ5BOhCeZqCnPtGCoXrWAMlZP0EFz0BUHpKNhfGOhRB4ZXNNvOMrj+/T4DV1XkM2CvbFCFZHstIL/+iJaFZfJWGQjkH8gDee88nEO09NhSIYiV0iZ6Am3HPkX01EdI/m+Ia1dijq0LolmruMYcLyaOFWveHRfJb6O2z0dwHL0uQ20rl+w0SL5UW4JPfQl3t+9hfruYurk/T/snxQ8rDObGPG2fAKooqOUk85MrNq7UFEBZIZmjt+P1MLKzz/azPTubv1Dy7CzvcQQ4BgrwV+SoDNz/uUxFvBReVukD+dAXezl783Z2Ja0Kc41Kc2tV0/sb+m1zM5D3os/Dcfr/214fRpXpkS9ao7SVaqI3AtHruMITHdcZ1iJ0vsLDYaMCffSm6+T4eyS/x3y1zvBBea02Ittq3WVYkyrJY7464DfaS9F9+ef3gi/hJkodk0XWZeOLeZLsX2PXz7x4e7O8xww3wwercaW88Wonu0ztMEfM0LW9i/NDf3ZAo+w2qq3E9jnl9w/Iio+H
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Is Asset Owned"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/is_asset_owned"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Check if a specific asset (by ID) is owned by this wallet.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the is_asset_owned endpoint","content":{"application/json":{"schema":{"type":"object","description":"Check if an asset is owned","required":["asset_id"],"properties":{"asset_id":{"type":"string","description":"Asset ID to check"}},"title":"IsAssetOwned"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from is_asset_owned","content":{"application/json":{"schema":{"type":"object","description":"Response with asset ownership status","required":["owned"],"properties":{"owned":{"type":"boolean","description":"Whether the asset is owned by this wallet","example":true}},"title":"IsAssetOwnedResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

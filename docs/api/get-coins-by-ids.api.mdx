@@ -1,0 +1,71 @@
+---
+id: get-coins-by-ids
+title: "Get Coins By Ids"
+description: "Retrieve specific coins by their coin IDs."
+sidebar_label: "Get Coins By Ids"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVt9v20YM/lcIvmwLFCfNsj3oLWm3wUOXBkmKPbhBcJYo+drTncqjkriG//eBJ/lHajdrgeTJ4fE+fuTHI7VAMXXEfIKvg/URbzMsKRZsW7HBY45XJGzpniC2VNjKFlCoI0znIDOynP6F8Zs4wgyZPncU5TyUc8wXO0jpEFrDpiEhjlAFVhSoSe4S7N10fmfLCOTLNlgvmGERvJAXxTNt62xhFO/oY1TQBcZiRo3RXzJvCXMM049U6MUfzGP8Jg4ZWKZSK6IOykaL0nJoicVS1FDrk01Yw2zmmKEVarbtUdj6Gpdf83lro0Co1uUDCcADR1wuMxQrTgH+IknSnM/HZcSlHm1ICneUDLENPvbkTo6Pd4t/3RUFxVh1DlbOUHFodkr/khUf4jxYmcHQGlT2dd9T6m/U+XuKvGawRz7M0JQlU9SYpgmdl91AK499ug138gUGT+8qzCe7TmuL9UI1MWZYBW6M9KbfTzHDxnrbdA3mx8vbjbxnPfoyw8KZh6kpPt2JbSiKadoNnckWsO+c0wyeC5Cts9+XUcFkhMq7Gdl6Jt8f5deTnSgD0otQDlVF/ITzZEV6BbHMMLbk5QWo9zgvQlzY+GgK7fv/ob/1rvVRX1ERuHx+OERojBQz6+s0KjfvSAfWNwfF6vHpwFhmeLpvJpybcgUHh2D9vXG23B7PgaExTnOnEv6+fneBCerVLtR7bzqZBbZfqIRD8AEejHMkYCMUHTN5cXNwoa6pBOszhdYb5GUYL+q5fr0pzOlumIsgUIXOa4xNIZhi6LggKANF/5MAPWr9fqZRPcrg4s+bDFJrZbAl1C8a5Ld9ZRl7IfbGQSS+JwZiDgyH0Hl6bKnQiJWxrmMC61d56jBJefSaNCSzUGKObYg6l1ojM8zxaM+01bF6tdmbfzyaplU9t7fMupH0AVhfhdRjg+7Xpib4t6dxdfkazi7Hu7O4t6eFm/x72iM4c269bCOYoqBWktTrzpiG0lIE47XQ0rFfHQ8rZ/TBf/AHB2dP1Dw4yPs4GriLFOGfTjrj4ObtdSLxVHz9drgnjj3Z49Grk9Gp6qPVa0zaOt40Q5ND6nI4n8M4FfBJpovN9vqxT5dhSAo9ylHrjPUav2OnkL16E9xR7zbDmQqcT3CxmJpI79ktl2r+3BHPMZ/cZnhv2JqpSjVR+WZkSuK0RT7RPA2CRPjwRhmou+vSrvt69eqW6W+cJZme9b3d6sHLd9c3mOF0+CprQql32DzowjQPmCNmGNq+e/NFb1ugM77uTK2+Pab+/QeeXIW6
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Coins By Ids"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_coins_by_ids"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Retrieve specific coins by their coin IDs.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_coins_by_ids endpoint","content":{"application/json":{"schema":{"type":"object","description":"Retrieve specific coins by their IDs","required":["coin_ids"],"properties":{"coin_ids":{"type":"array","items":{"type":"string"},"description":"List of coin IDs to retrieve"}},"title":"GetCoinsByIds"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_coins_by_ids","content":{"application/json":{"schema":{"type":"object","description":"Response with requested coins","required":["coins"],"properties":{"coins":{"type":"array","items":{"type":"object","required":["coin_id","address","amount"],"properties":{"address":{"type":"string"},"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"clawback_timestamp":{"type":["integer","null"],"format":"int64","minimum":0},"coin_id":{"type":"string"},"created_height":{"type":["integer","null"],"format":"int32","minimum":0},"created_timestamp":{"type":["integer","null"],"format":"int64","minimum":0},"offer_id":{"type":["string","null"]},"spent_height":{"type":["integer","null"],"format":"int32","minimum":0},"spent_timestamp":{"type":["integer","null"],"format":"int64","minimum":0},"transaction_id":{"type":["string","null"]}},"title":"CoinRecord"},"description":"List of coins matching the requested IDs"}},"title":"GetCoinsByIdsResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

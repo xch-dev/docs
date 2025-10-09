@@ -1,0 +1,71 @@
+---
+id: get-are-coins-spendable
+title: "Get Are Coins Spendable"
+description: "Check whether specific coins are currently spendable (not locked or pending)."
+sidebar_label: "Get Are Coins Spendable"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVU1v20gM/SsEL9sGipMW2YtubnZbpGjTIE7Rg2sEY4mSphnNqBwqjtfwf19Qkj8SJ+2lPhkzHL5HvkdqhWLKiOkUz4P1EWcJ5hQzto3Y4DHF84qyO1hUJBUxxIYyW9gMMo0GwwRZy0xe3FIvfW7mjuCVDwIuZHeUQ2DQc+vL1yNMkOlnS1HehXyJ6eoJ2HV/CY1hU5MQRygCg1QEJcmtYbrtgG93UOTzJlgvmGAWvJAXTWuaxtnMaNqTH1FzrzBmFdVG/8myIUwxzH9Qpg+fq9gWzxW7xR0qsUy5Nk8jbm3e9a/h0BCLpahY25sdrmE2S0zQCtX751HY+hLXTwl9slEgFB0NuPgnggTIlCSu1wmKFaevP5CMmToVJ1uWa43YERVuqTuITfCxJ/j29PRQiEmbZRRj0TrYBEPBoX5Jhj/X/esN3MJKtem3dVaWEMVIG590fkfhoPW7qx3qPARHxh/AfhsMbpx7QW56MHWjubom/qbxmypUgHWCZ8/1+J3JYZgGOAbr742z+b71A0NtXBG4phw+Tr5cYpfqzWGqr960UgW2/1EOx+ADLIxzJGDj3ny6UJaUg/WJptYX5GXQSSO3be1gzg5hLoNAEVqvGANz0hpiaDkjyANF/5cAPahhX9GoHCVw+f4mgVAUxAkIGx9NptleK8jfz7XlwguxNw4i8T0xEHNgOIbW00NDmSIWxrqWCazf1Kmyd3XEbiZqkirkmGITolqsMVJhiicvu1dter1bTf9uxN4f4OlmQmfrBK0vQuerwQUTUxJ869lcX53D+Ori0Nv9ebfTuvie/QjGzm0XWQSTZdRIp/jWIPOQW4pgvPZbWvab62GSR9/9d390NH4k6tFR2uMocBspwudWWuPg5tOkI/HYA7qe74ljT/Z09Obt6Exl0ibWpptib+rB8jBmgs70MNnr46OCV7ul8Me/I8M8Cz3ISeOM9cq0ZaeovdxTfEnuWYKVGiOd4mo1N5G+sluv9fhnS7zEdDpL8N6w7ZfHVPWuyOTEmE5XeEdLLagv7fhGiWi4a7vl/nT3rZPNi3Gn6y9jZ3vevfoyucEE58OXsg65vmGz0A1oFpgiJhia3vXpqj9boTO+bE2psX1O/f0PRkjGFQ==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Are Coins Spendable"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_are_coins_spendable"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Check whether specific coins are currently spendable (not locked or pending).
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_are_coins_spendable endpoint","content":{"application/json":{"schema":{"type":"object","description":"Check if specific coins are spendable","required":["coin_ids"],"properties":{"coin_ids":{"type":"array","items":{"type":"string"},"description":"List of coin IDs to check"}},"title":"GetAreCoinsSpendable"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_are_coins_spendable","content":{"application/json":{"schema":{"type":"object","description":"Response with spendability status","required":["spendable"],"properties":{"spendable":{"type":"boolean","description":"Whether all coins are spendable","example":true}},"title":"GetAreCoinsSpendableResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

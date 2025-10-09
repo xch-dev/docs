@@ -1,0 +1,71 @@
+---
+id: get-network
+title: "Get Network"
+description: "Get current network configuration and status."
+sidebar_label: "Get Network"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVMFu00AQ/ZXRXIDKTQsqF98KAlQEoWqKOIQIbeyxs7DeNbOzbYPlf0djO6UlqAiJnKL17Hvz5s3bDsXUEfMlzkmuA3+DBYlYX0dcZVhSLNi2YoPHHN+QQJGYyQv4qboIvrJ1YqM1YHwJUYykOMMMmb4nivIilFvMu9/ALsaP0Bo2DQlxhCowyIagJvmywydftsF6wQyL4IW8KJRpW2eLgfPoa1S8DmOxocboP9m2hDmG9Vcq9OLfVVhfBW4GPMxQrDgaK6ehYN/3ox7LVGIunGg4iG3wkaKyPjs+3le5SEVBMVbJwa4YKg7NXY3/T9rLB2T1g4STPzX5wpQweQWHYP2Vcba8a0xgaIxTLCrh7eLDHAeop/tQH71Jsglsf1AJh+ADXBvnSMDG3dDdFlyoayrB+kyh9QZ5mURr5e2gB5qTfZp5EKhC8soxdU6qIYbEBUEZKPpHAnRjo8BjmtWzDOavLzMIVUWcgbDx0RSK9kRJnv9pLGdeiL1xEImviIGYA8MhJE83LRXKWBnrEhNYv9MZWhqzEFHn3ZBsQok5tiGqX62RDeZ4dN9+9fniV1he3Zim1Q3s+gzVw8H5aSkXpib4NJJdnL+E0/OzvT2YzodADfVjczM4de42URFMUVArg6G3/q9DaSkOQWaSxH73edr02Wf/2R8cnN7z7OAgH3mUOEWK8D5JMg4u3y2GJu5brG/DFXEcmz2ePX02O1EXdEaNGTbem2ZKIMxvx3RPZPcrNP/8ME0pErqRo9YZ65U9sVPU0aEl3nVoleFG/cuX2HVrE+kju77X4++JeIv5cpXhlWFr1urRctVnuCFTEmO+7PAbbTWcY7uHl0qu5S5pE3t577PdjdPBnwdrV3dW7PzD4hIzXE/PbRNKvcPmWp9ic405YoahHZcz78azDp3xdTK11o6Y+vsJqZsidQ==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Network"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_network"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get current network configuration and status.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_network endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get current network information","title":"GetNetwork"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_network","content":{"application/json":{"schema":{"type":"object","description":"Current network information"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

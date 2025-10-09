@@ -1,0 +1,71 @@
+---
+id: get-offer
+title: "Get Offer"
+description: "Get detailed information about a specific offer by ID."
+sidebar_label: "Get Offer"
+hide_title: true
+hide_table_of_contents: true
+api: eJztWUtv4zYQ/isEL20Dxclu0x58y+62RfqIgziLHryBQUsjmxuK1JIjJ66h/14MKVmypSZIsAG6gHJJMhzO45vhR9qz5SiWjo9nfJKmYB2/jXgCLrYyR2k0H/PfAFkCKKSChEmdGpsJWmJiYQpkgrkcYpnKmBmywBYbdvFhxCNu4UsBDt+ZZMPH2wOr12GR5cKKDBCsY6mxDFfAloDzYAp0khupkUc8NhpBIxkSea5k7GM4+ezI2pa7eAWZoL9wkwMfc7P4DDFt7CZzGHEVqrSQEA5eNpcJIZFbk4NFCY5M71YaNw6t1MuOG48lu/jAyzLiKFFB8O3lvCRp4xJtAV7gcqNdcPX29LSL2bSIY3AuLRSrlVlqTdYg9vWAuq4d3EtcVZUNXeD68PoPsLo5TA4sHUbRW4mI19k5FFjQvtiCT2yOMgOHIstptcgyYTfdYHq0GwSkRlh666G3g+jnMx7xTGqZFRkfn5ZRk9F+7euV3sYodyH39AxoMj3jOegkSESMcg2+ilmuAIFyj4WOQSn/NzzkHp3bpq08otcQG5tMg6uyQaKnzm2EUyBnmbjz6aP/3QHP+wzwrUAuV9hYnbXA04VStLkN4o9vD0FsGeupxVP2ukWhDKjbNExSPp518X9mmVvAnmem0EhoBoAaLIW1YsMjLhEy9xTGwjkgmQjmIm7NRijs6dJK49XTCRE9EXZuIZaODm3EpZs70E5Sc85rgvHitXRyoaiJ7qTuoUzvau9kzJr+DxUuD6jnMUUZGz0vrHpCqy/cJt2FMQqE5uVeBr3rPqlHTi6aOyCAdOoZNFBVyKONPIHwB5kqI65FBo+H3yD/FEd1j5eFtQmMPxdJYsG5x32hjPdau6tTHuThc0hxXndxX7f6ra1e7W2wysAuzt3BmC+Ek27ub37XbanDfX2c22vpuWi2Mr9M8brKtyTYQo3nvrvdyyEodAJWbaRezmuWaItqwqC87mCnUv9bL7co1UFsdNIDWo/O8y/AfcevTlN7aQ9sNbDVC9mqe6RevXU7B3to36F9X9S+LcnE53oe7hx/DT12B3/Ffi4PPmy0QhsexsNZHc7q8DAeHsbDw3hgq2+MrYaH8dC+32z7/p8fxofyafVtfGchfG3fOyWqBzBkroz4Wd9A6J1IWDVlY8dM6rVQMmmP1IxlmVCUFSTs9+nkkntTb7qmPmpR4MpY+Q8k7Jhpw+6FUoBMOhYX1oJGtWHKLJd+ChiRadoBGqsRE2nujq53c9Z1c2mQpabQ5KOKHCgHZwobA0sMOP0dMniQDtn3MFqOInb5600UJlARQyu0oymJ0T+Qk5/6YLnQCFYLxRzYNY0RrTWWHbNCw0MOMXlMhVSFBSZ1nSfxhc/D+XJkgCuT8DHPjaNTlQtc8TE/aY/aaKZ23Qw5f3kQNLTZnxS23l40O/U9XlV6KpbA/g7er6/es/Ori+4YLsj9bNTrh2hH7Fyp3XjUMRHHkKOv8K4hFiaR4JjQhC8WVtfL1Zhx9El/0kdH53tFPDoaBz/kuHDg2F8FFkKxmz+nPoj9mtOYdw020AQ/Hb15OzqjVAm0THjqCEzjB6+TCrcDot1x48tHzdVBRnjAk1wJ6WmzYuhQuRlvKncb8RVVdTzj2+1COPhoVVmS+EsBNDSb3UZ8LawUnpJnxCgrEAlR1GzL72DDx/x9iPr4hlyTuir8J+DDmSvxTNhx7ov0qO5tq/GuJtMbHvFFNT7PTEJ7rLinK1Lc8zHf0Xx4/pNsy5XQy0IsSTfYpJ9/ASYBBMA=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Offer"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_offer"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get detailed information about a specific offer by ID.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_offer endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get a specific offer","required":["offer_id"],"properties":{"offer_id":{"type":"string","description":"Offer ID"}},"title":"GetOffer"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_offer","content":{"application/json":{"schema":{"type":"object","description":"Response with offer details","required":["offer"],"properties":{"offer":{"description":"Offer details","type":"object","required":["offer_id","offer","status","creation_timestamp","summary"],"properties":{"creation_timestamp":{"type":"integer","format":"int64","minimum":0},"offer":{"type":"string"},"offer_id":{"type":"string"},"status":{"type":"string","enum":["pending","active","completed","cancelled","expired"],"title":"OfferRecordStatus"},"summary":{"type":"object","required":["fee","maker","taker"],"properties":{"expiration_height":{"type":["integer","null"],"format":"int32","minimum":0},"expiration_timestamp":{"type":["integer","null"],"format":"int64","minimum":0},"fee":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"maker":{"type":"array","items":{"type":"object","required":["asset","amount","royalty"],"properties":{"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"nft_royalty":{"oneOf":[{"type":"null"},{"type":"object","required":["royalty_address","royalty_basis_points"],"properties":{"royalty_address":{"type":"string"},"royalty_basis_points":{"type":"integer","format":"int32","minimum":0}},"title":"NftRoyalty"}]},"option_assets":{"oneOf":[{"type":"null"},{"type":"object","required":["underlying_asset","underlying_amount","strike_asset","strike_amount","expiration_seconds"],"properties":{"expiration_seconds":{"type":"integer","format":"int64","minimum":0},"strike_amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"strike_asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"underlying_amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"underlying_asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"}},"title":"OptionAssets"}]},"royalty":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"}},"title":"OfferAsset"}},"taker":{"type":"array","items":{"type":"object","required":["asset","amount","royalty"],"properties":{"amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"nft_royalty":{"oneOf":[{"type":"null"},{"type":"object","required":["royalty_address","royalty_basis_points"],"properties":{"royalty_address":{"type":"string"},"royalty_basis_points":{"type":"integer","format":"int32","minimum":0}},"title":"NftRoyalty"}]},"option_assets":{"oneOf":[{"type":"null"},{"type":"object","required":["underlying_asset","underlying_amount","strike_asset","strike_amount","expiration_seconds"],"properties":{"expiration_seconds":{"type":"integer","format":"int64","minimum":0},"strike_amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"strike_asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"},"underlying_amount":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"underlying_asset":{"type":"object","required":["precision","is_sensitive_content","is_visible","kind"],"properties":{"asset_id":{"type":["string","null"]},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"is_sensitive_content":{"type":"boolean"},"is_visible":{"type":"boolean"},"kind":{"type":"string","enum":["token","nft","did","option"],"title":"AssetKind"},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]}},"title":"Asset"}},"title":"OptionAssets"}]},"royalty":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"}},"title":"OfferAsset"}}},"title":"OfferSummary"}},"title":"OfferRecord"}},"title":"GetOfferResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

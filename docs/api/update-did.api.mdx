@@ -1,0 +1,71 @@
+---
+id: update-did
+title: "Update Did"
+description: "Update DID metadata and information."
+sidebar_label: "Update Did"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVcFuGzcQ/ZXBXNIaa9kJ3MvenKgFVDS2YcvIQRESajnSMuWSG3IoWxX078Vwdy2pMoIcuqcFOZw3b+Y9cousVhHLGY4n44jzAjXFKpiWjXdY4mOrFROMJ2NoiJVWrEA5DcYtfWiURI2wwEDfE0V+7/UGy+1/ctx3m9CqoBpiChGWPgDXBCmn/6KNBnK69cYxFlh5x+RYMqm2tabKOBffoqTbYqxqapT88aYlLNEvvlElB1+tXcHX8WT89U0EpxrK1a9NNAtjDW8gErNxq9iTMIG0dEMb/cVoLDCHWpLOtMG3FNhQzBy7iH0VkYNxq5MqpjV1BcBkDOx7ylggPaumtXJSG11WtVHlaDTCXYFS5z7xbJ/ZJWtPZ3Sbf5QFR08dx6G9GfcI6uMGJpocG94I0sBuz2LhvSXlTmh8qolrOkgLsfbJalgQ9FnAuLz9ODmE5JBotyuQDecKuqmMjcadLO+bngNlIbbexa7J7y4vT/X0kKqKYlwmC0MwLINvDtT0/4nofkBQS6bQQRi3GlSFrxAbjgjBXYFXr3F4rzT0poFzMG6trNGHDvEBGmXFZKThz4fbG8yp3p6menQqce2D+Yc0nIPz8KSsJQYToUohkGO7AetXKxLfFpJaTogKuqZI5MscMszVKcyNZ1j65ASjr5yEQ/QpVATaU3RvGOjZRIZfaLQaFXDzx7QAv1xSKICDclFVku1XAfnttbZMHFMQKUcKawpAIfgA55AcPbdUCeJSGZtCFlvPU1yZeUSUfjfEtddYYuujzLNVXGOJF0fqEBnc7y+t3we17n197MrBlEcGOvBPL165FrOmek08qBXBp67M+7sPcH03OVVYt55Nm+M7WiO4tvblVoygqopazlJ4Uc7Ca0MxX2mBOAU3bPcWGn12n93Z2fXRtM/Oyg5HgFOkCB8TJ2Vh+tdDLuJYHMJ9TSF2xV6O3r4bXcn8pLuNyl7qWzO8FbnBRxy3ezf+7IvSu5LpmS9aq4wTzBSsJOsmOsODic4LrGXc5Qy324WK9BjsbifL3xOFDZazeYFrFYzK45rNdwXWpDQFLGdb/Js2WOKHrsjzqWBLuE1Sw8n1sSuGE9d5KD+MnR8o8u72YYoFLvpnsvFazgT1JK+PesISsUDfdlout93aFq1yq6RWEtvllO9fwJGoqg==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Update Did"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/update_did"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Update DID metadata and information.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the update_did endpoint","content":{"application/json":{"schema":{"type":"object","description":"Update a `DID`'s name and visibility settings","required":["did_id","visible"],"properties":{"did_id":{"type":"string","description":"The `DID` ID to update","example":"did:chia:..."},"name":{"type":["string","null"],"description":"Optional new name for the `DID`","example":"My Identity"},"visible":{"type":"boolean","description":"Whether the `DID` should be visible in the UI","example":true}},"title":"UpdateDid"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from update_did","content":{"application/json":{"schema":{"type":"object","description":"Response after updating a `DID`","title":"UpdateDidResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

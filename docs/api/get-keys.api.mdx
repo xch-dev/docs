@@ -1,0 +1,71 @@
+---
+id: get-keys
+title: "Get Keys"
+description: "List all available wallet keys stored in the system."
+sidebar_label: "Get Keys"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVU1vGzcQ/SvEHJrWoGXHdS97c4K2cJ06huWgB8UwqN3RijaX3AyHtlVh/3sx3NWXpfRQVKfVkDPvzdfjEtjUEYoJXCSeo2dbGrbBqx/UFS4i3GuoMJZkW7FCAZ9sZGWcU+bZWGemDtWLcQ5ZPeEiqsiBsFLWK56jiovI2IxAA+G3hJE/hGoBxfJNzNv+ULWGTIOMFNUsUI5QIz/kwOirNljPoKEMntGzxDFt6wbGJ49Rgi0hlnNsjHzxokUoIEwfsRTH72SyxR80sGUnXr8j5wp0XdfTt4QVFEwJsyG2wUeMgnN2erqf1DiVJcY4S06tLqsZhWad0v+Xye0q/ovl+YGUNuwn8DR0taXQIrHtM8jWDY4hMgvQYBmbeAh/O6I3DYKGmfU1Ukt9j9o0dbaUPEHDk/UVaJib+BCxJGQh5ZFfAj092GqfDjbh0W5wJxCZrK/FKzkH990u3Iag9Yw1ktAJ1BjuTT+fgYbGetukBorTbpfKxnsagkPjoRsob07W+OglxASmLldxNSxXuLgSj0735djz7HYSPnS8VbH9424H6tLPgrgcmOcw2+n9tuMw0KthkcHuNJwfmt0PplLDxqpjZf2zcbbaXs9AqjFOaoyV+mP8+RpyqPf7ob54k3geyP6NlTpWPqz42ajKRISe3UK5UNdZNrSENrtSZKNaz1uGOd+HuQ6sZiF5wRiYo+QQQ6ISVRUw+nes8FWK9COO6pFW17/daRVmMyStmIyPppRoPwnIL4fKcukZyRunItIzkkKiQOpYJY+vLZaCODPWJUIRwCFPmeucR9+NBnkeKiigDTEviuE5FHCypQqy/rcbvfz11TStdHDZabDSepmPoaljU6P6q0e6vfmoLm4u9+Wht2dNzfd7ZiN14dxaV6MyZYkt526umz8NlcWojJdaciK/Oh7Ub/TVf/VHR7tvx9FR0eMIcIoY1Z+Jk3Hq7tM4k9jtrzwPz0ixJ3s6en82Os8LESI3Jgthv1Mywf2r9CbD5UZI/+v7NOwb4yuftM7YLAKJnATvWzSBdYvuNcyle8UElsupifiFXNeJ+VtCWkAxudfwbMgKvPwTxUFTIUExyWILBXzsKR/fCbJcdylL79t3oNMrj4vcoH+9e781YDefx3egYTo8uU2oxIfMi+i3eYECQENo+9Eslr1tCc74Opla7vYx5fcPXXDTAQ==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Keys"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_keys"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+List all available wallet keys stored in the system.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_keys endpoint","content":{"application/json":{"schema":{"type":"object","description":"List all wallet keys","title":"GetKeys"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_keys","content":{"application/json":{"schema":{"type":"object","description":"Response with all wallet keys","required":["keys"],"properties":{"keys":{"type":"array","items":{"type":"object","required":["name","fingerprint","public_key","kind","has_secrets","network_id"],"properties":{"emoji":{"type":["string","null"]},"fingerprint":{"type":"integer","format":"int32","minimum":0},"has_secrets":{"type":"boolean"},"kind":{"type":"string","enum":["bls"],"title":"KeyKind"},"name":{"type":"string"},"network_id":{"type":"string"},"public_key":{"type":"string"}},"title":"KeyInfo"},"description":"List of wallet keys"}},"title":"GetKeysResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

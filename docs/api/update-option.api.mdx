@@ -1,0 +1,71 @@
+---
+id: update-option
+title: "Update Option"
+description: "Update option visibility and display settings."
+sidebar_label: "Update Option"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVU1v20YQ/SuDuaQ1aNoJ3AtvTtoCLlrbsGTkoAjBiBySmy53mf2wpQj878UsKUuKjAIBopO4nJ03b96b4RYDNR6LBd71QVnjcZlhxb50Kj1jgY99RYHBpmd4Ul6tlFZhA2QqqJTvNW3AcwjKND7HDB1/jezDe1ttsNh+l+1hfAk9Oeo4sPNQWwehZYgJ6PMExKbqrTIBMyytCWyCJKO+16okibj44iXjFn3ZckfyL2x6xgLt6guXcvFVImQmLm/8IZsdg4mAclxJW8bQz6rCDFO0ZmlR72zPLij2grsP2hfhg1OmOSli3r608uZ3CHZijRnymrpey9XLdZ7nOOwB91lX1momc5L2Y8uh5bGPU3rf2qgrWDFMaUCZ9P7x5hAtuMjDkGFQIYGPXRrdgIO82bcjxcqB763xI/d3l5enKs9iWbL3ddSwC4ba2e5Y458n7cMOhOrAbkRRptlrja8T3N0TokOGV69xeU8VTJaGc1DmibSqDv1rHXSka+s6ruCv2d0tplRvT1M9GoqhtU594wrOwVh4Jq05gPJQRufYBL0BbZuGK1Amk9Ryg02YOiORL3okmKtTmFsboLbRCMZUOQsHb6MrGSrL3rwJwGvlA/zCeZNncPvnPANb1+wyCI6Mp1Ky/Sogv73WlhsT2BnS4Nk9sQN2zjo4h2h43XMpiDUpHV3y3cRThobGPSP97ji0tsICe+tF1J5CiwVefO8SscPDfqv8sfPu0eRNY3MwNZNdlaltstBkgBk1DB/Hgh7uP8D1/c2pocbztJtS/Eggh2utX1aTBypL7kMS/cUjK1sp9mk7Og7Rmd3raWjyT+aTOTu7PtL17KwYcQQ4evbwTwyRNMz/nqUijm2QaLLzY7GX+dt3+ZUoJX3sKI2OoW7vdrjbtfKI5nY/fz++5qeJDLwOF70mZaSA6LSkHYVc4LGQywxbEbpY4Ha7Is+PTg+DHH+N7DZYLJYZPpFTlORbLIcMW6aKHRaLLf7LGyzww1jx+VzgJVxHKeNkewzZ7sZ1Eul/Y5cHXry/m80xw9X0+epsJXccPcuXgZ6xQMwm36UFmM62qMk0kRqJHXPK7z/QxZQA
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Update Option"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/update_option"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Update option visibility and display settings.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the update_option endpoint","content":{"application/json":{"schema":{"type":"object","description":"Update an option's visibility settings","required":["option_id","visible"],"properties":{"option_id":{"type":"string","description":"The option ID to update","example":"0x..."},"visible":{"type":"boolean","description":"Whether the option should be visible in the UI","example":true}},"title":"UpdateOption"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from update_option","content":{"application/json":{"schema":{"type":"object","description":"Response after updating an option","title":"UpdateOptionResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

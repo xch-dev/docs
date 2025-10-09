@@ -1,0 +1,71 @@
+---
+id: get-cats
+title: "Get Cats"
+description: "List all CAT (Chia Asset Token) tokens in the wallet."
+sidebar_label: "Get Cats"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVdtuG0cM/RWCL02Mtey4bh/2TRHaIkVqG5aCPiiCQe1S0sSzM5u5yFaE/feCM2tJvkAFiupJ4JI8vJ0zWwy09FhOcTScwMTes/E4K7BmXznVBmUNlvhZ+QCkNYjTu9FKEQy955AD3kNIcaAMhBXDA2nNYYAFOv4e2YePtt5guX2R9DZ/hJYcNRzYeVhYlzIsOdxVFDywqVurTMACK2sCmyB5qG21qkjynH3zkmyLvlpxQ/IvbFrGEu38G1cS+Bz1Dw6pi33JuVwsMKigObuMKHjsui63oBzXWAYXORl8a41nL1gX5+evGxvHqmLvF1HDkzMsnG12bf1/3dw+5X9QYXXQFx4WPsUEOiuwdbZlF1QuPln3EOQcbbBAFbjxb0EfZmwdV8pLEQWulVdzzVjgnDSZil9DkVzLnar3aafog1NmiQWaqDXOun14uUVr+HqB5XRXRe/dFTuLMoGX7LDAhXUNhWz69RILbJRRTWywPO9m+70OGxtNwO7FEI9VpCpr7qLTx70MNXzcYz+u8l/q//nief0y9rXN53FHde3Y++NYQVX37I77PK1sX83cWs1ksOv2A0vsvuXKujqT4QVDnq5PPnYFXr5Fho9UQy8DcArKrEmr+pDz1kFDWkbANfw5vr7ClOrD61RfDMWwsk794BpOwdieuqA8VNE5NkFvQNvlkmtQppDUEsEm9PwSz90VJ5jL1zBXNsDCRiMYfeUsPXgbXcVQW/bmpwD8KKL4jgfLQQFXv08KsIsFuwKCI+OpkmzvBeSXt8byyQR2hjR4dmt2wM5ZB6cQDT+2XAnigpSOjvcSBcKo1IdPa2o4rGyNJbbWCz9bCiss8exAZkRPbvci/NsjNW1au9y2Wdh0AP1Sx7Rk+Dsj3d6MYHjz6bXeZHsS6uTfaz0Mtd6JtQeqKm5D2uZu+XNbK/ZARmYZojNPn3s5HXw1X83JyfDZwk5OyowjwNGzh79iiKRh8nmcini+X3lz1uwy0fB88OFicCkrkAE1lMiXuZqfgTyjF2KwU+b//Or1jAr8GM5aTcpICb2I5B1NcbejWYErWV85xe12Tp6/ON11Yv4e2W2wnM4KXJNTlPg6FfaumGph+HSL97zBEke55tOJIIu7jknRX74sop45Ypg2dNR3dnBhN9fjieh7/5A3tpYYRw/yLNADlogF2jbfZrnNti1qMstIS/HNOeX3D8KM5u0=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Cats"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_cats"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+List all CAT (Chia Asset Token) tokens in the wallet.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_cats endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get CAT tokens in wallet","title":"GetCats"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_cats","content":{"application/json":{"schema":{"type":"object","description":"Response with CAT tokens","required":["cats"],"properties":{"cats":{"type":"array","items":{"type":"object","required":["precision","visible","balance"],"properties":{"asset_id":{"type":["string","null"]},"balance":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount"},"description":{"type":["string","null"]},"icon_url":{"type":["string","null"]},"name":{"type":["string","null"]},"precision":{"type":"integer","format":"int32","minimum":0},"revocation_address":{"type":["string","null"]},"ticker":{"type":["string","null"]},"visible":{"type":"boolean"}},"title":"TokenRecord"}}},"title":"GetCatsResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

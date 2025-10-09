@@ -1,0 +1,71 @@
+---
+id: resync-cat
+title: "Resync Cat"
+description: "Resynchronize a specific CAT token's coins and balance."
+sidebar_label: "Resync Cat"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVd9v2zgM/lcIvuxWuGl+tqnfstwd0MNdVzQZ7iELNlqmE22y5Elym8zI/36Q7TTJpdjL5idDIj/yIz9SFXpaOYwXOJ3MYW6+sna4jDBlJ6wsvDQaY3xkt9VibY2W3xkIXMFCZlJAcPLB6Y0DYaR2QDqFhBRpwR2M0PK3kp1/Z9ItxtUZbH0JBVnK2bN1kBkLfs1g64ifBHlgnRZGao8RCqM9ax+QqCiUFBSQrr64AFehE2vOKfz5bcEYo0m+sAiOP6bzeTqZf37hkbOnlDxBZk0OpIE3nq0mBc6UVnDLSlpOQ93IOfafZBqqVlhTsPWSXZ3i/uaQkPNW6tVZQvM1Q20Nd7+DyeoKHCUF3rQFaXPGCHlDeaECJl33x6In+uI6E8nNMB0NbobXvdENDwdj7nXHTMlIdJNkwCMx7mbZbdK77XWTAQ/Hg/5tb4C7XYRe+hqsKc2UPO7C8YGotyXXB64w2jUE+93ueVNnpRDsXFYq2Bs3lTy09Jd2solAmWd7UiSpV6etxVdY7v0D212Ew9cIvaMUWhnDJUj9REqmx5o1FnJSmbE5p/DX7P091lC9c6gPmkq/NlZ+5xQuQRt4JqXYg3QgSmtZe7UFZVYrTkHqKEAHD9a+rVCwfGlKHWZ4HubeeMhMqUOMNnMOHBr9QmrY6TceeCOdh9+4s+pEcP/nPAKTZWwj8Ja0IxHQ3oYgo9fKcqf3U8H2iS2wtcbCJZSaNwWLEDEjqUrLIPWeZxiPmoerVZezX5sUYyyMC80tyK8xxqsTqQRNPB7WyB974R8P2C8YggilzkwtuVYlM1ox/Nsk/vgwhcnD3bkAm/N6b9X2DdEOTJR62VwOSAgufC2OFy0lJpXcLEzLvrR6f91OWOej/qgvLiYn/b+4iJs4IXDp2ME/pS9JwfzvWZ3EqVzCCn5i65pku51evzMMVEO9c6pHTVN+GAmY0tmQVYdh/YmHoJ1jzxt/VSiSOqRRWhXwm7Yv8KjtywjXQRPxAqsqIccfrNrtwvG3ku0W48UywieykpLQq8VyF+GaKWWL8aLCr7zFGKdN3pfzEDuYq7JemP9fOLto7zGp+/RD2+WRbB/ez+YYYdK+brlJg4+l5/BG0DPGiBGaohF8XDVnFSrSq5JWwbbBDN9/HWWVKw==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Resync Cat"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/resync_cat"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Resynchronize a specific CAT token's coins and balance.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the resync_cat endpoint","content":{"application/json":{"schema":{"type":"object","description":"Resynchronize a `CAT` token's metadata from an external source","required":["asset_id"],"properties":{"asset_id":{"type":"string","description":"The asset ID of the `CAT` token to resynchronize","example":"a628c1c2c6fcb74d53746157e438e108eab5c0bb3e5c80ff9b1910b3e4832913"}},"title":"ResyncCat"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from resync_cat","content":{"application/json":{"schema":{"type":"object","description":"Response after resynchronizing a `CAT` token","title":"ResyncCatResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

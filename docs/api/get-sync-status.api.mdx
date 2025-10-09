@@ -1,0 +1,71 @@
+---
+id: get-sync-status
+title: "Get Sync Status"
+description: "Get the current synchronization status including peak height and synced state."
+sidebar_label: "Get Sync Status"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVttS40YQ/ZWufsiFEobdkDzoDTa3TSVAYag8eCnXWNOWZhnNaOdiMC79e6pHko1tAimyPOHRzDndffq2wiBKj/kEx0sfqIZvYLw0Bd5mKMkXTjVBWYM5/kYBQkVQROfIBPBLU1TOGvUo+Ab4IEL0oEyho1SmhIbEHVSkyiqAMDI9IJnu0QgzdPQlkg9nVi4xX+2wXXUfoRFO1BTIeZhblwwoKUwZa9ozkpGNVSZghoU1gUxgONE0WhXJtKPPnjFX6IuKasH/hWVDmKOdfaaCH77FVcwwqKCpe8BBG3fnbdt23ilHEvPgIqUD31jjyTP/++PjfZ/HsSjI+3nUMFyGubP1rsdfz9GrgeZehQokBaE0dUptnNx4MsGZ0MIUhBlGoxivE3VaWGVSQGwQev3LUUFqQVMhpSPPJ7PozJOf0VTCSTIkp5KcWiQvpspIesAMX/pWVFTckZzOlaYN8fBLiiBmwtPUq0fiVG6cbcgF1UV/8CJfoTV0Mcd8so6UD06ZEttsfaJMoJIcZji3rhahO/rpBDOslVF1rDE/bm832XBa22j2g/2hz6Z7oTUFGIxod6KS75qyi3MWnYH+9rooOlAG245M/oobP7zfwz+P9Ywc2Dmc/3oNCQZ60G2Xd+P8GlcK2TbXzz0AMAAoA7NlSApu0fx7IrzBvd97MNiAwZBVW6y72fuqMIPA/cNBIxZlq0z+lyYJou+luxY/rb43kFzz854g2MTxPMObU6tj2KRVsF1m7dK81BfeQHuzhntV9NTW9jrzjVEhlVpftCCVb7RYcuPZabBPu2VQxV2yr3FUKM9Ye71o8+k/ObatRoe/l5htu2lGbPrWwdasGgYAz6w2w5PnxtKZkNDPajgEZRZCK/l0MFsHtdBsKkn4Y3xxjgnq3XNxFDFU1qlHknAIxg7NUPlh2OolaFuWJEGZjKH5BZnQjzi+uQ5xojnZpzm3rFY0zNFbTuyDt9GxeJa8+TYAPSgf4DsalaOMkzIDO5+TyyA4YbwoGO17JvnxubB8NIGcERo8uQU5IOesg0OIhh4aKphxLpSOLvW13k9WPvnhkyY1hcpKzLGxnpOnEaHCHI/2Bz5P9qvNwvTLg6gblnPVZqjM3KYk6BUei5Lg747w6vIDnF5+3J/83XlK6nS/M3AEp1qvNyoPoiioCUnUdQ7MrFTk00rnKPAw6j/3+83ok/lkDg5Ot3Q7OMg7HiaOnjz8FUMUGq7/HCcjtmXm/XBBrqsLPB69ez86YSU4TrVItWJE3adzWlhhPIRqy9HVZlX6+htsX3WBHsJRo4UybGJ0OtV1knKCu1LeZlix2PkEVysefTdOty0ff4nklphPbjNcCKfEjMWc3PL8IyG5zicrvKMlT5rOp8NrNoCv68iG7K2CvMV0L06TkC/evX2Sj5cX42te1/rdvLaS3zhxzx1O3GOOmKFtukzOV93ZCrUwZRQl3+0w+e8f8hlVkw==
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Sync Status"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_sync_status"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get the current synchronization status including peak height and synced state.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_sync_status endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get the current synchronization status","title":"GetSyncStatus"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_sync_status","content":{"application/json":{"schema":{"type":"object","description":"Response with detailed sync status","required":["balance","unit","synced_coins","total_coins","receive_address","burn_address","unhardened_derivation_index","hardened_derivation_index","checked_files","total_files","database_size"],"properties":{"balance":{"oneOf":[{"type":"string"},{"type":"integer","format":"int64","minimum":0}],"title":"Amount","description":"Current wallet balance"},"burn_address":{"type":"string","description":"Burn address for the wallet"},"checked_files":{"type":"integer","format":"int32","description":"Number of NFT files checked","minimum":0},"database_size":{"type":"integer","format":"int64","description":"Database size in bytes","minimum":0},"hardened_derivation_index":{"type":"integer","format":"int32","description":"Hardened derivation index","minimum":0},"receive_address":{"type":"string","description":"Current receive address"},"synced_coins":{"type":"integer","format":"int32","description":"Number of coins synced","minimum":0},"total_coins":{"type":"integer","format":"int32","description":"Total coins to sync","minimum":0},"total_files":{"type":"integer","format":"int32","description":"Total NFT files to check","minimum":0},"unhardened_derivation_index":{"type":"integer","format":"int32","description":"Unhardened derivation index","minimum":0},"unit":{"description":"Unit for balance display","type":"object","required":["ticker","precision"],"properties":{"precision":{"type":"integer","format":"int32","minimum":0},"ticker":{"type":"string"}},"title":"Unit"}},"title":"GetSyncStatusResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

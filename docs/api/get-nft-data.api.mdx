@@ -1,0 +1,71 @@
+---
+id: get-nft-data
+title: "Get Nft Data"
+description: "Get the raw data file associated with an NFT."
+sidebar_label: "Get Nft Data"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVU1v20gM/SsEL7sbKE5aZC+6pU2zyGLXCRIXe3CNgJYoa7qjGXWGsuMa/u8LjvwRx0mBBeqTQVHvkXyP1AqFZhHzMQ6vRxEnGZYci2BaMd5hjn+wgNQMgRZQkhBUxjJQjL4wJFzCwkgN5GB4PRpghoG/dRzlgy+XmK9egN33D6GlQA0LhwiVDwl/xvLoKnlMHOzK1hsnmGHhnbATxaK2taYgxTr7GhVwhbGouSH9J8uWMUc//cqFvnjcxvB6tG9hU6oJXGrzSm1Kbb8NvuUghqOibuJ7/CjBuNkRvmIX3ji4ucL1OkMxYrnnHVZyRUK41vieU0LHKRBb72LP9v78/HhoD11RcIxVZ2GbDFXwzcHIft6k7rccSdjtzPDlYFIwX6F3fFthPt7Bus5aXGcvu9gN31RAczKWpkmEl8U8F6WmWD82JEXNETNsWEghHg/iR5JNrZ/u2xzvFUuVTdbZIe5+IFPvLZPD9VtUP07dDvpt3sY0/Ng/fjvtmXl2zpm8bqmtVGqtdYYXr7nnA5Ww2Uk4BePmZE35fAF9gIZs5UPDJfz5cDvEBPXuGOqzo05qH8x3LuEUnIcFWcsCJkLRhcBO7BKsn824BOMyhdY32MnGjJq5EzjRXBzTDL1A5TunHJvKWXuIvgsFQ+k5ul8E+MlEgV95MBtkatMMfFVxyEACuUiFov2mJL+/NpYbJxwcWYgc5hyAQ/ABTqFz/NRyoYwVGdsFBuO2farLUh8x7XjDUvsSc2x9VOu2JDXmePZiL9UX9/ur+OmJmtby8+Oy9cA6Q+Mqn9yxEfuBZgz/9PT3dx/h8u7meGP7eDqlKb8vdwCX1u5OaQQqCm4lSbxzxNSXhiOQ0wFLF9z28eYoDb64L+7k5PJAxZOTvOdR4i5yhL876cjC6K+HVMSh6PpVmHOIfbHng3fvBxfaqk6tobQyjhreHulK4Kof3EGXq/19+9/fpM3SCj/JWWvJpL3tglXUXrQxHog2ybBWTfMxrlZTivw52PVaw986DkvMx5MM5xRMOmL5OB0VppJDuoT/8hJz/NjXezpSdk23nVZxdJv1VvZvXCaFfpg7eWa7u9uHEWY43XxqG1/qO4EWekZpgTlihr7tDZuv+tgKLblZRzPN7TH19x+3vsZP
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Get Nft Data"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/get_nft_data"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Get the raw data file associated with an NFT.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the get_nft_data endpoint","content":{"application/json":{"schema":{"type":"object","description":"Get NFT data file","required":["nft_id"],"properties":{"nft_id":{"type":"string","description":"NFT coin ID"}},"title":"GetNftData"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from get_nft_data","content":{"application/json":{"schema":{"type":"object","description":"Response with NFT data","properties":{"data":{"oneOf":[{"type":"null"},{"description":"NFT data if available","type":"object","required":["hash_matches","metadata_hash_matches"],"properties":{"blob":{"type":["string","null"]},"hash_matches":{"type":"boolean"},"metadata_hash_matches":{"type":"boolean"},"metadata_json":{"type":["string","null"]},"mime_type":{"type":["string","null"]}},"title":"NftData"}]}},"title":"GetNftDataResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

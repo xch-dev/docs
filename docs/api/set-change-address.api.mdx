@@ -1,0 +1,71 @@
+---
+id: set-change-address
+title: "Set Change Address"
+description: "Set a custom change address for transaction outputs."
+sidebar_label: "Set Change Address"
+hide_title: true
+hide_table_of_contents: true
+api: eJylVduO2zYQ/ZXBvDRZcLWXbHrRmxOkQIp2s1hv0AfHCGhpJDOlSIUceu0Y/vdiJPkWG3lo/WRQwznnzJwZrpF1HTGf4KgsA8VIEacKS4pFMC0b7zDHMTFoKFJk30Ax164m0H04VD4AB+2iLiQafOI2ccxQYaCviSK/8eUK8/V3OR/7j9DqoBtiCkOqOUEk/tyjfN6ikCtbbxyjwsI7JseSUbetNYWWjFdfoqRdYyzm1Gj5x6uWMEc/+0KFXDzVJGA/lhMHGSZQKUWqjKsptEGoTBW2wbcU2FAUwGPOewoTjByMq1GhS9ae1vftMYcXEgXsIUWCkiqdLENJwSw6qS9RIS1101qRtyzmN1mW4UYdkdvrN46ppoAKKx8azf3Rq9uTivytrSWGwywHQDe3r+5e//zLr79dK2yMM01qML/ebBSy4Y7JmLgXMjgJN/J1Xz0OibqD2HoX+5LdXl+fWmOcioJirJKFbTBUwTdnjPF//LDl/a5pefU4AAnpjcK7c7ze6BIGT8MlGLfQ1pSHBvYBGm2lzFTCH+MP99ilujlN9dHpxHMfzDcq4RKch+e++iZCkUIgx3YF1tc1lWCcktRygxwPAiVyV9sO5u4U5t4zVD45wRiYk2iIPoWCoPQU3U8MtDSR4QVldabg/vcnBb6qKKjDSXgpIK/PleW9YwpOW4gUFhSAQvABLiE5WrZUCGKljU2BwLitTpkb3U+Y1LshnvsSc2x9lN60mueY49XZjktrH/e75d3WoqcTuJuO74Zjb+aNQuMq3/lj62NdEwzD8PjwFkYP709mZTjv1kUX38vKYGTtbllF0EVBLXdW2Dln5ktDEbSTRnAKbvt5GIvsk/vkLi5GR92+uMh7HAFOkSL8lThpC09/jjsSx+YQwQsKsSd7nd3cZnfSP6luo7u5cLoZhhaG9TPaFfhI63o/Yf/1IRgmj2nJV63VxgmXFKwk7zs9wTOdniqcix3yCa7XMx3pY7CbjRx/TRRWmE+mChc6GD2Txk2mG4Vz0iUFzCdr/IdWslt78pdPwkHCbRIuJ6tio7Y3Rl3Tfhg7PXDsw4fxEyqcDa9c40u5E/SzPB36GXNEhb7tvZ6v+7M1Wu3qpGuJ7XPK719UTKBb
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Set Change Address"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/set_change_address"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Set a custom change address for transaction outputs.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the set_change_address endpoint","content":{"application/json":{"schema":{"type":"object","description":"Set the change address for transactions","required":["fingerprint"],"properties":{"change_address":{"type":["string","null"],"description":"Change address (null to use default derivation)","example":"xch1..."},"fingerprint":{"type":"integer","format":"int32","description":"Wallet fingerprint","example":1234567890,"minimum":0}},"title":"SetChangeAddress"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from set_change_address","content":{"application/json":{"schema":{"type":"object","title":"EmptyResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

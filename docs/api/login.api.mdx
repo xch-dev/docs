@@ -1,0 +1,71 @@
+---
+id: login
+title: "Login"
+description: "Authenticate and log into a wallet using its fingerprint. This must be called before most other endpoints."
+sidebar_label: "Login"
+hide_title: true
+hide_table_of_contents: true
+api: eJy9VU1vGzcQ/SuDOfTDoGRZdpJ2b07QAmkTx7AU9KDoQO3O7jLhkmtyaFsV9N+L2V1ZshT0VFQngRzOezPvzewGWVcRswVeJ67Jsck1G+/gB/iT1hGXCguKeTCtnGJ2GEagXQHWV2Ace9DwqK0lhhSNq8BwhNK4ikIbjOMxzGsToUmRYUWQS2gBKyp9IGh8ZPBcUwByReuN4zhGhYHuE0V+64s1ZpsjJnf9JbQ66IaYQoTSB+CahJNxz6lQYe4dk2NJotvWDkWef42SaYMxr6nR8o/XLWGGfvWVcnn4EvJDl/e0Vn1Y6cDbBCqkr4c3S4Vt8C0FNhQF7vByj24cU0UBFZY+NJr7o8vpCZ95TZCcuU90SABMIQqVhgL4smvIwFaYH+r3aLgehDERNFxORyvDkFw0laMCBiLAteYByK736SOQzutd8m+0BulOTRDXkakRBelJN60lzC6ml1evXr/55deJwsY406QGs8l2q5ANS0DfXNzK0b5/HBJ1B7H1LvZNm04mp26YpTynGMtkYRcMZfBN74X/zgJ3x8mrzuyHA4BHNe2eSG1bhVffo/9WFzC4HUZg3IO2pji0tg/QaCt+oAL+mH26wS7VxWmqz0409sH8TQWMwPmdQCZCnkIgx3bdMe8UVpJavxx+E+FZgg7m6hTmxjOUPjnBGJiT1BB9CjlB4Sm6HxnoyUSGn2hcjRXc/D5X4MuSggIO2kWdS7afBeTV99ry3jEFpy1ECg+yHULwAUaQHD21lAtiqY1NgcR6Q50yYF0dEaXfDXHtC8yw9VG0aTXXmOH5zhjigLv9ovlt59ij6dwbeKvQuNJ3Xhl0numK4K8e/u72HVzfvj91Tn/eLakuvqc7hmtr92sPdJ5Ty53Ez45Y+UKmTdZtIE7B7a6HqRh/cV/c2dnLFX52lvU4ApwiRfiYOGkL8w+zjsRL0WVaHyjEnuxkfDEdX4ku0rVGdzPidLMf1KPyNvsB+3+/EcO4Mj3xeWu1rBCFKVih1Eu9wF7qpcJaLJAtcLNZ6Uifg91u5fg+UVhjtlgqfNDB6JWIulhuFdakCwqYLTb4jdaY4bu+ytFcYCXcJoE/WSlbtXtx3Qn6r7HLA5fefprNUeFq+OY1vpA3QT/Kd0U/Yoao0Le9v7NNf7ZBq12VdCWxfU75/QOqtL5i
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Login"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/login"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Authenticate and log into a wallet using its fingerprint. This must be called before most other endpoints.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the login endpoint","content":{"application/json":{"schema":{"type":"object","description":"Login to a wallet using a fingerprint","required":["fingerprint"],"properties":{"fingerprint":{"type":"integer","format":"int32","description":"The unique fingerprint identifier of the wallet to authenticate with. This is a 32-bit unsigned integer that uniquely identifies each wallet key in the system.","example":1234567890,"minimum":0}},"title":"Login"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from login","content":{"application/json":{"schema":{"type":"object","description":"Response from logging into a wallet","title":"LoginResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

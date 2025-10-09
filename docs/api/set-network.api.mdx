@@ -1,0 +1,71 @@
+---
+id: set-network
+title: "Set Network"
+description: "Set the active network (mainnet, testnet, etc.)."
+sidebar_label: "Set Network"
+hide_title: true
+hide_table_of_contents: true
+api: eJylVE1vG0cM/SsEL02MsewE7mVvTpACKVrFsBz0oAjFaJe7mmR2ZjLDkawu9N8D7oclR0FQtDoJXJLv8T1yOmTdJCyWOCfe+fgFFsRsXJNwpbCiVEYT2HiHBS6IgTcEumSzJXBjwYtWG+eIFTAl7v8Ql7OXM1QY6WumxG98tcei+67f/fARgo66JaaYoPaxh0jEf0/9yVXBG8eosPSOybG00iFYU2ppdfU5Sb8OU7mhVss/3gfCAv36M5VS+G8GGemaSJXo4XRLokGIPlBkQ0ka99EjQOJoXHMGMGkp2cAe0s5wuQH2qJAedRusFI+64eGgkA33sQXxWIwHiR8ZcczUB1LwLg1sXl9fn8u6yGVJKdXZwpQMdfTtqaj/R8uJ6rs28P5+RBC2B4U3PyL0RlcwLgJcgnFbbU116rqP0Gpb+9hSBb8vPsyxb/XqvNVHpzNvfDT/UAWX4DzstLXEYBKUOUZybPdgfdNQBcYpaS0V5HgcUDKfRO1hbs5h5p6h9tkJxsicZIbkcywJKk/J/cJAjyYxvKBZM1Mw/+1Bga9rigo4apdku7x7KSC//kiW944pOm0hUdxSBIrRR7iE7OgxUCmItTY2RwLjpjllF/s5Ur82LfHGV1hg8Em8CZo3WODVc6vF0/vjJb6bNnBa5+MmKjSu9r3r00LqhuCvAfz+7i3c3r0/W/cx3l9vnz+QncGttU/nm0CXJQXuDX7ah7WvDCXQTuTlHN30edzy2Sf3yV1c3D7z8OKiGHAEOCdK8GfmrC08/LHoSTy3XB6iLcU0kL2evXo9u5FRRbNWuxMd5GGYP8n2bMjueDD/5SEcj4jpka+C1cYJgRytNB5MW+KpaSuFG7G0WGLXrXWij9EeDhL+minusViuFG51NHotNi1XB4Ub0hVFLJYdfqE9Fvh2YHz5IOCSbrOQODv3g5oqbnuLfpq7Otm6uw+LB1S4Hp/31ldSE/VO3lK9wwJRoQ/DvhbdEOvQatdk3Uju0FN+3wAdRUXz
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Set Network"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/set_network"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Set the active network (mainnet, testnet, etc.).
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the set_network endpoint","content":{"application/json":{"schema":{"type":"object","description":"Set the active network","required":["name"],"properties":{"name":{"type":"string","description":"Network name to switch to","example":"mainnet"}},"title":"SetNetwork"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from set_network","content":{"application/json":{"schema":{"type":"object","title":"EmptyResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      

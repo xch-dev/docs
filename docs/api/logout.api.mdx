@@ -1,0 +1,71 @@
+---
+id: logout
+title: "Logout"
+description: "Log out of the current wallet session and clear authentication."
+sidebar_label: "Logout"
+hide_title: true
+hide_table_of_contents: true
+api: eJytVE1P20AQ/SujOfQDmUArevENqlaiHxQRqh5CDhN7nCxd77qzu0Bq+b9XYzspENRDRU7ReOa9eftmpsVIy4D5DI9TXLGLpqBovIMX8JnXAecZlhwKMY1GMccvfgk+RfAVxBVDkUTYRbglazlC4BC0mlwJhWUSoAewE8xQ+FfiEE98uca8fQR/MXyEhoRqjiwBKi89lfVLJWZXNt64iBkW3kV2UVGoaezIcXAdFKrFUKy4Jv0X1w1jjn5xzYUW/ockzDCaaHnI9yli13WDGCNcYh4lcR8IjXeBg/K+PTzclThNRcEhVMnCJhkq8fUo8Pl0XTxGXxq3VUqjvh1dmyrV12V49JSEEyphtBH2wbgbsqa875kXqMlWXmou4dP02xn2UG92ob47nRAv5jeXsA/Ob97dhI0Tdt03zyUYlyn0w5nSzK0NPc3RLs2Zj1D55JRj7JxVQ/BJCobSc3AvI/CdCRFe8WQ5yeDs42UGvqpYMohCLlChaK+V5N1Tz3LqIosjC4HlhgVYxAvsQ3J813ChjBUZm4TBuI1O37D0OgLqe9ccV77EHBsf1JyG4gpzPNgOh07Bxd8V+nBHdaP2tV2GxlW+n4vR0SktGX4MPBfn7+H4/HR3SoZ4v2Z9/tDXBI6t3S5bACoKbmLv5db6hS8Nh37ZhWMSt/k8rsDkyl25vb2Hl2VvLx94lDgFDvA1xUQWLr9M+yZ2L8YNSxiaPZy8eTs5UgP0eWrq98FRfW8tH+lr/27TM9yuceEi38WDxpJx2koSqzyDUzMcnZpnuFIL8xm27YICfxfbdRr+lVjWmM/mGd6QGFqoV7N5l+GKqWTBfNbiT15jju+H3vcvlVfTbVL+navQZZuK496nf+bO703Z+bfpJWa4GI9x7UutEbrVQ023mCNm6JthPvN2iLVoyS0TLTV3wNTfH22VMlA=
+sidebar_class_name: "post api-method"
+info_path: docs/api/sage-wallet-rpc-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Logout"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/logout"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Log out of the current wallet session and clear authentication.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={undefined}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"description":"Request parameters for the logout endpoint","content":{"application/json":{"schema":{"type":"object","description":"Log out of the current wallet session","title":"Logout"}}},"required":true}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Successful response from logout","content":{"application/json":{"schema":{"type":"object","description":"Response from logging out of a wallet","title":"LogoutResponse"}}}},"400":{"description":"Bad request - invalid parameters or malformed JSON"},"401":{"description":"Unauthorized - no wallet is currently logged in, or authentication is required"},"404":{"description":"Not found - requested resource doesn't exist (e.g., NFT, offer, transaction)"},"500":{"description":"Internal server error - unexpected failure in wallet operations"}}}
+>
+  
+</StatusCodes>
+
+
+      
