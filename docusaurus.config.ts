@@ -8,7 +8,7 @@ const config: Config = {
   tagline: "Build our decentralized future on the Chia blockchain",
   favicon: "img/favicon.ico",
   url: "https://xch.dev",
-  baseUrl: "/",
+  baseUrl: "/docs/",
   organizationName: "xch-dev",
   projectName: "docs",
   onBrokenLinks: "throw",
