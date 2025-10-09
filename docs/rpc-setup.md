@@ -1,6 +1,6 @@
 ---
 title: Setup
-slug: /rpc-setup
+slug: /rpc/setup
 ---
 
 # RPC Setup

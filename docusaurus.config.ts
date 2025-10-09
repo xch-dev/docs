@@ -1,7 +1,7 @@
 import type * as Preset from "@docusaurus/preset-classic";
 import type { Config } from "@docusaurus/types";
-import { themes as prismThemes } from "prism-react-renderer";
 import type * as OpenApiPlugin from "docusaurus-plugin-openapi-docs";
+import { themes as prismThemes } from "prism-react-renderer";
 
 const config: Config = {
   title: "xch.dev",
@@ -34,21 +34,21 @@ const config: Config = {
   ],
   plugins: [
     [
-      'docusaurus-plugin-openapi-docs',
+      "docusaurus-plugin-openapi-docs",
       {
-        id: "api", // plugin id
-        docsPluginId: "classic", // configured for preset-classic
+        id: "api",
+        docsPluginId: "classic",
         config: {
           sage_rpc: {
             specPath: "src/openapi.json",
-            outputDir: "docs/api/",
+            outputDir: "docs/rpc/",
             sidebarOptions: {
               groupPathsBy: "tag",
             },
           } satisfies OpenApiPlugin.Options,
-        }
+        },
       },
-    ]
+    ],
   ],
   themes: ["docusaurus-theme-openapi-docs"],
   themeConfig: {
