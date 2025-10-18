@@ -1,8 +1,3 @@
----
-title: Setup
-slug: /rpc/setup
----
-
 # RPC Setup
 
 ## GUI

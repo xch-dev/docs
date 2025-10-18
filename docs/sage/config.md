@@ -1,7 +1,3 @@
----
-slug: /config
----
-
 # Config
 
 The config files are used to control the app's backend, rather than UI specific things (such as the default fee).

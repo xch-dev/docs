@@ -41,7 +41,7 @@ const config: Config = {
         config: {
           sage_rpc: {
             specPath: "src/openapi.json",
-            outputDir: "docs/rpc/",
+            outputDir: "docs/sage/rpc/",
             sidebarOptions: {
               groupPathsBy: "tag",
             },

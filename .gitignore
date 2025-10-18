@@ -7,7 +7,7 @@
 # Generated files
 .docusaurus
 .cache-loader
-/docs/rpc
+/docs/sage/rpc
 
 # Misc
 .DS_Store
