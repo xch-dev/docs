@@ -1,0 +1,39 @@
+fn main(
+    mod_hash: Bytes32,
+    metadata: String,
+    inner_puzzle: fn(...solution: Any) -> List<Condition>,
+    ...inner_solution: Any,
+) -> List<Condition> {
+    let conditions = inner_puzzle(...inner_solution);
+    morph_conditions(mod_hash, metadata, conditions)
+}
+
+fn morph_conditions(
+    mod_hash: Bytes32,
+    metadata: String,
+    conditions: List<Condition>,
+) -> List<Condition> {
+    if conditions is nil {
+        return nil;
+    }
+
+    inline let (condition, rest) = conditions;
+
+    let rest = morph_conditions(mod_hash, metadata, rest);
+
+    if condition is CreateCoin {
+        let condition = CreateCoin {
+            puzzle_hash: curry_tree_hash(mod_hash, [
+                tree_hash_atom(mod_hash),
+                tree_hash_atom(metadata),
+                condition.puzzle_hash,
+            ]),
+            amount: condition.amount,
+            memos: condition.memos,
+        };
+
+        return [condition, ...rest];
+    }
+
+    [condition, ...rest]
+}

@@ -1,0 +1,11 @@
+fn main(
+    seconds: Int,
+    inner_puzzle: fn(...solution: Any) -> List<Condition>,
+    ...inner_solution: Any,
+) -> List<Condition> {
+    let conditions = inner_puzzle(...inner_solution);
+
+    let timelock = AssertSecondsAbsolute { seconds };
+
+    [timelock, ...conditions]
+}

@@ -29,6 +29,9 @@ importers:
       prism-react-renderer:
         specifier: ^2.3.0
         version: 2.4.1(react@19.1.0)
+      prismjs:
+        specifier: ^1.30.0
+        version: 1.30.0
       react:
         specifier: ^19.0.0
         version: 19.1.0
@@ -45,12 +48,18 @@ importers:
       '@docusaurus/types':
         specifier: 3.7.0
         version: 3.7.0(acorn@8.14.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@types/prismjs':
+        specifier: ^1.26.5
+        version: 1.26.5
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
       typescript:
         specifier: ~5.6.2
         version: 5.6.3
+      utility-types:
+        specifier: ^3.11.0
+        version: 3.11.0
 
 packages:
 

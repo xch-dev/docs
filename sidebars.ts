@@ -19,6 +19,46 @@ const sidebars: SidebarsConfig = {
         },
       ],
     },
+    {
+      type: "category",
+      label: "Coin Set Model",
+      items: [
+        { type: "doc", id: "coin-set/index" },
+        { type: "doc", id: "coin-set/coins" },
+        { type: "doc", id: "coin-set/puzzles" },
+      ],
+    },
+    {
+      type: "category",
+      label: "Custody",
+      items: [
+        { type: "doc", id: "custody/standard-transaction" },
+        { type: "doc", id: "custody/mips" },
+        { type: "doc", id: "custody/clawbacks" },
+        { type: "doc", id: "custody/revocation" },
+      ],
+    },
+    {
+      type: "category",
+      label: "Primitives",
+      items: [
+        { type: "doc", id: "primitives/cats" },
+        { type: "doc", id: "primitives/nfts" },
+        { type: "doc", id: "primitives/dids" },
+        { type: "doc", id: "primitives/option-contracts" },
+        { type: "doc", id: "primitives/vaults" },
+      ],
+    },
+    {
+      type: "category",
+      label: "Wallet SDK",
+      items: [{ type: "doc", id: "wallet-sdk/index" }],
+    },
+    {
+      type: "category",
+      label: "Bindings",
+      items: [{ type: "doc", id: "bindings/index" }],
+    },
   ],
 };
 

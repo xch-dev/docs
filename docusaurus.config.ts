@@ -12,7 +12,6 @@ const config: Config = {
   organizationName: "xch-dev",
   projectName: "docs",
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "warn",
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
@@ -120,7 +119,7 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
-      additionalLanguages: ["toml"],
+      additionalLanguages: ["bash", "toml"],
     },
   } satisfies Preset.ThemeConfig,
 };

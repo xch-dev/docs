@@ -1,0 +1,14 @@
+fn main(
+    public_key: PublicKey,
+    delegated_puzzle: fn(...solution: Any) -> List<Condition>,
+    delegated_solution: Any,
+) -> List<Condition> {
+    let agg_sig = AggSigMe {
+        public_key,
+        message: tree_hash(delegated_puzzle),
+    };
+
+    let conditions = delegated_puzzle(...delegated_solution);
+
+    [agg_sig, ...conditions]
+}
