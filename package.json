@@ -50,8 +50,10 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@parcel/watcher",
       "core-js",
-      "core-js-pure"
+      "core-js-pure",
+      "postman-code-generators"
     ]
   }
 }
