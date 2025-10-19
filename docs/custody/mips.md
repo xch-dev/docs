@@ -57,7 +57,7 @@ Passkeys have their own member puzzles:
 
 ### Singletons
 
-You can delegate signing to another singleton (ie a vault):
+You can delegate signing to another singleton (e.g., a vault):
 
 1. [**Singleton Member**](https://github.com/Chia-Network/chia_puzzles/blob/d122456feeef55708d354a065623037bfa010714/puzzles/mips_puzzles/member_puzzles/singleton_member.clsp) - Receives a message from another singleton puzzle by coin id.
 2. [**Singleton Member (With Mode)**](https://github.com/Chia-Network/chia_puzzles/blob/d122456feeef55708d354a065623037bfa010714/puzzles/mips_puzzles/member_puzzles/singleton_member_with_mode.clsp) - Receives a message from another singleton with a custom mode (for example, by puzzle hash).

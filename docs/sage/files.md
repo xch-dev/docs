@@ -17,13 +17,13 @@ The username `Alice` is a placeholder, and must be replaced by your actual usern
 
 ## Files
 
-| Name            | Description                                                                             |
-| --------------- | --------------------------------------------------------------------------------------- |
-| `config.toml`   | The main configuration file used by the app. See [Config](/config).                     |
-| `keys.bin`      | A binary encoding of all imported keys.                                                 |
-| `logs`          | Logs emitted by the backend of the app.                                                 |
-| `networks.toml` | Information about blockchain networks (ie mainnet or testnet11). See [Config](/config). |
-| `peers`         | Binary files that store previous peer connections.                                      |
-| `ssl`           | The SSL certificate used for full node connections and the RPC.                         |
-| `wallets`       | SQLite databases for each network and key pair.                                         |
-| `wallets.toml`  | Configuration for each imported wallet. See [Config](/config).                          |
+| Name            | Description                                                                                |
+| --------------- | ------------------------------------------------------------------------------------------ |
+| `config.toml`   | The main configuration file used by the app. See [Config](/config).                        |
+| `keys.bin`      | A binary encoding of all imported keys.                                                    |
+| `logs`          | Logs emitted by the backend of the app.                                                    |
+| `networks.toml` | Information about blockchain networks (e.g., mainnet or testnet11). See [Config](/config). |
+| `peers`         | Binary files that store previous peer connections.                                         |
+| `ssl`           | The SSL certificate used for full node connections and the RPC.                            |
+| `wallets`       | SQLite databases for each network and key pair.                                            |
+| `wallets.toml`  | Configuration for each imported wallet. See [Config](/config).                             |
