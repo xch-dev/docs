@@ -10,6 +10,14 @@ A coin is made up of the following 3 parts:
 
 If you calculate the sha256 hash of the CLVM representation of these 3 values, you get the coin's id.
 
+## Mojos
+
+A coin's amount is represented by a unit called a mojo. As far as the blockchain is concerned, every coin is measured in mojos. An amount must be zero or more mojos, and be an integer (non-fractional).
+
+:::info
+There are 1 trillion mojos in 1 XCH, but this is just a social convention for display purposes. Nothing on the blockchain is concerned with the precision of XCH.
+:::
+
 ## Block Rewards
 
 Every transaction block creates reward coins that were earned since the previous transaction block.

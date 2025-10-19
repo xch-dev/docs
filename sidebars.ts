@@ -35,7 +35,6 @@ const sidebars: SidebarsConfig = {
         { type: "doc", id: "custody/standard-transaction" },
         { type: "doc", id: "custody/mips" },
         { type: "doc", id: "custody/clawbacks" },
-        { type: "doc", id: "custody/revocation" },
       ],
     },
     {
