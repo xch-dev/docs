@@ -3,6 +3,9 @@ slug: /sdk/primitives/vault
 title: Vault
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Vault
 
 Vaults provide multi-signature custody for Chia assets. They enable secure storage patterns where multiple parties or conditions must be satisfied to spend funds.
@@ -66,10 +69,32 @@ The `MipsSpend` contains the puzzle reveal and solution that satisfies the vault
 
 After a vault spend, you can compute the resulting vault:
 
+<Tabs>
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 // Compute the child vault after a spend
 let child_vault = vault.child(new_custody_hash, new_amount);
 ```
+
+  </TabItem>
+  <TabItem value="nodejs" label="Node.js">
+
+```typescript
+// Compute the child vault after a spend
+const childVault = vault.child(newCustodyHash, newAmount);
+```
+
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
+# Compute the child vault after a spend
+child_vault = vault.child(new_custody_hash, new_amount)
+```
+
+  </TabItem>
+</Tabs>
 
 This is essential for tracking the vault's state across multiple operations.
 
@@ -114,6 +139,9 @@ This is particularly important for hardware wallet integrations where users need
 
 Here's a basic vault spend pattern:
 
+<Tabs>
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 use chia_wallet_sdk::prelude::*;
 
@@ -138,6 +166,77 @@ fn track_vault_state(
     vault.child(new_custody_hash, new_amount)
 }
 ```
+
+  </TabItem>
+  <TabItem value="nodejs" label="Node.js">
+
+```typescript
+import {
+  Clvm, Simulator, blsMemberHash, MemberConfig
+} from "chia-wallet-sdk";
+
+// Create a BLS key vault (single signer)
+const sim = new Simulator();
+const clvm = new Clvm();
+const alice = sim.bls(0n);
+
+// Configure the vault member
+const config = new MemberConfig().withTopLevel(true);
+const custodyHash = blsMemberHash(config, alice.pk, false);
+
+// Mint a vault with the custody configuration
+const { vault, coin } = mintVaultWithCoin(sim, clvm, custodyHash, 1n);
+
+// Create a delegated spend (what the vault should do)
+const delegatedSpend = clvm.delegatedSpend([
+  clvm.createCoin(vault.info.custodyHash, vault.coin.amount, null),
+]);
+
+// Create the MIPS spend and configure the BLS member
+const mips = clvm.mipsSpend(vault.coin, delegatedSpend);
+mips.blsMember(config, alice.pk, false);
+mips.spendVault(vault);
+
+// Sign and execute
+sim.spendCoins(clvm.coinSpends(), [alice.sk]);
+```
+
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
+from chia_wallet_sdk import (
+    Clvm, Simulator, bls_member_hash, MemberConfig
+)
+
+# Create a BLS key vault (single signer)
+sim = Simulator()
+clvm = Clvm()
+alice = sim.bls(0)
+
+# Configure the vault member
+config = MemberConfig().with_top_level(True)
+custody_hash = bls_member_hash(config, alice.pk, False)
+
+# Mint a vault with the custody configuration
+vault, coin = mint_vault_with_coin(sim, clvm, custody_hash, 1)
+
+# Create a delegated spend (what the vault should do)
+delegated_spend = clvm.delegated_spend([
+    clvm.create_coin(vault.info.custody_hash, vault.coin.amount, None),
+])
+
+# Create the MIPS spend and configure the BLS member
+mips = clvm.mips_spend(vault.coin, delegated_spend)
+mips.bls_member(config, alice.pk, False)
+mips.spend_vault(vault)
+
+# Sign and execute
+sim.spend_coins(clvm.coin_spends(), [alice.sk])
+```
+
+  </TabItem>
+</Tabs>
 
 ## Use Cases
 

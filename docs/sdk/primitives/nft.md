@@ -3,6 +3,9 @@ slug: /sdk/primitives/nft
 title: NFT
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # NFT
 
 NFTs (Non-Fungible Tokens) in Chia are singleton-based assets that can hold metadata, have ownership controls, and support royalties. Each NFT has a unique launcher ID that serves as its permanent identifier.
@@ -36,6 +39,9 @@ NFTs consist of multiple layers:
 ## Minting NFTs
 
 To mint a new NFT, use the `Nft::mint` function:
+
+<Tabs>
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 use chia_wallet_sdk::prelude::*;
@@ -73,9 +79,103 @@ p2.spend(ctx, parent_coin, mint_conditions)?;
 let launcher_id = nft.info.launcher_id;
 ```
 
+  </TabItem>
+  <TabItem value="nodejs" label="Node.js">
+
+```typescript
+import { Clvm, NftMetadata, NftMint, Constants, Simulator } from "chia-wallet-sdk";
+
+const clvm = new Clvm();
+const sim = new Simulator();
+const alice = sim.bls(1n);
+
+// Define the NFT metadata
+const metadata = new NftMetadata(
+  1n,  // edition number
+  1n,  // edition total
+  ["https://example.com/image.png"],     // data URIs
+  null,                                   // data hash (optional)
+  ["https://example.com/metadata.json"], // metadata URIs
+  null,                                   // metadata hash (optional)
+  [],                                     // license URIs
+  null                                    // license hash (optional)
+);
+
+// Mint the NFT
+const { nfts, parentConditions } = clvm.mintNfts(alice.coin.coinId(), [
+  new NftMint(
+    clvm.nftMetadata(metadata),
+    Constants.nftMetadataUpdaterDefaultHash(),
+    alice.puzzleHash,     // Royalty puzzle hash
+    alice.puzzleHash,     // Owner p2 puzzle hash
+    300                   // Royalty in basis points (3%)
+  ),
+]);
+
+// Spend the parent coin with mint conditions
+clvm.spendStandardCoin(
+  alice.coin,
+  alice.pk,
+  clvm.delegatedSpend(parentConditions)
+);
+
+// The NFT's permanent identifier
+const launcherId = nfts[0].info.launcherId;
+```
+
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
+from chia_wallet_sdk import Clvm, NftMetadata, NftMint, Constants, Simulator
+
+clvm = Clvm()
+sim = Simulator()
+alice = sim.bls(1)
+
+# Define the NFT metadata
+metadata = NftMetadata(
+    1,  # edition number
+    1,  # edition total
+    ["https://example.com/image.png"],     # data URIs
+    None,                                   # data hash (optional)
+    ["https://example.com/metadata.json"], # metadata URIs
+    None,                                   # metadata hash (optional)
+    [],                                     # license URIs
+    None                                    # license hash (optional)
+)
+
+# Mint the NFT
+result = clvm.mint_nfts(alice.coin.coin_id(), [
+    NftMint(
+        clvm.nft_metadata(metadata),
+        Constants.nft_metadata_updater_default_hash(),
+        alice.puzzle_hash,     # Royalty puzzle hash
+        alice.puzzle_hash,     # Owner p2 puzzle hash
+        300                    # Royalty in basis points (3%)
+    ),
+])
+
+# Spend the parent coin with mint conditions
+clvm.spend_standard_coin(
+    alice.coin,
+    alice.pk,
+    clvm.delegated_spend(result.parent_conditions)
+)
+
+# The NFT's permanent identifier
+launcher_id = result.nfts[0].info.launcher_id
+```
+
+  </TabItem>
+</Tabs>
+
 ## Transferring NFTs
 
 To transfer an NFT to a new owner:
+
+<Tabs>
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 use chia_wallet_sdk::prelude::*;
@@ -93,6 +193,43 @@ let new_nft = nft.transfer(
 let coin_spends = ctx.take();
 ```
 
+  </TabItem>
+  <TabItem value="nodejs" label="Node.js">
+
+```typescript
+// Transfer the NFT to a new owner
+const innerSpend = clvm.standardSpend(
+  alice.pk,
+  clvm.delegatedSpend([
+    clvm.createCoin(newOwnerPuzzleHash, 1n, clvm.alloc([newOwnerPuzzleHash])),
+  ])
+);
+
+const newNft = clvm.spendNft(nft, innerSpend);
+
+const coinSpends = clvm.coinSpends();
+```
+
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
+# Transfer the NFT to a new owner
+inner_spend = clvm.standard_spend(
+    alice.pk,
+    clvm.delegated_spend([
+        clvm.create_coin(new_owner_puzzle_hash, 1, clvm.alloc([new_owner_puzzle_hash])),
+    ])
+)
+
+new_nft = clvm.spend_nft(nft, inner_spend)
+
+coin_spends = clvm.coin_spends()
+```
+
+  </TabItem>
+</Tabs>
+
 For more control over the transfer, use `transfer_with_metadata`:
 
 ```rust
@@ -109,6 +246,9 @@ let new_nft = nft.transfer_with_metadata(
 
 For complex operations beyond simple transfers:
 
+<Tabs>
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 let ctx = &mut SpendContext::new();
 
@@ -123,6 +263,45 @@ let new_nft = nft.spend(
     p2.spend_with_conditions(ctx, conditions)?,
 )?;
 ```
+
+  </TabItem>
+  <TabItem value="nodejs" label="Node.js">
+
+```typescript
+// Build conditions for the NFT spend
+const innerSpend = clvm.standardSpend(
+  alice.pk,
+  clvm.delegatedSpend([
+    clvm.createCoinAnnouncement(Buffer.from("nft_action")),
+    clvm.reserveFee(feeAmount),
+    clvm.createCoin(newOwnerPuzzleHash, 1n, clvm.alloc([newOwnerPuzzleHash])),
+  ])
+);
+
+// Spend with custom conditions
+const newNft = clvm.spendNft(nft, innerSpend);
+```
+
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
+# Build conditions for the NFT spend
+inner_spend = clvm.standard_spend(
+    alice.pk,
+    clvm.delegated_spend([
+        clvm.create_coin_announcement(b"nft_action"),
+        clvm.reserve_fee(fee_amount),
+        clvm.create_coin(new_owner_puzzle_hash, 1, clvm.alloc([new_owner_puzzle_hash])),
+    ])
+)
+
+# Spend with custom conditions
+new_nft = clvm.spend_nft(nft, inner_spend)
+```
+
+  </TabItem>
+</Tabs>
 
 ## Royalties
 
@@ -188,6 +367,9 @@ When building custom NFT interactions, be aware that the ownership layer require
 
 Here's a full example of minting and transferring an NFT:
 
+<Tabs>
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 use chia_wallet_sdk::prelude::*;
 
@@ -226,6 +408,116 @@ fn mint_and_transfer_nft(
     Ok((launcher_id, ctx.take()))
 }
 ```
+
+  </TabItem>
+  <TabItem value="nodejs" label="Node.js">
+
+```typescript
+import { Clvm, NftMetadata, NftMint, Constants, Simulator } from "chia-wallet-sdk";
+
+function mintAndTransferNft(recipientPuzzleHash: Uint8Array) {
+  const clvm = new Clvm();
+  const sim = new Simulator();
+  const alice = sim.bls(2n);
+
+  // Step 1: Mint the NFT
+  const metadata = new NftMetadata(
+    1n, 1n,
+    ["https://example.com/image.png"],
+    null, [], null, [], null
+  );
+
+  const { nfts, parentConditions } = clvm.mintNfts(alice.coin.coinId(), [
+    new NftMint(
+      clvm.nftMetadata(metadata),
+      Constants.nftMetadataUpdaterDefaultHash(),
+      alice.puzzleHash,
+      alice.puzzleHash,
+      0  // No royalties
+    ),
+  ]);
+
+  clvm.spendStandardCoin(
+    alice.coin,
+    alice.pk,
+    clvm.delegatedSpend(parentConditions)
+  );
+
+  const launcherId = nfts[0].info.launcherId;
+
+  // Step 2: Transfer to recipient
+  clvm.spendNft(
+    nfts[0],
+    clvm.standardSpend(
+      alice.pk,
+      clvm.delegatedSpend([
+        clvm.createCoin(recipientPuzzleHash, 1n, clvm.alloc([recipientPuzzleHash])),
+      ])
+    )
+  );
+
+  // Sign and validate
+  sim.spendCoins(clvm.coinSpends(), [alice.sk]);
+
+  return launcherId;
+}
+```
+
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
+from chia_wallet_sdk import Clvm, NftMetadata, NftMint, Constants, Simulator
+
+def mint_and_transfer_nft(recipient_puzzle_hash: bytes):
+    clvm = Clvm()
+    sim = Simulator()
+    alice = sim.bls(2)
+
+    # Step 1: Mint the NFT
+    metadata = NftMetadata(
+        1, 1,
+        ["https://example.com/image.png"],
+        None, [], None, [], None
+    )
+
+    result = clvm.mint_nfts(alice.coin.coin_id(), [
+        NftMint(
+            clvm.nft_metadata(metadata),
+            Constants.nft_metadata_updater_default_hash(),
+            alice.puzzle_hash,
+            alice.puzzle_hash,
+            0  # No royalties
+        ),
+    ])
+
+    clvm.spend_standard_coin(
+        alice.coin,
+        alice.pk,
+        clvm.delegated_spend(result.parent_conditions)
+    )
+
+    launcher_id = result.nfts[0].info.launcher_id
+
+    # Step 2: Transfer to recipient
+    clvm.spend_nft(
+        result.nfts[0],
+        clvm.standard_spend(
+            alice.pk,
+            clvm.delegated_spend([
+                clvm.create_coin(recipient_puzzle_hash, 1, clvm.alloc([recipient_puzzle_hash])),
+            ])
+        )
+    )
+
+    # Sign and validate
+    sim.spend_coins(clvm.coin_spends(), [alice.sk])
+
+    return launcher_id
+```
+
+  </TabItem>
+</Tabs>
 
 ## API Reference
 

@@ -13,6 +13,12 @@ This documentation assumes familiarity with Chia blockchain concepts such as coi
 
 ## Installation
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem value="rust" label="Rust" default>
+
 Add the SDK to your `Cargo.toml`:
 
 ```toml
@@ -22,9 +28,37 @@ chia-wallet-sdk = "0.32"
 
 For the latest version and detailed API reference, see [docs.rs/chia-wallet-sdk](https://docs.rs/chia-wallet-sdk).
 
+  </TabItem>
+  <TabItem value="nodejs" label="Node.js">
+
+Install via npm:
+
+```bash
+npm install chia-wallet-sdk
+```
+
+The Node.js bindings provide a similar API with JavaScript/TypeScript support. Full TypeScript type definitions are included.
+
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+Install via pip:
+
+```bash
+pip install chia-wallet-sdk
+```
+
+The Python bindings provide a Pythonic API with full type stub support for IDE autocompletion.
+
+  </TabItem>
+</Tabs>
+
 ## Quick Example
 
 Here's a minimal example that creates and spends a standard XCH coin:
+
+<Tabs>
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 use chia_wallet_sdk::prelude::*;
@@ -46,23 +80,82 @@ StandardLayer::new(public_key).spend(ctx, coin, conditions)?;
 let coin_spends = ctx.take();
 ```
 
+  </TabItem>
+  <TabItem value="nodejs" label="Node.js">
+
+```typescript
+import { Clvm, Coin, Simulator } from "chia-wallet-sdk";
+
+// Create a CLVM instance to build the transaction
+const clvm = new Clvm();
+
+// Create conditions:
+// - Create a new coin with 900 mojos
+// - Reserve 100 mojos as transaction fee
+const conditions = [
+  clvm.createCoin(puzzleHash, 900n, null),
+  clvm.reserveFee(100n),
+];
+
+// Create and spend using delegated spend (p2 puzzle)
+clvm.spendStandardCoin(
+  coin,
+  publicKey,
+  clvm.delegatedSpend(conditions)
+);
+
+// Extract the coin spends for signing and broadcast
+const coinSpends = clvm.coinSpends();
+```
+
+  </TabItem>
+  <TabItem value="python" label="Python">
+
+```python
+from chia_wallet_sdk import Clvm, Coin, Simulator
+
+# Create a CLVM instance to build the transaction
+clvm = Clvm()
+
+# Create conditions:
+# - Create a new coin with 900 mojos
+# - Reserve 100 mojos as transaction fee
+conditions = [
+    clvm.create_coin(puzzle_hash, 900, None),
+    clvm.reserve_fee(100),
+]
+
+# Create and spend using delegated spend (p2 puzzle)
+clvm.spend_standard_coin(
+    coin,
+    public_key,
+    clvm.delegated_spend(conditions)
+)
+
+# Extract the coin spends for signing and broadcast
+coin_spends = clvm.coin_spends()
+```
+
+  </TabItem>
+</Tabs>
+
 This example demonstrates the core pattern you'll use throughout the SDK:
 
-1. **Create a SpendContext** - The central builder that manages CLVM allocation and collects spends
+1. **Create a context** - In Rust, use `SpendContext`; in Node.js/Python, use the `Clvm` class
 2. **Build conditions** - Define what the transaction should do (create coins, fees, announcements)
-3. **Spend coins** - Use primitives like `StandardLayer` to create the actual spends
+3. **Spend coins** - Use primitives like `StandardLayer` (Rust) or `spendStandardCoin` (bindings)
 4. **Extract and broadcast** - Take the collected spends, sign them, and submit to the network
 
 ## Core Concepts
 
 The SDK is organized around these key abstractions:
 
-| Concept | Description |
-|---------|-------------|
-| **SpendContext** | Transaction builder that manages memory and collects coin spends |
-| **Conditions** | Builder for output conditions (create coin, fees, announcements) |
-| **Primitives** | High-level APIs for CAT, NFT, Vault, and other Chia constructs |
-| **Layers** | Composable puzzle components (internal, used by primitives) |
+| Concept | Rust | Node.js / Python | Description |
+|---------|------|------------------|-------------|
+| **Context** | `SpendContext` | `Clvm` | Transaction builder that manages memory and collects coin spends |
+| **Conditions** | `Conditions` builder | Method calls (`createCoin`, etc.) | Output conditions (create coin, fees, announcements) |
+| **Primitives** | `Cat`, `Nft`, `Vault`, etc. | `spendCats`, `spendNft`, etc. | High-level APIs for Chia constructs |
+| **Simulator** | `Simulator` | `Simulator` | Test transaction validation locally |
 
 ## Next Steps
 

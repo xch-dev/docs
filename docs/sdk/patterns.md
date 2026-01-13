@@ -187,26 +187,6 @@ fn try_build_transaction(/* params */) -> Result<Vec<CoinSpend>> {
 }
 ```
 
-### Validation Before Broadcast
-
-Always validate before broadcasting to mainnet:
-
-```rust
-fn safe_broadcast(
-    spends: Vec<CoinSpend>,
-    secret_keys: &[SecretKey],
-) -> Result<()> {
-    // Validate with simulator first
-    let mut sim = Simulator::new();
-    // ... setup sim state to match expected blockchain state ...
-
-    sim.spend_coins(spends.clone(), secret_keys)?;
-
-    // Only broadcast if simulation succeeds
-    broadcast_to_network(spends)
-}
-```
-
 ## Signing Patterns
 
 ### Collecting Required Signatures
