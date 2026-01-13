@@ -154,12 +154,14 @@ The SDK is organized around these key abstractions:
 |---------|------|------------------|-------------|
 | **Context** | `SpendContext` | `Clvm` | Transaction builder that manages memory and collects coin spends |
 | **Conditions** | `Conditions` builder | Method calls (`createCoin`, etc.) | Output conditions (create coin, fees, announcements) |
+| **Actions** | `Action`, `Spends` | `Action`, `Spends` | High-level declarative transaction API |
 | **Primitives** | `Cat`, `Nft`, `Vault`, etc. | `spendCats`, `spendNft`, etc. | High-level APIs for Chia constructs |
 | **Simulator** | `Simulator` | `Simulator` | Test transaction validation locally |
 
 ## Next Steps
 
 - [SpendContext](/sdk/spend-context) - Understanding the core transaction builder
+- [Action System](/sdk/actions) - High-level declarative transaction API
 - [Standard (XCH)](/sdk/primitives/standard) - Working with basic XCH coins
 - [CAT](/sdk/primitives/cat) - Issuing and spending custom asset tokens
 - [NFT](/sdk/primitives/nft) - Minting and transferring NFTs

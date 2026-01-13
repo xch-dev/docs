@@ -17,6 +17,7 @@ const sidebars: SidebarsConfig = {
       items: [
         { type: "doc", id: "sdk/index", label: "Quick Start" },
         { type: "doc", id: "sdk/spend-context", label: "SpendContext" },
+        { type: "doc", id: "sdk/actions", label: "Action System" },
         { type: "doc", id: "sdk/connectivity", label: "Connectivity" },
         {
           type: "category",
