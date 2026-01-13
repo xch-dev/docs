@@ -5,7 +5,41 @@ title: Other Primitives
 
 # Other Primitives
 
-The SDK includes several additional primitives beyond the core CAT, NFT, and Vault types. This page provides brief overviews of these primitives.
+The SDK includes several additional primitives beyond the core CAT and NFT types. This page provides brief overviews of these primitives.
+
+## Vault
+
+Vaults provide multi-signature custody for Chia assets. They enable secure storage patterns where multiple parties or conditions must be satisfied to spend funds.
+
+```rust
+use chia_wallet_sdk::prelude::*;
+
+// Vault structure
+let vault = Vault {
+    coin,
+    launcher_id,
+    proof,
+    custody_hash,  // Defines spending requirements
+};
+
+// Spend a vault with a MIPS (Multi-Input Puzzle Spend)
+vault.spend(ctx, &mips_spend)?;
+
+// Compute the child vault after a spend
+let child_vault = vault.child(new_custody_hash, new_amount);
+```
+
+For vault internals and specification, see [CHIP-0043 (MIPS)](https://github.com/Chia-Network/chips/blob/main/CHIPs/chip-0043.md).
+
+**Use cases:**
+- Multi-signature wallets requiring M-of-N approval
+- Time-locked custody arrangements
+- Institutional custody solutions
+- Escrow patterns
+
+For the complete API, see [Vault in docs.rs](https://docs.rs/chia-sdk-driver/latest/chia_sdk_driver/struct.Vault.html).
+
+---
 
 ## DID (Decentralized Identifiers)
 

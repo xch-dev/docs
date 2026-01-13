@@ -165,7 +165,6 @@ The SDK is organized around these key abstractions:
 - [Standard (XCH)](/sdk/primitives/standard) - Working with basic XCH coins
 - [CAT](/sdk/primitives/cat) - Issuing and spending custom asset tokens
 - [NFT](/sdk/primitives/nft) - Minting and transferring NFTs
-- [Vault](/sdk/primitives/vault) - Multi-signature custody
 
 ## Relationship to chia-rs
 
