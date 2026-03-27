@@ -59,6 +59,19 @@ puzzle_hash = standard_puzzle_hash(public_key)
 ```
 
   </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// The puzzle hash can be computed from a synthetic public key
+puzzleHash, _ := sdk.StandardPuzzleHash(publicKey)
+
+// In Go, spends are created directly via the Clvm object
+// rather than through a separate layer object
+```
+
+  </TabItem>
 </Tabs>
 
 ## Spending Standard Coins
@@ -128,6 +141,33 @@ coin_spends = clvm.coin_spends()
 ```
 
   </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Build the conditions
+createCoin, _ := clvm.CreateCoin(recipientPuzzleHash, 900, nil)
+defer createCoin.Close()
+
+reserveFee, _ := clvm.ReserveFee(100)
+defer reserveFee.Close()
+
+conditions := []*sdk.Program{createCoin, reserveFee}
+
+// Create the spend
+delegatedSpend, _ := clvm.DelegatedSpend(conditions)
+defer delegatedSpend.Close()
+
+clvm.SpendStandardCoin(coin, publicKey, delegatedSpend)
+
+coinSpends, _ := clvm.CoinSpends()
+```
+
+  </TabItem>
 </Tabs>
 
 ### Sending with Hints
@@ -176,6 +216,30 @@ clvm.spend_standard_coin(coin, public_key, clvm.delegated_spend(conditions))
 ```
 
   </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Include puzzle hash as memo for coin discovery
+memos, _ := clvm.Alloc(sdk.ClvmList{sdk.ClvmBytes(recipientPuzzleHash)})
+defer memos.Close()
+
+createCoin, _ := clvm.CreateCoin(recipientPuzzleHash, amount, memos)
+defer createCoin.Close()
+
+conditions := []*sdk.Program{createCoin}
+
+delegatedSpend, _ := clvm.DelegatedSpend(conditions)
+defer delegatedSpend.Close()
+
+clvm.SpendStandardCoin(coin, publicKey, delegatedSpend)
+```
+
+  </TabItem>
 </Tabs>
 
 ### Multiple Outputs
@@ -218,6 +282,38 @@ conditions = [
 ]
 
 clvm.spend_standard_coin(coin, public_key, clvm.delegated_spend(conditions))
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+memosA, _ := clvm.Alloc(sdk.ClvmList{sdk.ClvmBytes(recipientA)})
+defer memosA.Close()
+
+memosB, _ := clvm.Alloc(sdk.ClvmList{sdk.ClvmBytes(recipientB)})
+defer memosB.Close()
+
+createCoinA, _ := clvm.CreateCoin(recipientA, 500, memosA)
+defer createCoinA.Close()
+
+createCoinB, _ := clvm.CreateCoin(recipientB, 400, memosB)
+defer createCoinB.Close()
+
+reserveFee, _ := clvm.ReserveFee(100)
+defer reserveFee.Close()
+
+conditions := []*sdk.Program{createCoinA, createCoinB, reserveFee}
+
+delegatedSpend, _ := clvm.DelegatedSpend(conditions)
+defer delegatedSpend.Close()
+
+clvm.SpendStandardCoin(coin, publicKey, delegatedSpend)
 ```
 
   </TabItem>
@@ -292,6 +388,49 @@ conditions2 = [
 clvm.spend_standard_coin(coin2, pk2, clvm.delegated_spend(conditions2))
 
 coin_spends = clvm.coin_spends()
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// First coin - sends to recipient, asserts second coin is spent together
+memos1, _ := clvm.Alloc(sdk.ClvmList{sdk.ClvmBytes(recipient)})
+defer memos1.Close()
+
+createCoin1, _ := clvm.CreateCoin(recipient, 1000, memos1)
+defer createCoin1.Close()
+
+coin2Id, _ := coin2.CoinId()
+assert1, _ := clvm.AssertConcurrentSpend(coin2Id)
+defer assert1.Close()
+
+conditions1 := []*sdk.Program{createCoin1, assert1}
+delegatedSpend1, _ := clvm.DelegatedSpend(conditions1)
+defer delegatedSpend1.Close()
+
+clvm.SpendStandardCoin(coin1, pk1, delegatedSpend1)
+
+// Second coin - pays fee, asserts first coin is spent together
+reserveFee, _ := clvm.ReserveFee(100)
+defer reserveFee.Close()
+
+coin1Id, _ := coin1.CoinId()
+assert2, _ := clvm.AssertConcurrentSpend(coin1Id)
+defer assert2.Close()
+
+conditions2 := []*sdk.Program{reserveFee, assert2}
+delegatedSpend2, _ := clvm.DelegatedSpend(conditions2)
+defer delegatedSpend2.Close()
+
+clvm.SpendStandardCoin(coin2, pk2, delegatedSpend2)
+
+coinSpends, _ := clvm.CoinSpends()
 ```
 
   </TabItem>
@@ -391,6 +530,58 @@ conditions = [
 ```
 
   </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Conditions are built as a slice of *sdk.Program objects
+
+// Create output coins
+createCoin, _ := clvm.CreateCoin(puzzleHash, amount, memos)
+defer createCoin.Close()
+
+// Transaction fee (goes to farmers)
+reserveFee, _ := clvm.ReserveFee(feeAmount)
+defer reserveFee.Close()
+
+// Link multiple spends together (IMPORTANT for security)
+assertSpend, _ := clvm.AssertConcurrentSpend(otherCoinId)
+defer assertSpend.Close()
+
+// Coin announcements for coordinating multi-spend transactions
+createCoinAnn, _ := clvm.CreateCoinAnnouncement(message)
+defer createCoinAnn.Close()
+
+assertCoinAnn, _ := clvm.AssertCoinAnnouncement(announcementId)
+defer assertCoinAnn.Close()
+
+// Puzzle announcements
+createPuzzleAnn, _ := clvm.CreatePuzzleAnnouncement(message)
+defer createPuzzleAnn.Close()
+
+assertPuzzleAnn, _ := clvm.AssertPuzzleAnnouncement(announcementId)
+defer assertPuzzleAnn.Close()
+
+// Time conditions
+assertSeconds, _ := clvm.AssertSecondsAbsolute(timestamp)
+defer assertSeconds.Close()
+
+assertHeight, _ := clvm.AssertHeightAbsolute(blockHeight)
+defer assertHeight.Close()
+
+conditions := []*sdk.Program{
+    createCoin, reserveFee, assertSpend,
+    createCoinAnn, assertCoinAnn,
+    createPuzzleAnn, assertPuzzleAnn,
+    assertSeconds, assertHeight,
+}
+```
+
+  </TabItem>
 </Tabs>
 
 For the complete list of conditions, see the [Conditions API in docs.rs](https://docs.rs/chia-sdk-types/latest/chia_sdk_types/struct.Conditions.html).
@@ -469,6 +660,41 @@ clvm.spend_standard_coin(parent_coin, public_key, clvm.delegated_spend(condition
 # Calculate the new coin's ID
 new_coin = Coin(parent_coin.coin_id(), recipient_puzzle_hash, 900)
 print("New coin ID:", new_coin.coin_id())
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import (
+    "fmt"
+    sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+)
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// The parent coin
+parentCoin := coin
+
+// Conditions create a new coin
+createCoin, _ := clvm.CreateCoin(recipientPuzzleHash, 900, nil)
+defer createCoin.Close()
+
+conditions := []*sdk.Program{createCoin}
+
+delegatedSpend, _ := clvm.DelegatedSpend(conditions)
+defer delegatedSpend.Close()
+
+clvm.SpendStandardCoin(parentCoin, publicKey, delegatedSpend)
+
+// Calculate the new coin's ID
+parentCoinId, _ := parentCoin.CoinId()
+newCoin, _ := sdk.NewCoin(parentCoinId, recipientPuzzleHash, 900)
+defer newCoin.Close()
+
+newCoinId, _ := newCoin.CoinId()
+fmt.Println("New coin ID:", newCoinId)
 ```
 
   </TabItem>
@@ -717,6 +943,88 @@ coin_spends = send_xch(
 
 # Simulator signs and validates the transaction
 sim.spend_coins(coin_spends, [alice.sk])
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import (
+    "fmt"
+    sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+)
+
+func sendXch(
+    sourceCoin *sdk.Coin,
+    sourcePublicKey *sdk.PublicKey,
+    recipientPuzzleHash []byte,
+    amount uint64,
+    fee uint64,
+) ([]*sdk.CoinSpend, error) {
+    clvm, _ := sdk.NewClvm()
+    defer clvm.Close()
+
+    sourcePuzzleHash, _ := sdk.StandardPuzzleHash(sourcePublicKey)
+
+    // Calculate change (if any)
+    sourceAmount, _ := sourceCoin.Amount()
+    change := sourceAmount - amount - fee
+
+    // Build conditions
+    recipientMemos, _ := clvm.Alloc(sdk.ClvmList{sdk.ClvmBytes(recipientPuzzleHash)})
+    defer recipientMemos.Close()
+
+    createCoin, _ := clvm.CreateCoin(recipientPuzzleHash, amount, recipientMemos)
+    defer createCoin.Close()
+
+    reserveFee, _ := clvm.ReserveFee(fee)
+    defer reserveFee.Close()
+
+    conditions := []*sdk.Program{createCoin, reserveFee}
+
+    // Add change output if needed
+    if change > 0 {
+        changeMemos, _ := clvm.Alloc(sdk.ClvmList{sdk.ClvmBytes(sourcePuzzleHash)})
+        defer changeMemos.Close()
+
+        changeCoin, _ := clvm.CreateCoin(sourcePuzzleHash, change, changeMemos)
+        defer changeCoin.Close()
+
+        conditions = append(conditions, changeCoin)
+    }
+
+    // Create the spend
+    delegatedSpend, _ := clvm.DelegatedSpend(conditions)
+    defer delegatedSpend.Close()
+
+    clvm.SpendStandardCoin(sourceCoin, sourcePublicKey, delegatedSpend)
+
+    return clvm.CoinSpends()
+}
+
+// Example usage with Simulator (handles signing automatically)
+sim, _ := sdk.NewSimulator()
+defer sim.Close()
+
+alice, _ := sim.Bls(1000)
+defer alice.Close()
+aliceSk, _ := alice.Sk()
+defer aliceSk.Close()
+alicePk, _ := alice.Pk()
+defer alicePk.Close()
+aliceCoin, _ := alice.Coin()
+defer aliceCoin.Close()
+
+coinSpends, _ := sendXch(
+    aliceCoin,
+    alicePk,
+    recipientPuzzleHash,
+    900,
+    100,
+)
+
+// Simulator signs and validates the transaction
+sim.SpendCoins(coinSpends, []*sdk.SecretKey{aliceSk})
 ```
 
   </TabItem>

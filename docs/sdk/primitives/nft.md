@@ -168,6 +168,79 @@ launcher_id = result.nfts[0].info.launcher_id
 ```
 
   </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+package main
+
+import (
+	"fmt"
+
+	sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+)
+
+func main() {
+	clvm, _ := sdk.NewClvm()
+	defer clvm.Close()
+
+	sim, _ := sdk.NewSimulator()
+	defer sim.Close()
+
+	alice, _ := sim.Bls(1)
+	defer alice.Close()
+
+	// Define the NFT metadata
+	metadata, _ := sdk.NewNftMetadata(
+		1, // edition number
+		1, // edition total
+		[]string{"https://example.com/image.png"},     // data URIs
+		nil,                                            // data hash (optional)
+		[]string{"https://example.com/metadata.json"}, // metadata URIs
+		nil, // metadata hash (optional)
+		[]string{}, // license URIs
+		nil,        // license hash (optional)
+	)
+	defer metadata.Close()
+
+	// Mint the NFT
+	nftMetadata, _ := clvm.NftMetadata(metadata)
+	defer nftMetadata.Close()
+
+	updaterHash, _ := sdk.ConstantsNftMetadataUpdaterDefaultHash()
+	puzzleHash, _ := alice.PuzzleHash()
+
+	mint, _ := sdk.NewNftMint(
+		nftMetadata,
+		updaterHash,
+		puzzleHash, // Owner p2 puzzle hash
+		puzzleHash, // Royalty puzzle hash
+		300,        // Royalty in basis points (3%)
+		nil,        // Transfer condition (optional)
+	)
+	defer mint.Close()
+
+	coin, _ := alice.Coin()
+	coinId, _ := coin.CoinId()
+	result, _ := clvm.MintNfts(coinId, []*sdk.NftMint{mint})
+	defer result.Close()
+
+	// Spend the parent coin with mint conditions
+	parentConditions, _ := result.ParentConditions()
+	delegated, _ := clvm.DelegatedSpend(parentConditions)
+	defer delegated.Close()
+
+	pk, _ := alice.Pk()
+	clvm.SpendStandardCoin(coin, pk, delegated)
+
+	// The NFT's permanent identifier
+	nfts, _ := result.Nfts()
+	info, _ := nfts[0].Info()
+	launcherId, _ := info.LauncherId()
+	fmt.Println(launcherId)
+}
+```
+
+  </TabItem>
 </Tabs>
 
 ## Transferring NFTs
@@ -225,6 +298,30 @@ inner_spend = clvm.standard_spend(
 new_nft = clvm.spend_nft(nft, inner_spend)
 
 coin_spends = clvm.coin_spends()
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// Transfer the NFT to a new owner
+memos, _ := clvm.Alloc(sdk.ClvmList{sdk.ClvmBytes(newOwnerPuzzleHash)})
+defer memos.Close()
+
+createCoin, _ := clvm.CreateCoin(newOwnerPuzzleHash, 1, memos)
+defer createCoin.Close()
+
+delegated, _ := clvm.DelegatedSpend([]*sdk.Program{createCoin})
+defer delegated.Close()
+
+pk, _ := alice.Pk()
+innerSpend, _ := clvm.StandardSpend(pk, delegated)
+defer innerSpend.Close()
+
+newNft, _ := clvm.SpendNft(nft, innerSpend)
+defer newNft.Close()
+
+coinSpends, _ := clvm.CoinSpends()
 ```
 
   </TabItem>
@@ -298,6 +395,35 @@ inner_spend = clvm.standard_spend(
 
 # Spend with custom conditions
 new_nft = clvm.spend_nft(nft, inner_spend)
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// Build conditions for the NFT spend
+announcement, _ := clvm.CreateCoinAnnouncement([]byte("nft_action"))
+defer announcement.Close()
+
+fee, _ := clvm.ReserveFee(feeAmount)
+defer fee.Close()
+
+memos, _ := clvm.Alloc(sdk.ClvmList{sdk.ClvmBytes(newOwnerPuzzleHash)})
+defer memos.Close()
+
+createCoin, _ := clvm.CreateCoin(newOwnerPuzzleHash, 1, memos)
+defer createCoin.Close()
+
+delegated, _ := clvm.DelegatedSpend([]*sdk.Program{announcement, fee, createCoin})
+defer delegated.Close()
+
+pk, _ := alice.Pk()
+innerSpend, _ := clvm.StandardSpend(pk, delegated)
+defer innerSpend.Close()
+
+// Spend with custom conditions
+newNft, _ := clvm.SpendNft(nft, innerSpend)
+defer newNft.Close()
 ```
 
   </TabItem>
@@ -514,6 +640,95 @@ def mint_and_transfer_nft(recipient_puzzle_hash: bytes):
     sim.spend_coins(clvm.coin_spends(), [alice.sk])
 
     return launcher_id
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+package main
+
+import (
+	"fmt"
+
+	sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+)
+
+func mintAndTransferNft(recipientPuzzleHash []byte) ([]byte, error) {
+	clvm, _ := sdk.NewClvm()
+	defer clvm.Close()
+
+	sim, _ := sdk.NewSimulator()
+	defer sim.Close()
+
+	alice, _ := sim.Bls(2)
+	defer alice.Close()
+
+	puzzleHash, _ := alice.PuzzleHash()
+	coin, _ := alice.Coin()
+	pk, _ := alice.Pk()
+	sk, _ := alice.Sk()
+
+	// Step 1: Mint the NFT
+	metadata, _ := sdk.NewNftMetadata(
+		1, 1,
+		[]string{"https://example.com/image.png"},
+		nil, []string{}, nil, []string{}, nil,
+	)
+	defer metadata.Close()
+
+	nftMetadata, _ := clvm.NftMetadata(metadata)
+	defer nftMetadata.Close()
+
+	updaterHash, _ := sdk.ConstantsNftMetadataUpdaterDefaultHash()
+
+	mint, _ := sdk.NewNftMint(
+		nftMetadata,
+		updaterHash,
+		puzzleHash,
+		puzzleHash,
+		0,   // No royalties
+		nil, // Transfer condition (optional)
+	)
+	defer mint.Close()
+
+	coinId, _ := coin.CoinId()
+	result, _ := clvm.MintNfts(coinId, []*sdk.NftMint{mint})
+	defer result.Close()
+
+	parentConditions, _ := result.ParentConditions()
+	delegated, _ := clvm.DelegatedSpend(parentConditions)
+	defer delegated.Close()
+
+	clvm.SpendStandardCoin(coin, pk, delegated)
+
+	nfts, _ := result.Nfts()
+	info, _ := nfts[0].Info()
+	launcherId, _ := info.LauncherId()
+
+	// Step 2: Transfer to recipient
+	memos, _ := clvm.Alloc(sdk.ClvmList{sdk.ClvmBytes(recipientPuzzleHash)})
+	defer memos.Close()
+
+	createCoin, _ := clvm.CreateCoin(recipientPuzzleHash, 1, memos)
+	defer createCoin.Close()
+
+	transferDelegated, _ := clvm.DelegatedSpend([]*sdk.Program{createCoin})
+	defer transferDelegated.Close()
+
+	innerSpend, _ := clvm.StandardSpend(pk, transferDelegated)
+	defer innerSpend.Close()
+
+	clvm.SpendNft(nfts[0], innerSpend)
+
+	// Sign and validate
+	coinSpends, _ := clvm.CoinSpends()
+
+	sim.SpendCoins(coinSpends, []*sdk.SecretKey{sk})
+
+	fmt.Println(launcherId)
+	return launcherId, nil
+}
 ```
 
   </TabItem>

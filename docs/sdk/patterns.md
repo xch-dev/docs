@@ -3,6 +3,9 @@ slug: /sdk/patterns
 title: Application Patterns
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Application Patterns
 
 This page covers common patterns for structuring applications that use the Wallet SDK.
@@ -12,6 +15,9 @@ This page covers common patterns for structuring applications that use the Walle
 ### Single Transaction Pattern
 
 For simple operations, create a SpendContext, use it, and discard:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 fn send_payment(/* params */) -> Result<SpendBundle> {
@@ -26,9 +32,36 @@ fn send_payment(/* params */) -> Result<SpendBundle> {
 }
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+func sendPayment(/* params */) (*sdk.SpendBundle, error) {
+    clvm, _ := sdk.NewClvm()
+    defer clvm.Close()
+
+    // Build transaction
+    spend, _ := clvm.DelegatedSpend(conditions)
+    defer spend.Close()
+    stdSpend, _ := clvm.StandardSpend(syntheticKey, spend)
+    defer stdSpend.Close()
+    clvm.SpendStandardCoin(coin, syntheticKey, stdSpend)
+
+    // Extract, sign, return
+    coinSpends, _ := clvm.CoinSpends()
+    return signAndBundle(coinSpends)
+}
+```
+
+  </TabItem>
+</Tabs>
+
 ### Reusable Context Pattern
 
 For multiple transactions, reuse the context to benefit from puzzle caching:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 struct TransactionBuilder {
@@ -52,11 +85,47 @@ impl TransactionBuilder {
 }
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+type TransactionBuilder struct {
+    clvm *sdk.Clvm
+}
+
+func NewTransactionBuilder() *TransactionBuilder {
+    clvm, _ := sdk.NewClvm()
+    return &TransactionBuilder{clvm: clvm}
+}
+
+func (b *TransactionBuilder) Close() error {
+    return b.clvm.Close()
+}
+
+func (b *TransactionBuilder) BuildPayment(/* params */) ([]*sdk.CoinSpend, error) {
+    // Use b.clvm for building
+    spend, _ := b.clvm.DelegatedSpend(conditions)
+    defer spend.Close()
+    stdSpend, _ := b.clvm.StandardSpend(syntheticKey, spend)
+    defer stdSpend.Close()
+    b.clvm.SpendStandardCoin(coin, syntheticKey, stdSpend)
+
+    // CoinSpends() returns accumulated spends and resets
+    return b.clvm.CoinSpends()
+}
+```
+
+  </TabItem>
+</Tabs>
+
 ## Batching Transactions
 
 ### Multiple Independent Spends
 
 When spending multiple coins, batch them in one transaction and link them with `assert_concurrent_spend`:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 let ctx = &mut SpendContext::new();
@@ -83,6 +152,52 @@ for (i, (coin, pk)) in coins.iter().enumerate() {
 let spends = ctx.take();
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Collect all coin IDs for concurrent spend assertions
+var coinIds [][]byte
+for _, coin := range coins {
+    id, _ := coin.CoinId()
+    coinIds = append(coinIds, id)
+}
+
+// Spend multiple coins in one transaction
+for i, coin := range coins {
+    // Build conditions with create_coin
+    var conditions []*sdk.Program
+    cc, _ := sdk.NewCreateCoin(destination, coin.Amount(), memos)
+    defer cc.Close()
+    ccProg, _ := clvm.CreateCoin(cc)
+    conditions = append(conditions, ccProg)
+
+    // Link to all other coins in the transaction
+    for j, otherId := range coinIds {
+        if i != j {
+            acs, _ := sdk.NewAssertConcurrentSpend(otherId)
+            defer acs.Close()
+            acsProg, _ := clvm.AssertConcurrentSpend(acs)
+            conditions = append(conditions, acsProg)
+        }
+    }
+
+    spend, _ := clvm.DelegatedSpend(conditions)
+    defer spend.Close()
+    stdSpend, _ := clvm.StandardSpend(syntheticKeys[i], spend)
+    defer stdSpend.Close()
+    clvm.SpendStandardCoin(coin, syntheticKeys[i], stdSpend)
+}
+
+coinSpends, _ := clvm.CoinSpends()
+```
+
+  </TabItem>
+</Tabs>
+
 :::warning
 Always use `assert_concurrent_spend` to link coins in a multi-spend transaction. Without it, an attacker could extract individual spends from your signed bundle.
 :::
@@ -90,6 +205,9 @@ Always use `assert_concurrent_spend` to link coins in a multi-spend transaction.
 ### Dependent Spends
 
 When spends depend on each other (e.g., parent-child), ensure proper ordering:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 let ctx = &mut SpendContext::new();
@@ -111,11 +229,40 @@ StandardLayer::new(pk2).spend(ctx, child_coin, conditions)?;
 let spends = ctx.take();
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// First spend creates a coin
+// ... build conditions with CreateCoin for intermediate_ph, 1000
+clvm.SpendStandardCoin(parentCoin, syntheticKey1, firstSpend)
+
+// Calculate the created coin
+parentId, _ := parentCoin.CoinId()
+childCoin, _ := sdk.NewCoin(parentId, intermediatePh, 1000)
+defer childCoin.Close()
+
+// Second spend uses the created coin (ephemeral spend)
+// ... build conditions with CreateCoin + ReserveFee
+clvm.SpendStandardCoin(childCoin, syntheticKey2, secondSpend)
+
+coinSpends, _ := clvm.CoinSpends()
+```
+
+  </TabItem>
+</Tabs>
+
 ## Coin Management
 
 ### Coin Selection
 
 When you have multiple coins, select appropriately:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 fn select_coins(
@@ -138,9 +285,37 @@ fn select_coins(
 }
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+func selectCoins(available []*sdk.Coin, targetAmount uint64) []*sdk.Coin {
+    var selected []*sdk.Coin
+    var total uint64
+
+    // Simple greedy selection
+    for _, coin := range available {
+        if total >= targetAmount {
+            break
+        }
+        selected = append(selected, coin)
+        amount, _ := coin.Amount()
+        total += amount
+    }
+
+    return selected
+}
+```
+
+  </TabItem>
+</Tabs>
+
 ### Change Handling
 
 Always account for change when the input exceeds the output:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 fn build_with_change(
@@ -167,9 +342,59 @@ fn build_with_change(
 }
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+func buildWithChange(
+    clvm *sdk.Clvm,
+    coin *sdk.Coin,
+    syntheticKey *sdk.PublicKey,
+    sendAmount uint64,
+    recipient []byte,
+    fee uint64,
+) error {
+    amount, _ := coin.Amount()
+    change := amount - sendAmount - fee
+
+    var conditions []*sdk.Program
+    // Create coin for recipient
+    cc, _ := sdk.NewCreateCoin(recipient, sendAmount, nil)
+    defer cc.Close()
+    ccProg, _ := clvm.CreateCoin(cc)
+    conditions = append(conditions, ccProg)
+
+    // Reserve fee
+    rf, _ := sdk.NewReserveFee(fee)
+    defer rf.Close()
+    rfProg, _ := clvm.ReserveFee(rf)
+    conditions = append(conditions, rfProg)
+
+    // Change output
+    if change > 0 {
+        changeCc, _ := sdk.NewCreateCoin(senderPh, change, nil)
+        defer changeCc.Close()
+        changeProg, _ := clvm.CreateCoin(changeCc)
+        conditions = append(conditions, changeProg)
+    }
+
+    spend, _ := clvm.DelegatedSpend(conditions)
+    defer spend.Close()
+    stdSpend, _ := clvm.StandardSpend(syntheticKey, spend)
+    defer stdSpend.Close()
+    return clvm.SpendStandardCoin(coin, syntheticKey, stdSpend)
+}
+```
+
+  </TabItem>
+</Tabs>
+
 ## Error Handling
 
 ### Graceful Error Recovery
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 fn try_build_transaction(/* params */) -> Result<Vec<CoinSpend>> {
@@ -187,9 +412,32 @@ fn try_build_transaction(/* params */) -> Result<Vec<CoinSpend>> {
 }
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+func tryBuildTransaction(/* params */) ([]*sdk.CoinSpend, error) {
+    clvm, _ := sdk.NewClvm()
+    defer clvm.Close() // Always cleaned up, even on error
+
+    // Attempt to build
+    if err := buildComplexSpend(clvm /* params */); err != nil {
+        return nil, err
+    }
+
+    return clvm.CoinSpends()
+}
+```
+
+  </TabItem>
+</Tabs>
+
 ## Signing Patterns
 
 ### Collecting Required Signatures
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 fn sign_spends(
@@ -215,9 +463,36 @@ fn sign_spends(
 }
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+func signSpends(
+    coinSpends []*sdk.CoinSpend,
+    secretKeys []*sdk.SecretKey,
+) (*sdk.Signature, error) {
+    // Sign each spend with the appropriate key
+    var sigs []*sdk.Signature
+    for _, sk := range secretKeys {
+        msg := /* compute message for this key */
+        sig, _ := sk.Sign(msg)
+        sigs = append(sigs, sig)
+    }
+
+    // Aggregate signatures
+    return sdk.NewSignatureAggregate(sigs)
+}
+```
+
+  </TabItem>
+</Tabs>
+
 ### Multi-Party Signing
 
 When multiple parties need to sign:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 // Party 1 builds and partially signs
@@ -236,9 +511,36 @@ let final_sig = aggregate(&partial.signatures);
 let bundle = SpendBundle::new(partial.spends, final_sig);
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// Party 1 builds and partially signs
+coinSpends := buildTransaction()
+sig1, _ := signMyPortion(coinSpends, myKeys)
+
+// Serialize and send to Party 2
+// (serialize coinSpends and sig1 for transport)
+
+// Party 2 adds their signature
+sig2, _ := signMyPortion(coinSpends, theirKeys)
+
+// Combine and broadcast
+finalSig, _ := sdk.NewSignatureAggregate([]*sdk.Signature{sig1, sig2})
+defer finalSig.Close()
+bundle, _ := sdk.NewSpendBundle(coinSpends, finalSig)
+defer bundle.Close()
+```
+
+  </TabItem>
+</Tabs>
+
 ## State Tracking
 
 ### Tracking Coin State
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 struct WalletState {
@@ -263,9 +565,48 @@ impl WalletState {
 }
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+type WalletState struct {
+    coins         map[string]*sdk.Coin // keyed by hex coin ID
+    pendingSpends map[string]bool
+}
+
+func (w *WalletState) MarkSpent(coinId []byte) {
+    w.pendingSpends[hex.EncodeToString(coinId)] = true
+}
+
+func (w *WalletState) ConfirmSpent(coinId []byte) {
+    key := hex.EncodeToString(coinId)
+    if coin, ok := w.coins[key]; ok {
+        coin.Close()
+        delete(w.coins, key)
+    }
+    delete(w.pendingSpends, key)
+}
+
+func (w *WalletState) AvailableCoins() []*sdk.Coin {
+    var available []*sdk.Coin
+    for id, coin := range w.coins {
+        if !w.pendingSpends[id] {
+            available = append(available, coin)
+        }
+    }
+    return available
+}
+```
+
+  </TabItem>
+</Tabs>
+
 ### Tracking NFT/CAT State
 
 For singletons and CATs, track the current coin after each spend:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 struct NftTracker {
@@ -282,6 +623,36 @@ impl NftTracker {
     }
 }
 ```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+type NftTracker struct {
+    nft *sdk.Nft
+}
+
+func (t *NftTracker) AfterTransfer(newNft *sdk.Nft) {
+    if t.nft != nil {
+        t.nft.Close()
+    }
+    t.nft = newNft
+}
+
+func (t *NftTracker) CurrentCoin() (*sdk.Coin, error) {
+    return t.nft.Coin()
+}
+
+func (t *NftTracker) Close() error {
+    if t.nft != nil {
+        return t.nft.Close()
+    }
+    return nil
+}
+```
+
+  </TabItem>
+</Tabs>
 
 ## Best Practices
 

@@ -3,6 +3,9 @@ slug: /sdk/primitives/other
 title: Other Primitives
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Other Primitives
 
 The SDK includes several additional primitives beyond the core CAT and NFT types. This page provides brief overviews of these primitives.
@@ -10,6 +13,9 @@ The SDK includes several additional primitives beyond the core CAT and NFT types
 ## Vault
 
 Vaults provide multi-signature custody for Chia assets. They enable secure storage patterns where multiple parties or conditions must be satisfied to spend funds.
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 use chia_wallet_sdk::prelude::*;
@@ -29,6 +35,27 @@ vault.spend(ctx, &mips_spend)?;
 let child_vault = vault.child(new_custody_hash, new_amount);
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Mint a new vault
+vaultMint, _ := clvm.MintVault(parentCoinId, custodyHash, memos)
+defer vaultMint.Close()
+
+// Spend a vault with a MIPS delegated spend
+mipsSpend, _ := clvm.MipsSpend(coin, delegatedSpend)
+defer mipsSpend.Close()
+```
+
+  </TabItem>
+</Tabs>
+
 For vault internals and specification, see [CHIP-0043 (MIPS)](https://github.com/Chia-Network/chips/blob/main/CHIPs/chip-0043.md).
 
 **Use cases:**
@@ -44,6 +71,9 @@ For the complete API, see [Vault in docs.rs](https://docs.rs/chia-sdk-driver/lat
 ## DID (Decentralized Identifiers)
 
 DIDs provide on-chain identity management following the singleton pattern. A DID maintains a persistent identity that can be associated with metadata and used for authentication.
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 use chia_wallet_sdk::prelude::*;
@@ -62,6 +92,27 @@ let did = Did {
 };
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Create an eve DID
+createdDid, _ := clvm.CreateEveDid(parentCoinId, p2PuzzleHash)
+defer createdDid.Close()
+
+// Spend an existing DID
+newDid, _ := clvm.SpendDid(did, innerSpend)
+defer newDid.Close()
+```
+
+  </TabItem>
+</Tabs>
+
 **Use cases:**
 - Creator verification for NFTs
 - On-chain identity for applications
@@ -74,6 +125,9 @@ For the complete API, see [Did in docs.rs](https://docs.rs/chia-sdk-driver/lates
 ## Option Contracts
 
 Options enable on-chain derivatives trading where one party has the right (but not obligation) to buy or sell an asset at a predetermined price.
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 use chia_wallet_sdk::prelude::*;
@@ -92,6 +146,29 @@ let option = OptionContract {
 };
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Spend an option contract
+newOption, _ := clvm.SpendOption(option, innerSpend)
+defer newOption.Close()
+
+// Encode option metadata for CLVM
+optMeta, _ := sdk.NewOptionMetadata(/* ... */)
+defer optMeta.Close()
+metaProg, _ := clvm.OptionMetadata(optMeta)
+defer metaProg.Close()
+```
+
+  </TabItem>
+</Tabs>
+
 **Use cases:**
 - Hedging price risk
 - Speculation on asset prices
@@ -105,6 +182,9 @@ For the complete API, see [OptionContract in docs.rs](https://docs.rs/chia-sdk-d
 
 ClawbackV2 enables recoverable payments where the sender can reclaim funds within a specified time window if needed.
 
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 use chia_wallet_sdk::prelude::*;
 
@@ -116,6 +196,26 @@ let clawback = ClawbackV2 {
     clawback_timeout,  // Blocks until recipient can claim
 };
 ```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// ClawbackV2 is available as a data type in the Go bindings.
+// It is used within parsed transactions (e.g., VaultTransaction)
+// to represent recoverable payment conditions.
+clawback, _ := sdk.NewClawbackV2(
+    senderPuzzleHash,
+    recipientPuzzleHash,
+    clawbackTimeout,
+)
+defer clawback.Close()
+```
+
+  </TabItem>
+</Tabs>
 
 **Use cases:**
 - Reversible payments for dispute resolution
@@ -130,6 +230,9 @@ For the complete API, see [ClawbackV2 in docs.rs](https://docs.rs/chia-sdk-drive
 
 StreamedAsset implements time-locked or vesting payments where funds are released gradually over time.
 
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 use chia_wallet_sdk::prelude::*;
 
@@ -142,6 +245,23 @@ let streamed = StreamedAsset {
     // Funds unlock linearly between start and end
 };
 ```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Spend a streamed asset at a given payment time
+// Set clawback to true if the sender is reclaiming
+err := clvm.SpendStreamedAsset(streamedAsset, paymentTime, false)
+```
+
+  </TabItem>
+</Tabs>
 
 **Use cases:**
 - Employee vesting schedules
@@ -156,12 +276,32 @@ For the complete API, see [StreamedAsset in docs.rs](https://docs.rs/chia-sdk-dr
 
 Bulletin provides on-chain data storage using the singleton pattern. It allows storing arbitrary data that can be updated over time.
 
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 use chia_wallet_sdk::prelude::*;
 
 // Bulletin for on-chain data storage
 // Uses BulletinLayer for puzzle construction
 ```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Create a bulletin with messages
+bulletin, _ := clvm.CreateBulletin(parentCoinId, hiddenPuzzleHash, messages)
+defer bulletin.Close()
+```
+
+  </TabItem>
+</Tabs>
 
 **Use cases:**
 - On-chain configuration storage
@@ -175,6 +315,9 @@ For the complete API, see [BulletinLayer in docs.rs](https://docs.rs/chia-sdk-dr
 ## Singleton
 
 The Singleton primitive is the foundation for NFTs, DIDs, Vaults, and other unique assets. It ensures only one instance of an asset exists at any time.
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 use chia_wallet_sdk::prelude::*;
@@ -190,6 +333,23 @@ let singleton = Singleton {
 };
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// Singletons are accessed through their specific types:
+// NFTs, DIDs, Vaults, OptionContracts, etc.
+// Each type wraps a singleton with domain-specific methods.
+
+// The launcher_id is the permanent unique identifier
+launcherId, _ := nft.LauncherId()
+```
+
+  </TabItem>
+</Tabs>
+
 **Key properties:**
 - Unique identity via launcher_id
 - Lineage proofs ensure authenticity
@@ -203,6 +363,9 @@ For the complete API, see [Singleton in docs.rs](https://docs.rs/chia-sdk-driver
 
 Launchers are used to create new singletons (NFTs, DIDs, etc.). The launcher coin's ID becomes the permanent identifier for the singleton.
 
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 use chia_wallet_sdk::prelude::*;
 
@@ -213,6 +376,23 @@ let launcher_id = launcher.coin().coin_id();
 // The launcher_id becomes the permanent identifier
 // for the resulting NFT, DID, or other singleton
 ```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// Launching singletons is handled by the Clvm mint methods:
+// - clvm.MintNfts() for NFTs
+// - clvm.CreateEveDid() for DIDs
+// - clvm.MintVault() for Vaults
+// The launcher is created internally and the launcher_id
+// is returned as part of the minted object.
+```
+
+  </TabItem>
+</Tabs>
 
 For the complete API, see [Launcher in docs.rs](https://docs.rs/chia-sdk-driver/latest/chia_sdk_driver/struct.Launcher.html).
 

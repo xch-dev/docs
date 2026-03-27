@@ -3,6 +3,9 @@ slug: /sdk/offers
 title: Offers
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Offers
 
 Offers enable trustless, atomic swaps of assets on the Chia blockchain. Both parties' transactions execute together or not at all.
@@ -22,6 +25,9 @@ Chia offers work by:
 
 The settlement layer is a special puzzle (`SETTLEMENT_PAYMENT_HASH`) that locks assets until the offer is completed. Assets sent to this puzzle hash can only be claimed by satisfying the offer's requirements.
 
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 use chia_wallet_sdk::prelude::*;
 use chia_puzzles::SETTLEMENT_PAYMENT_HASH;
@@ -30,6 +36,25 @@ use chia_puzzles::SETTLEMENT_PAYMENT_HASH;
 // the corresponding requested payments are satisfied
 let settlement_puzzle_hash: Bytes32 = SETTLEMENT_PAYMENT_HASH.into();
 ```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// The settlement layer is used internally by the SDK
+// when constructing offer spends via Clvm methods:
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Build a settlement spend with notarized payments
+settlementSpend, _ := clvm.SettlementSpend(notarizedPayments)
+defer settlementSpend.Close()
+```
+
+  </TabItem>
+</Tabs>
 
 ### Offer Structure
 
@@ -46,6 +71,9 @@ An offer contains:
 
 Requested payments use a nonce (derived from offered coin IDs) to link the maker's and taker's spends:
 
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 use chia_puzzle_types::offer::{NotarizedPayment, Payment};
 
@@ -58,9 +86,34 @@ let notarized_payment = NotarizedPayment::new(
 );
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// Build notarized payments for settlement
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+payment, _ := sdk.NewPayment(recipientPuzzleHash, amount, memos)
+defer payment.Close()
+paymentProg, _ := clvm.Payment(payment)
+defer paymentProg.Close()
+
+np, _ := sdk.NewNotarizedPayment(nonce, []*sdk.Payment{payment})
+defer np.Close()
+```
+
+  </TabItem>
+</Tabs>
+
 ## XCH for CAT Offer
 
 ### Maker: Offering XCH for CAT
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 use chia_wallet_sdk::prelude::*;
@@ -126,7 +179,50 @@ fn create_xch_for_cat_offer(
 }
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// In Go, offers are built using the Clvm spending primitives
+// and then encoded for sharing.
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Step 1: Lock XCH to settlement puzzle
+// Build conditions that create a coin at the settlement puzzle hash
+cc, _ := sdk.NewCreateCoin(settlementPuzzleHash, xchAmount, nil)
+defer cc.Close()
+ccProg, _ := clvm.CreateCoin(cc)
+
+// Spend the XCH coin with these conditions
+spend, _ := clvm.DelegatedSpend([]*sdk.Program{ccProg})
+defer spend.Close()
+stdSpend, _ := clvm.StandardSpend(syntheticKey, spend)
+defer stdSpend.Close()
+clvm.SpendStandardCoin(xchCoin, syntheticKey, stdSpend)
+
+// Step 2: Spend settlement coin with notarized payments
+clvm.SpendSettlementCoin(settlementCoin, notarizedPayments)
+
+// Step 3: Extract and encode the offer
+coinSpends, _ := clvm.CoinSpends()
+sb, _ := sdk.NewSpendBundle(coinSpends, signature)
+defer sb.Close()
+
+encoded, _ := sdk.EncodeOffer(sb)
+// Share 'encoded' string with the taker
+```
+
+  </TabItem>
+</Tabs>
+
 ### Taker: Accepting with CAT
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 use chia_wallet_sdk::prelude::*;
@@ -203,11 +299,47 @@ fn accept_xch_for_cat_offer(
 }
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// Step 1: Decode the maker's offer
+makerBundle, _ := sdk.DecodeOffer(encodedOffer)
+defer makerBundle.Close()
+
+// Step 2: Build taker's spends using Clvm
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Spend CATs to satisfy the maker's request
+catSpends := []*sdk.CatSpend{catSpend}
+newCats, _ := clvm.SpendCats(catSpends)
+for _, cat := range newCats {
+    defer cat.Close()
+}
+
+// Step 3: Build taker's spend bundle
+takerSpends, _ := clvm.CoinSpends()
+takerBundle, _ := sdk.NewSpendBundle(takerSpends, takerSignature)
+defer takerBundle.Close()
+
+// Step 4: Combine maker + taker bundles
+// Merge coin spends and aggregate signatures from both bundles
+```
+
+  </TabItem>
+</Tabs>
+
 ## NFT Offers
 
 NFTs have built-in methods for offer settlement that handle royalties.
 
 ### Maker: Offering NFT
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 use chia_wallet_sdk::prelude::*;
@@ -274,7 +406,36 @@ fn create_nft_offer(
 }
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Step 1: Spend the NFT into the settlement layer
+innerSpend, _ := clvm.DelegatedSpend(settlementConditions)
+defer innerSpend.Close()
+newNft, _ := clvm.SpendNft(nft, innerSpend)
+defer newNft.Close()
+
+// Step 2: Build and encode the maker's offer
+coinSpends, _ := clvm.CoinSpends()
+sb, _ := sdk.NewSpendBundle(coinSpends, makerSignature)
+defer sb.Close()
+
+encoded, _ := sdk.EncodeOffer(sb)
+```
+
+  </TabItem>
+</Tabs>
+
 ### Taker: Accepting NFT Offer
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 use chia_wallet_sdk::prelude::*;
@@ -362,9 +523,41 @@ fn accept_nft_offer(
 }
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// Step 1: Decode the maker's offer
+makerBundle, _ := sdk.DecodeOffer(encodedOffer)
+defer makerBundle.Close()
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Step 2: Unlock the NFT via settlement
+clvm.SpendSettlementCoin(nftSettlementCoin, notarizedPayments)
+
+// Step 3: Pay maker's requested XCH + royalties
+// Build conditions for XCH payment
+clvm.SpendStandardCoin(xchCoin, syntheticKey, paymentSpend)
+
+// Step 4: Build taker bundle and combine with maker
+takerSpends, _ := clvm.CoinSpends()
+takerBundle, _ := sdk.NewSpendBundle(takerSpends, takerSignature)
+defer takerBundle.Close()
+```
+
+  </TabItem>
+</Tabs>
+
 ## Parsing Existing Offers
 
 To parse an offer received from elsewhere:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 use chia_wallet_sdk::prelude::*;
@@ -396,9 +589,37 @@ fn parse_offer(spend_bundle: &SpendBundle) -> Result<Offer, DriverError> {
 }
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// Decode the offer string into a spend bundle
+sb, _ := sdk.DecodeOffer(encodedOffer)
+defer sb.Close()
+
+// Inspect the spend bundle's coin spends
+coinSpends, _ := sb.CoinSpends()
+for _, cs := range coinSpends {
+    coin, _ := cs.Coin()
+    amount, _ := coin.Amount()
+    puzzleHash, _ := coin.PuzzleHash()
+    fmt.Printf("Coin: %x, amount: %d\n", puzzleHash, amount)
+    coin.Close()
+    cs.Close()
+}
+```
+
+  </TabItem>
+</Tabs>
+
 ## Royalties
 
 NFT royalties are automatically calculated based on trade prices:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 // Get royalty info from an offer
@@ -417,9 +638,27 @@ for royalty in &royalties {
 println!("Total royalty XCH: {} mojos", royalty_amounts.xch);
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// Royalty calculation is handled within the Rust layer.
+// When building NFT offers, use the Clvm NFT spending methods
+// which automatically account for royalty requirements.
+
+// The trade prices set during NFT locking determine royalty amounts:
+// royalty = trade_price * royalty_basis_points / 10000
+```
+
+  </TabItem>
+</Tabs>
+
 ## Offer Compression
 
 For sharing offers efficiently, enable compression:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```toml
 chia-wallet-sdk = { version = "0.32", features = ["offer-compression"] }
@@ -435,9 +674,29 @@ let compressed = compress_offer(&offer_bytes)?;
 let decompressed = decompress_offer(&compressed)?;
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// EncodeOffer compresses and encodes a spend bundle for sharing
+encoded, _ := sdk.EncodeOffer(spendBundle)
+
+// DecodeOffer decompresses and decodes an offer string
+decoded, _ := sdk.DecodeOffer(encoded)
+defer decoded.Close()
+```
+
+  </TabItem>
+</Tabs>
+
 ## Helper Function
 
 A utility for signing spends used in the examples above:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 fn sign_spends(
@@ -461,6 +720,28 @@ fn sign_spends(
     Ok(signature)
 }
 ```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+func signSpends(sk *sdk.SecretKey, messages [][]byte) (*sdk.Signature, error) {
+    var sigs []*sdk.Signature
+    for _, msg := range messages {
+        sig, err := sk.Sign(msg)
+        if err != nil {
+            return nil, err
+        }
+        sigs = append(sigs, sig)
+    }
+    return sdk.NewSignatureAggregate(sigs)
+}
+```
+
+  </TabItem>
+</Tabs>
 
 ## Security Considerations
 

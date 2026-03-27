@@ -3,6 +3,9 @@ slug: /sdk/troubleshooting
 title: Troubleshooting
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Troubleshooting
 
 This page covers common issues when working with the Wallet SDK and how to resolve them.
@@ -21,6 +24,9 @@ This page covers common issues when working with the Wallet SDK and how to resol
 
 The puzzle hash used to create a coin must match the puzzle used to spend it:
 
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 // When creating a coin
 let puzzle_hash = StandardLayer::puzzle_hash(public_key);
@@ -30,9 +36,27 @@ conditions.create_coin(puzzle_hash, amount, memos);
 StandardLayer::new(public_key).spend(ctx, coin, conditions)?;
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// When creating a coin, use the matching synthetic key
+cc, _ := sdk.NewCreateCoin(puzzleHash, amount, memos)
+defer cc.Close()
+
+// When spending, use the same key
+clvm.SpendStandardCoin(coin, syntheticKey, spend)
+```
+
+  </TabItem>
+</Tabs>
+
 **Mismatched amounts**
 
 Output amounts must not exceed input amounts:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 // Input: 1000 mojos
@@ -44,9 +68,28 @@ let fee = 100;
 // Total: 900 + 100 = 1000 ✓
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// Input: 1000 mojos
+coinAmount := uint64(1000)
+
+// Outputs must sum to <= 1000
+sendAmount := uint64(900)
+fee := uint64(100)
+// Total: 900 + 100 = 1000 ✓
+```
+
+  </TabItem>
+</Tabs>
+
 **Missing lineage proof**
 
 CATs and singletons require valid lineage proofs:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 // Ensure CAT has lineage proof set
@@ -56,6 +99,19 @@ let cat = Cat {
     lineage_proof: Some(lineage_proof), // Required for spending
 };
 ```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// CAT lineage proofs are managed automatically by the SDK
+// when using clvm.SpendCats(). Ensure the Cat object was
+// obtained from a previous spend or mint operation that
+// includes the proof.
+```
+
+  </TabItem>
+</Tabs>
 
 ---
 
@@ -73,6 +129,9 @@ let cat = Cat {
 
 Ensure you sign with the key that matches the puzzle:
 
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 // The public key in the puzzle
 let p2 = StandardLayer::new(alice.pk);
@@ -82,9 +141,26 @@ p2.spend(ctx, coin, conditions)?;
 sim.spend_coins(spends, &[alice.sk])?;  // Not bob.sk!
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// The synthetic key in the puzzle
+clvm.SpendStandardCoin(coin, aliceSyntheticKey, spend)
+
+// Must sign with the corresponding secret key
+sig, _ := aliceSk.Sign(message) // Not bobSk!
+```
+
+  </TabItem>
+</Tabs>
+
 **Missing signatures**
 
 Multi-input transactions may require multiple signatures:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 // If spending coins from different keys
@@ -95,14 +171,45 @@ StandardLayer::new(bob.pk).spend(ctx, coin2, conditions2)?;
 sim.spend_coins(spends, &[alice.sk, bob.sk])?;
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// If spending coins from different keys
+clvm.SpendStandardCoin(coin1, aliceSyntheticKey, spend1)
+clvm.SpendStandardCoin(coin2, bobSyntheticKey, spend2)
+
+// Both keys must sign
+sig1, _ := aliceSk.Sign(msg1)
+sig2, _ := bobSk.Sign(msg2)
+aggSig, _ := sdk.NewSignatureAggregate([]*sdk.Signature{sig1, sig2})
+```
+
+  </TabItem>
+</Tabs>
+
 **Incorrect AGG_SIG_ME data**
 
 When signing manually, ensure you use the correct AGG_SIG_ME additional data:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 // AGG_SIG_ME includes coin_id + genesis_challenge
 // Make sure you're using the right network's genesis challenge
 ```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// AGG_SIG_ME includes coin_id + genesis_challenge
+// Make sure you're using the right network's genesis challenge
+```
+
+  </TabItem>
+</Tabs>
 
 ---
 
@@ -120,6 +227,9 @@ When signing manually, ensure you use the correct AGG_SIG_ME additional data:
 
 A coin can only be spent once. Check if it's already been used:
 
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 // Each coin has a unique ID
 let coin_id = coin.coin_id();
@@ -128,9 +238,26 @@ let coin_id = coin.coin_id();
 // you cannot spend it again
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// Each coin has a unique ID
+coinId, _ := coin.CoinId()
+
+// If this coin was spent in a previous transaction,
+// you cannot spend it again
+```
+
+  </TabItem>
+</Tabs>
+
 **Incorrect coin construction**
 
 When computing child coins, ensure the values match:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 // The child coin is determined by:
@@ -141,14 +268,45 @@ let child = Coin::new(
 );
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// The child coin is determined by:
+parentId, _ := parentCoin.CoinId()
+child, _ := sdk.NewCoin(
+    parentId,    // Parent's coin ID
+    puzzleHash,  // Must match create_coin puzzle hash
+    amount,      // Must match create_coin amount
+)
+defer child.Close()
+```
+
+  </TabItem>
+</Tabs>
+
 **Transaction not confirmed**
 
 If depending on a recent transaction, ensure it's confirmed:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 // In simulation, spends are instant
 // On mainnet, wait for block confirmation before using outputs
 ```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// In simulation, spends are instant
+// On mainnet, wait for block confirmation before using outputs
+```
+
+  </TabItem>
+</Tabs>
 
 ---
 
@@ -166,6 +324,9 @@ If depending on a recent transaction, ensure it's confirmed:
 
 Coin announcements include the coin ID:
 
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 // Coin announcement ID = sha256(coin_id + message)
 // Puzzle announcement ID = sha256(puzzle_hash + message)
@@ -176,9 +337,29 @@ conditions
     .assert_coin_announcement(expected_announcement_id);
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// Coin announcement ID = sha256(coin_id + message)
+// Puzzle announcement ID = sha256(puzzle_hash + message)
+
+// Create and assert announcements via condition programs
+cca, _ := sdk.NewCreateCoinAnnouncement(message)
+defer cca.Close()
+aca, _ := sdk.NewAssertCoinAnnouncement(expectedAnnouncementId)
+defer aca.Close()
+```
+
+  </TabItem>
+</Tabs>
+
 **Missing announcement creation**
 
 Every assertion needs a corresponding creation:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 // Spend 1: Create the announcement
@@ -191,14 +372,32 @@ let conditions2 = Conditions::new()
     .assert_coin_announcement(announcement_id);
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// Spend 1: Create the announcement
+cca, _ := sdk.NewCreateCoinAnnouncement([]byte("hello"))
+defer cca.Close()
+ccaProg, _ := clvm.CreateCoinAnnouncement(cca)
+
+// Spend 2: Assert the announcement
+// announcementId = sha256(coinId + message)
+aca, _ := sdk.NewAssertCoinAnnouncement(announcementId)
+defer aca.Close()
+acaProg, _ := clvm.AssertCoinAnnouncement(aca)
+```
+
+  </TabItem>
+</Tabs>
+
 **Different message bytes**
 
 Ensure message bytes match exactly:
 
-```rust
-// These are different!
+```
 b"hello"      // [104, 101, 108, 108, 111]
-"hello"       // String, needs .as_bytes()
+"hello"       // String, needs .as_bytes() in Rust or []byte() in Go
 ```
 
 ---
@@ -217,25 +416,48 @@ b"hello"      // [104, 101, 108, 108, 111]
 
 Always include a fee for mainnet transactions:
 
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 let conditions = Conditions::new()
     .create_coin(recipient, amount, memos)
     .reserve_fee(fee);  // Don't forget this
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+cc, _ := sdk.NewCreateCoin(recipient, amount, memos)
+defer cc.Close()
+rf, _ := sdk.NewReserveFee(fee) // Don't forget this
+defer rf.Close()
+
+ccProg, _ := clvm.CreateCoin(cc)
+rfProg, _ := clvm.ReserveFee(rf)
+conditions := []*sdk.Program{ccProg, rfProg}
+```
+
+  </TabItem>
+</Tabs>
+
 **Fee calculation**
 
 Fees are in mojos. During high demand, fees may need to be higher:
 
-```rust
+```
 // Minimum fee depends on network conditions
 // Check current fee estimates from a full node
-let fee = 100_000_000;  // 0.0001 XCH = 100M mojos
+// 0.0001 XCH = 100,000,000 mojos
 ```
 
 **Fee in wrong spend**
 
 If batching multiple spends, fee can be in any one of them:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 // This is fine - fee in second spend
@@ -246,6 +468,20 @@ StandardLayer::new(pk2).spend(ctx, coin2, Conditions::new()
     .create_coin(dest, amount2, memos)
     .reserve_fee(fee))?;  // Fee here covers both
 ```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// This is fine - fee in second spend
+clvm.SpendStandardCoin(coin1, syntheticKey1, spend1) // no fee
+
+// Fee here covers both spends
+clvm.SpendStandardCoin(coin2, syntheticKey2, spend2WithFee)
+```
+
+  </TabItem>
+</Tabs>
 
 ---
 
@@ -263,6 +499,9 @@ StandardLayer::new(pk2).spend(ctx, coin2, Conditions::new()
 
 CAT amounts must balance (no creation or destruction):
 
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 // If spending 1000 CAT, must output 1000 CAT
 let cat_spends = [CatSpend::new(
@@ -270,6 +509,19 @@ let cat_spends = [CatSpend::new(
     inner_spend_with_conditions,  // Must create exactly 1000 CAT output
 )];
 ```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// If spending 1000 CAT, must output 1000 CAT
+// clvm.SpendCats() handles the ring linking automatically
+// but output conditions must sum to the input amount
+newCats, _ := clvm.SpendCats(catSpends)
+```
+
+  </TabItem>
+</Tabs>
 
 :::info
 CATs cannot pay transaction fees directly. Fees must be paid with XCH in a separate spend within the same transaction.
@@ -290,6 +542,9 @@ CATs cannot pay transaction fees directly. Fees must be paid with XCH in a separ
 **Missing `assert_concurrent_spend`**
 
 When spending multiple coins together, you must link them:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 // WRONG: Spends can be separated
@@ -313,6 +568,30 @@ let conditions2 = Conditions::new()
 StandardLayer::new(pk2).spend(ctx, coin2, conditions2)?;
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// WRONG: Spends can be separated
+clvm.SpendStandardCoin(coin1, key1, spend1) // no link
+clvm.SpendStandardCoin(coin2, key2, spend2) // no link
+
+// RIGHT: Spends are linked and atomic
+// Include AssertConcurrentSpend in each spend's conditions
+coin2Id, _ := coin2.CoinId()
+acs1, _ := sdk.NewAssertConcurrentSpend(coin2Id) // Link to coin2
+defer acs1.Close()
+
+coin1Id, _ := coin1.CoinId()
+acs2, _ := sdk.NewAssertConcurrentSpend(coin1Id) // Link to coin1
+defer acs2.Close()
+
+// Add these to each spend's conditions list
+```
+
+  </TabItem>
+</Tabs>
+
 :::warning
 Without `assert_concurrent_spend`, an attacker can take your signed spend bundle, remove some spends, and submit only the ones beneficial to them. Always link all spends in a multi-coin transaction.
 :::
@@ -325,6 +604,9 @@ Without `assert_concurrent_spend`, an attacker can take your signed spend bundle
 
 Always test with the simulator first:
 
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
+
 ```rust
 let mut sim = Simulator::new();
 // Setup state...
@@ -335,18 +617,52 @@ if let Err(e) = result {
 }
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+sim, _ := sdk.NewSimulator()
+defer sim.Close()
+// Setup state...
+
+err := sim.SpendCoins(coinSpends, secretKeys)
+if err != nil {
+    fmt.Printf("Spend failed: %v\n", err)
+}
+```
+
+  </TabItem>
+</Tabs>
+
 ### Check Puzzle Hashes
 
 Verify puzzle hashes match:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 println!("Expected: {}", StandardLayer::puzzle_hash(pk));
 println!("Actual: {}", coin.puzzle_hash);
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+puzzleHash, _ := coin.PuzzleHash()
+fmt.Printf("Coin puzzle hash: %x\n", puzzleHash)
+```
+
+  </TabItem>
+</Tabs>
+
 ### Verify Amounts
 
 Ensure amounts balance:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 let total_input: u64 = coins.iter().map(|c| c.amount).sum();
@@ -355,9 +671,28 @@ let total_output: u64 = /* sum of create_coin amounts + fee */;
 assert_eq!(total_input, total_output, "Amount mismatch");
 ```
 
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+var totalInput uint64
+for _, coin := range coins {
+    amount, _ := coin.Amount()
+    totalInput += amount
+}
+// totalOutput = sum of create_coin amounts + fee
+// Ensure totalInput == totalOutput
+```
+
+  </TabItem>
+</Tabs>
+
 ### Inspect Conditions
 
 Print conditions before spending:
+
+<Tabs groupId="language">
+  <TabItem value="rust" label="Rust" default>
 
 ```rust
 let conditions = Conditions::new()
@@ -366,6 +701,20 @@ let conditions = Conditions::new()
 
 println!("Conditions: {:?}", conditions);
 ```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+// Inspect condition programs before spending
+for _, cond := range conditions {
+    bytes, _ := cond.Serialize()
+    fmt.Printf("Condition: %x\n", bytes)
+}
+```
+
+  </TabItem>
+</Tabs>
 
 ## Getting Help
 

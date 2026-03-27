@@ -94,6 +94,25 @@ index = new_asset.as_new()  # Returns int or None
 ```
 
   </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// Reference native XCH
+xch, _ := sdk.NewIdXch()
+defer xch.Close()
+
+// Reference an existing asset by its ID
+existingCat, _ := sdk.NewIdExisting(assetId)
+defer existingCat.Close()
+
+// Reference a new asset created in the current transaction
+newAsset, _ := sdk.NewId(0) // First action that creates an asset
+defer newAsset.Close()
+```
+
+  </TabItem>
 </Tabs>
 
 ## Creating Actions
@@ -162,6 +181,31 @@ send_with_memo = Action.send(Id.xch(), recipient_puzzle_hash, 1000, memo_program
 ```
 
   </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// Send XCH
+xchId, _ := sdk.NewIdXch()
+defer xchId.Close()
+sendXch, _ := sdk.NewActionSend(xchId, recipientPuzzleHash, 1000, nil)
+defer sendXch.Close()
+
+// Send a CAT
+catId, _ := sdk.NewIdExisting(assetId)
+defer catId.Close()
+sendCat, _ := sdk.NewActionSend(catId, recipientPuzzleHash, 500, nil)
+defer sendCat.Close()
+
+// Send a newly created asset (from action at index 0)
+newId, _ := sdk.NewId(0)
+defer newId.Close()
+sendNew, _ := sdk.NewActionSend(newId, recipientPuzzleHash, 100, nil)
+defer sendNew.Close()
+```
+
+  </TabItem>
 </Tabs>
 
 ### Fee Action
@@ -187,6 +231,16 @@ const fee = Action.fee(1000n);
 
 ```python
 fee = Action.fee(1000)
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+fee, _ := sdk.NewActionFee(1000)
+defer fee.Close()
 ```
 
   </TabItem>
@@ -227,6 +281,17 @@ issue = Action.single_issue_cat(None, 1_000_000)
 
 # Multi-issuance CAT with custom TAIL
 issue_with_tail = Action.issue_cat(tail_spend, None, 1_000_000)
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// Single issuance CAT (genesis by coin ID - can only mint once)
+issue, _ := sdk.NewActionSingleIssueCat(nil, 1_000_000)
+defer issue.Close()
 ```
 
   </TabItem>
@@ -332,6 +397,37 @@ metadata_update = Spend(
     clvm.list([clvm.string("u"), clvm.string("https://example.com/new-uri")])
 )
 update = Action.update_nft(Id.existing(launcher_id), [metadata_update])
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// Mint an NFT
+metadataProgram, _ := clvm.NftMetadata(metadata)
+defer metadataProgram.Close()
+updaterHash, _ := sdk.ConstantsNftMetadataUpdaterDefaultHash()
+mint, _ := sdk.NewActionMintNft(
+    clvm,
+    metadataProgram,
+    updaterHash,
+    royaltyPuzzleHash,
+    300, // 3% royalty
+    1,
+    nil, // parent ID (optional)
+)
+defer mint.Close()
+
+// Update NFT metadata
+nftId, _ := sdk.NewIdExisting(launcherId)
+defer nftId.Close()
+update, _ := sdk.NewActionUpdateNft(nftId, metadataSpends, nil)
+defer update.Close()
 ```
 
   </TabItem>
@@ -469,6 +565,39 @@ sim.spend_coins(clvm.coin_spends(), [pair.sk])
 ```
 
   </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+clvm, _ := sdk.NewClvm()
+defer clvm.Close()
+
+// 1. Create Spends with a change puzzle hash
+spends, _ := sdk.NewSpends(clvm, changePuzzleHash)
+defer spends.Close()
+
+// 2. Add coins to spend
+spends.AddXch(coin)
+
+// 3. Define actions
+xchId, _ := sdk.NewIdXch()
+defer xchId.Close()
+sendAction, _ := sdk.NewActionSend(xchId, recipientPuzzleHash, 500, nil)
+defer sendAction.Close()
+feeAction, _ := sdk.NewActionFee(100)
+defer feeAction.Close()
+
+// 4. Apply actions and get deltas
+deltas, _ := spends.Apply([]*sdk.Action{sendAction, feeAction})
+defer deltas.Close()
+
+// 5. Prepare
+finished, _ := spends.Prepare(deltas)
+defer finished.Close()
+```
+
+  </TabItem>
 </Tabs>
 
 ## Understanding Deltas
@@ -532,6 +661,17 @@ for id in deltas.ids():
 # Check if an asset needs to be provided
 if deltas.is_needed(Id.xch()):
     print("Need to provide XCH")
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// Calculate deltas from actions
+deltas, _ := sdk.DeltasFromActions(actions)
+defer deltas.Close()
 ```
 
   </TabItem>
@@ -600,6 +740,28 @@ nft_ids = outputs.nfts()
 # Get a specific NFT
 nft = outputs.nft(nft_ids[0])
 print(f"NFT launcher ID: {nft.info.launcher_id.hex()}")
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+import sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+
+// Access outputs after spending
+catIds, _ := outputs.Cats()
+cats, _ := outputs.Cat(catIds[0])
+for _, cat := range cats {
+    coin, _ := cat.Coin()
+    amount, _ := coin.Amount()
+    fmt.Printf("Created CAT: %d\n", amount)
+}
+
+nftIds, _ := outputs.Nfts()
+nft, _ := outputs.Nft(nftIds[0])
+info, _ := nft.Info()
+launcherId, _ := info.LauncherId()
+fmt.Printf("NFT launcher ID: %x\n", launcherId)
 ```
 
   </TabItem>
@@ -731,6 +893,47 @@ def send_xch(recipient_puzzle_hash: bytes, amount: int, fee: int):
     sim.spend_coins(clvm.coin_spends(), [sender.sk])
 
     return outputs
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+package main
+
+import (
+	"fmt"
+	sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+)
+
+func sendXch(recipientPuzzleHash []byte, amount uint64, fee uint64) error {
+	clvm, _ := sdk.NewClvm()
+	defer clvm.Close()
+
+	// Create spends
+	spends, _ := sdk.NewSpends(clvm, senderPh)
+	defer spends.Close()
+
+	// Add coins
+	spends.AddXch(coin)
+
+	// Apply actions
+	xchId, _ := sdk.NewIdXch()
+	defer xchId.Close()
+	sendAction, _ := sdk.NewActionSend(xchId, recipientPuzzleHash, amount, nil)
+	defer sendAction.Close()
+	feeAction, _ := sdk.NewActionFee(fee)
+	defer feeAction.Close()
+
+	deltas, _ := spends.Apply([]*sdk.Action{sendAction, feeAction})
+	defer deltas.Close()
+
+	// Prepare and finish
+	finished, _ := spends.Prepare(deltas)
+	defer finished.Close()
+
+	return nil
+}
 ```
 
   </TabItem>
@@ -882,6 +1085,47 @@ def issue_and_send_cat(
     asset_id = outputs.cat(cat_ids[0])[0].info.asset_id
 
     return asset_id, outputs
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+package main
+
+import (
+	"fmt"
+	sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+)
+
+func issueAndSendCat(recipientPuzzleHash []byte, issuanceAmount uint64, sendAmount uint64) error {
+	clvm, _ := sdk.NewClvm()
+	defer clvm.Close()
+
+	// Create spends
+	spends, _ := sdk.NewSpends(clvm, alicePh)
+	defer spends.Close()
+
+	// Add coins
+	spends.AddXch(coin)
+
+	// Issue CAT at index 0, then send from it
+	issueAction, _ := sdk.NewActionSingleIssueCat(nil, issuanceAmount)
+	defer issueAction.Close()
+	newId, _ := sdk.NewId(0)
+	defer newId.Close()
+	sendAction, _ := sdk.NewActionSend(newId, recipientPuzzleHash, sendAmount, nil)
+	defer sendAction.Close()
+
+	deltas, _ := spends.Apply([]*sdk.Action{issueAction, sendAction})
+	defer deltas.Close()
+
+	// Prepare and finish
+	finished, _ := spends.Prepare(deltas)
+	defer finished.Close()
+
+	return nil
+}
 ```
 
   </TabItem>
@@ -1069,6 +1313,58 @@ def mint_and_update_nft():
     nft = outputs.nft(nft_id)
 
     return nft.info.launcher_id, outputs
+```
+
+  </TabItem>
+  <TabItem value="go" label="Go">
+
+```go
+package main
+
+import (
+	"fmt"
+	sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+)
+
+func mintAndUpdateNft() error {
+	clvm, _ := sdk.NewClvm()
+	defer clvm.Close()
+
+	// Create spends
+	spends, _ := sdk.NewSpends(clvm, alicePh)
+	defer spends.Close()
+
+	// Add coins
+	spends.AddXch(coin)
+
+	// Mint NFT and update metadata in one transaction
+	metadataProgram, _ := clvm.NftMetadata(metadata)
+	defer metadataProgram.Close()
+	updaterHash, _ := sdk.ConstantsNftMetadataUpdaterDefaultHash()
+	mintAction, _ := sdk.NewActionMintNft(
+		clvm,
+		metadataProgram,
+		updaterHash,
+		alicePh,
+		300, // 3% royalty
+		1,
+		nil,
+	)
+	defer mintAction.Close()
+	newId, _ := sdk.NewId(0)
+	defer newId.Close()
+	updateAction, _ := sdk.NewActionUpdateNft(newId, metadataSpends, nil)
+	defer updateAction.Close()
+
+	deltas, _ := spends.Apply([]*sdk.Action{mintAction, updateAction})
+	defer deltas.Close()
+
+	// Prepare and finish
+	finished, _ := spends.Prepare(deltas)
+	defer finished.Close()
+
+	return nil
+}
 ```
 
   </TabItem>
