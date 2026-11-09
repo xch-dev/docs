@@ -11,10 +11,10 @@ The Wallet SDK provides client crates for connecting to the Chia network. This p
 
 The SDK includes two client approaches:
 
-| Crate | Use Case |
-|-------|----------|
-| `chia-sdk-client` | Direct peer-to-peer connections using the Chia protocol |
-| `chia-sdk-coinset` | HTTP/RPC client for querying coin state |
+| Crate              | Use Case                                                |
+| ------------------ | ------------------------------------------------------- |
+| `chia-sdk-client`  | Direct peer-to-peer connections using the Chia protocol |
+| `chia-sdk-coinset` | HTTP/RPC client for querying coin state                 |
 
 ## Peer Connections
 
@@ -108,9 +108,9 @@ let response = client.push_tx(spend_bundle).await?;
 Different networks require different configuration:
 
 | Network | Default Port | Genesis Challenge |
-|---------|--------------|-------------------|
-| Mainnet | 8444 | See Chia docs |
-| Testnet | 58444 | See Chia docs |
+| ------- | ------------ | ----------------- |
+| Mainnet | 8444         | See Chia docs     |
+| Testnet | 58444        | See Chia docs     |
 
 :::info
 For production applications, consider connecting to multiple peers for redundancy and using the coinset API for efficient queries.

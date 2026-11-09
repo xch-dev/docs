@@ -8,7 +8,7 @@ import TabItem from '@theme/TabItem';
 
 # Action System
 
-The Action System is a high-level, declarative API for building Chia blockchain transactions. Instead of manually constructing coin spends, puzzles, and solutions, you declare *what* you want to do using actions, and the system generates the appropriate spend bundles.
+The Action System is a high-level, declarative API for building Chia blockchain transactions. Instead of manually constructing coin spends, puzzles, and solutions, you declare _what_ you want to do using actions, and the system generates the appropriate spend bundles.
 
 ## Overview
 
@@ -21,13 +21,13 @@ The action system solves several challenges in transaction construction:
 
 ## Key Types
 
-| Type | Description |
-|------|-------------|
-| `Action` | A declarative operation (send, mint, issue, etc.) |
-| `Spends` | Orchestrates actions and manages coin selection |
-| `Deltas` | Tracks input/output requirements per asset |
-| `Id` | Identifies assets (XCH, existing CAT/NFT, or newly created) |
-| `Outputs` | Results of a completed transaction |
+| Type      | Description                                                 |
+| --------- | ----------------------------------------------------------- |
+| `Action`  | A declarative operation (send, mint, issue, etc.)           |
+| `Spends`  | Orchestrates actions and manages coin selection             |
+| `Deltas`  | Tracks input/output requirements per asset                  |
+| `Id`      | Identifies assets (XCH, existing CAT/NFT, or newly created) |
+| `Outputs` | Results of a completed transaction                          |
 
 ## Asset Identification with Id
 
@@ -63,12 +63,14 @@ const xch = Id.xch();
 const existingCat = Id.existing(assetId);
 
 // Reference a new asset created in the current transaction
-const newAsset = Id.new(0n);  // First action that creates an asset
+const newAsset = Id.new(0n); // First action that creates an asset
 
 // Check asset type
-if (xch.isXch()) { /* ... */ }
-const assetBytes = existingCat.asExisting();  // Returns Uint8Array or null
-const index = newAsset.asNew();  // Returns bigint or null
+if (xch.isXch()) {
+  /* ... */
+}
+const assetBytes = existingCat.asExisting(); // Returns Uint8Array or null
+const index = newAsset.asNew(); // Returns bigint or null
 ```
 
   </TabItem>
@@ -139,7 +141,12 @@ const sendCat = Action.send(Id.existing(assetId), recipientPuzzleHash, 500n);
 const sendNew = Action.send(Id.new(0n), recipientPuzzleHash, 100n);
 
 // With memos for hints
-const sendWithMemo = Action.send(Id.xch(), recipientPuzzleHash, 1000n, memoProgram);
+const sendWithMemo = Action.send(
+  Id.xch(),
+  recipientPuzzleHash,
+  1000n,
+  memoProgram,
+);
 ```
 
   </TabItem>
@@ -268,14 +275,14 @@ import { Action, NftMetadata, Constants, Spend } from "chia-wallet-sdk";
 
 // Define metadata
 const metadata = new NftMetadata(
-  1n,                                    // edition number
-  1n,                                    // edition total
-  ["https://example.com/image.png"],     // data URIs
-  null,                                  // data hash
+  1n, // edition number
+  1n, // edition total
+  ["https://example.com/image.png"], // data URIs
+  null, // data hash
   ["https://example.com/metadata.json"], // metadata URIs
-  null,                                  // metadata hash
-  [],                                    // license URIs
-  null                                   // license hash
+  null, // metadata hash
+  [], // license URIs
+  null, // license hash
 );
 
 // Mint an NFT
@@ -284,15 +291,15 @@ const mint = Action.mintNft(
   clvm.nftMetadata(metadata),
   Constants.nftMetadataUpdaterDefaultHash(),
   royaltyPuzzleHash,
-  300,   // 3% royalty
-  1n,    // amount
-  null   // parent ID (optional)
+  300, // 3% royalty
+  1n, // amount
+  null, // parent ID (optional)
 );
 
 // Update NFT metadata
 const metadataUpdate = new Spend(
   clvm.nftMetadataUpdaterDefault(),
-  clvm.list([clvm.string("u"), clvm.string("https://example.com/new-uri")])
+  clvm.list([clvm.string("u"), clvm.string("https://example.com/new-uri")]),
 );
 const update = Action.updateNft(Id.existing(launcherId), [metadataUpdate]);
 ```
@@ -380,7 +387,15 @@ let coin_spends = ctx.take();
   <TabItem value="nodejs" label="Node.js">
 
 ```typescript
-import { Action, Clvm, Id, Spends, Simulator, standardPuzzleHash, BlsPair } from "chia-wallet-sdk";
+import {
+  Action,
+  Clvm,
+  Id,
+  Spends,
+  Simulator,
+  standardPuzzleHash,
+  BlsPair,
+} from "chia-wallet-sdk";
 
 const sim = new Simulator();
 const clvm = new Clvm();
@@ -412,7 +427,7 @@ const finished = spends.prepare(deltas);
 for (const spend of finished.pendingSpends()) {
   finished.insert(
     spend.coin().coinId(),
-    clvm.standardSpend(pair.pk, clvm.delegatedSpend(spend.conditions()))
+    clvm.standardSpend(pair.pk, clvm.delegatedSpend(spend.conditions())),
   );
 }
 
@@ -579,7 +594,9 @@ const nftIds = outputs.nfts();
 
 // Get a specific NFT
 const nft = outputs.nft(nftIds[0]);
-console.log(`NFT launcher ID: ${Buffer.from(nft.info.launcherId).toString("hex")}`);
+console.log(
+  `NFT launcher ID: ${Buffer.from(nft.info.launcherId).toString("hex")}`,
+);
 ```
 
   </TabItem>
@@ -649,7 +666,13 @@ fn send_xch(
 
 ```typescript
 import {
-  Action, BlsPair, Clvm, Id, Simulator, Spends, standardPuzzleHash
+  Action,
+  BlsPair,
+  Clvm,
+  Id,
+  Simulator,
+  Spends,
+  standardPuzzleHash,
 } from "chia-wallet-sdk";
 
 function sendXch(recipientPuzzleHash: Uint8Array, amount: bigint, fee: bigint) {
@@ -678,7 +701,7 @@ function sendXch(recipientPuzzleHash: Uint8Array, amount: bigint, fee: bigint) {
   for (const spend of finished.pendingSpends()) {
     finished.insert(
       spend.coin().coinId(),
-      clvm.standardSpend(sender.pk, clvm.delegatedSpend(spend.conditions()))
+      clvm.standardSpend(sender.pk, clvm.delegatedSpend(spend.conditions())),
     );
   }
 
@@ -784,13 +807,19 @@ fn issue_and_send_cat(
 
 ```typescript
 import {
-  Action, BlsPair, Clvm, Id, Simulator, Spends, standardPuzzleHash
+  Action,
+  BlsPair,
+  Clvm,
+  Id,
+  Simulator,
+  Spends,
+  standardPuzzleHash,
 } from "chia-wallet-sdk";
 
 function issueAndSendCat(
   recipientPuzzleHash: Uint8Array,
   issuanceAmount: bigint,
-  sendAmount: bigint
+  sendAmount: bigint,
 ) {
   const sim = new Simulator();
   const clvm = new Clvm();
@@ -798,7 +827,7 @@ function issueAndSendCat(
   // Setup wallet
   const alice = BlsPair.fromSeed(0n);
   const alicePh = standardPuzzleHash(alice.pk);
-  sim.newCoin(alicePh, 1n);  // Just need 1 mojo for CAT issuance
+  sim.newCoin(alicePh, 1n); // Just need 1 mojo for CAT issuance
 
   // Create spends
   const spends = new Spends(clvm, alicePh);
@@ -817,7 +846,7 @@ function issueAndSendCat(
   for (const spend of finished.pendingSpends()) {
     finished.insert(
       spend.coin().coinId(),
-      clvm.standardSpend(alice.pk, clvm.delegatedSpend(spend.conditions()))
+      clvm.standardSpend(alice.pk, clvm.delegatedSpend(spend.conditions())),
     );
   }
 
@@ -939,8 +968,16 @@ fn mint_nft(
 
 ```typescript
 import {
-  Action, BlsPair, Clvm, Constants, Id, NftMetadata,
-  Simulator, Spend, Spends, standardPuzzleHash
+  Action,
+  BlsPair,
+  Clvm,
+  Constants,
+  Id,
+  NftMetadata,
+  Simulator,
+  Spend,
+  Spends,
+  standardPuzzleHash,
 } from "chia-wallet-sdk";
 
 function mintAndUpdateNft() {
@@ -954,9 +991,14 @@ function mintAndUpdateNft() {
 
   // Define metadata
   const metadata = new NftMetadata(
-    1n, 1n,
+    1n,
+    1n,
     ["https://example.com/image.png"],
-    null, [], null, [], null
+    null,
+    [],
+    null,
+    [],
+    null,
   );
 
   // Create spends
@@ -968,7 +1010,10 @@ function mintAndUpdateNft() {
   // Mint NFT and update metadata in one transaction
   const metadataUpdate = new Spend(
     clvm.nftMetadataUpdaterDefault(),
-    clvm.list([clvm.string("u"), clvm.string("https://example.com/updated.png")])
+    clvm.list([
+      clvm.string("u"),
+      clvm.string("https://example.com/updated.png"),
+    ]),
   );
 
   const deltas = spends.apply([
@@ -977,9 +1022,9 @@ function mintAndUpdateNft() {
       clvm.nftMetadata(metadata),
       Constants.nftMetadataUpdaterDefaultHash(),
       alicePh,
-      300,  // 3% royalty
+      300, // 3% royalty
       1n,
-      null
+      null,
     ),
     Action.updateNft(Id.new(0n), [metadataUpdate]),
   ]);
@@ -989,7 +1034,7 @@ function mintAndUpdateNft() {
   for (const spend of finished.pendingSpends()) {
     finished.insert(
       spend.coin().coinId(),
-      clvm.standardSpend(alice.pk, clvm.delegatedSpend(spend.conditions()))
+      clvm.standardSpend(alice.pk, clvm.delegatedSpend(spend.conditions())),
     );
   }
 
@@ -1076,20 +1121,20 @@ def mint_and_update_nft():
 
 ## Action Types Reference
 
-| Action | Description | Creates Asset |
-|--------|-------------|---------------|
-| `send` | Transfer assets to a puzzle hash | No |
-| `burn` | Send assets to unspendable address | No |
-| `fee` | Reserve XCH for transaction fees | No |
-| `single_issue_cat` | Issue a single-issuance CAT | Yes (`Id::New`) |
-| `issue_cat` | Issue a multi-issuance CAT with TAIL | Yes (`Id::New`) |
-| `run_tail` | Execute CAT TAIL logic | No |
-| `mint_nft` | Mint a new NFT | Yes (`Id::New`) |
-| `update_nft` | Update NFT metadata or transfer | No |
-| `create_did` | Create a DID | Yes (`Id::New`) |
-| `update_did` | Update DID metadata | No |
-| `settle` | Settle a payment with notarized payments | No |
-| `melt_singleton` | Destroy a singleton | No |
+| Action             | Description                              | Creates Asset   |
+| ------------------ | ---------------------------------------- | --------------- |
+| `send`             | Transfer assets to a puzzle hash         | No              |
+| `burn`             | Send assets to unspendable address       | No              |
+| `fee`              | Reserve XCH for transaction fees         | No              |
+| `single_issue_cat` | Issue a single-issuance CAT              | Yes (`Id::New`) |
+| `issue_cat`        | Issue a multi-issuance CAT with TAIL     | Yes (`Id::New`) |
+| `run_tail`         | Execute CAT TAIL logic                   | No              |
+| `mint_nft`         | Mint a new NFT                           | Yes (`Id::New`) |
+| `update_nft`       | Update NFT metadata or transfer          | No              |
+| `create_did`       | Create a DID                             | Yes (`Id::New`) |
+| `update_did`       | Update DID metadata                      | No              |
+| `settle`           | Settle a payment with notarized payments | No              |
+| `melt_singleton`   | Destroy a singleton                      | No              |
 
 ## Best Practices
 
@@ -1101,12 +1146,12 @@ def mint_and_update_nft():
 
 ## Comparison with Low-Level API
 
-| Feature | Action System | Low-Level (SpendContext) |
-|---------|--------------|--------------------------|
-| Complexity | Declarative, high-level | Imperative, detailed |
-| Flexibility | Covers common patterns | Full control |
-| Coin management | Automatic | Manual |
-| Change handling | Automatic | Manual |
-| Learning curve | Lower | Higher |
+| Feature         | Action System           | Low-Level (SpendContext) |
+| --------------- | ----------------------- | ------------------------ |
+| Complexity      | Declarative, high-level | Imperative, detailed     |
+| Flexibility     | Covers common patterns  | Full control             |
+| Coin management | Automatic               | Manual                   |
+| Change handling | Automatic               | Manual                   |
+| Learning curve  | Lower                   | Higher                   |
 
 Choose the action system for standard operations and the low-level API when you need precise control over puzzle construction.

@@ -1,0 +1,13 @@
+allowBuilds:
+  "@parcel/watcher": true
+  core-js: true
+  core-js-pure: true
+  # Its postinstall reinstalls every codegen with whichever package manager it
+  # finds first globally (yarn on GitHub runners), which fails. The published
+  # package works without it.
+  postman-code-generators: false
+
+# Patched releases within the ranges that upstream packages pin.
+overrides:
+  js-yaml@4: ^4.3.2
+  yaml@1: ^1.10.3

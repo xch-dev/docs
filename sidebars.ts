@@ -23,10 +23,18 @@ const sidebars: SidebarsConfig = {
           type: "category",
           label: "Primitives",
           items: [
-            { type: "doc", id: "sdk/primitives/standard", label: "Standard (XCH)" },
+            {
+              type: "doc",
+              id: "sdk/primitives/standard",
+              label: "Standard (XCH)",
+            },
             { type: "doc", id: "sdk/primitives/cat", label: "CAT" },
             { type: "doc", id: "sdk/primitives/nft", label: "NFT" },
-            { type: "doc", id: "sdk/primitives/other", label: "Other Primitives" },
+            {
+              type: "doc",
+              id: "sdk/primitives/other",
+              label: "Other Primitives",
+            },
           ],
         },
         { type: "doc", id: "sdk/offers", label: "Offers" },

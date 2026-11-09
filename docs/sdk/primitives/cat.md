@@ -20,12 +20,12 @@ CATs work by wrapping an inner puzzle (typically a standard p2 puzzle) with the 
 
 ## Key Types
 
-| Type | Description |
-|------|-------------|
-| `Cat` | A CAT coin with its info and optional lineage proof |
-| `CatInfo` | Asset ID and inner puzzle hash |
-| `CatSpend` | Combines a CAT with an inner spend |
-| `LineageProof` | Proof of the CAT's parent for validation |
+| Type           | Description                                         |
+| -------------- | --------------------------------------------------- |
+| `Cat`          | A CAT coin with its info and optional lineage proof |
+| `CatInfo`      | Asset ID and inner puzzle hash                      |
+| `CatSpend`     | Combines a CAT with an inner spend                  |
+| `LineageProof` | Proof of the CAT's parent for validation            |
 
 ## Issuing CATs
 
@@ -87,14 +87,14 @@ const catInfo = new CatInfo(assetId, null, alice.puzzleHash);
 clvm.spendStandardCoin(
   alice.coin,
   alice.pk,
-  clvm.delegatedSpend([clvm.createCoin(catInfo.puzzleHash(), 1000n)])
+  clvm.delegatedSpend([clvm.createCoin(catInfo.puzzleHash(), 1000n)]),
 );
 
 // Create the eve CAT (first CAT coin)
 const eveCat = new Cat(
   new Coin(alice.coin.coinId(), catInfo.puzzleHash(), 1000n),
-  null,  // No lineage proof for eve
-  catInfo
+  null, // No lineage proof for eve
+  catInfo,
 );
 ```
 
@@ -180,8 +180,12 @@ const clvm = new Clvm();
 const innerSpend = clvm.standardSpend(
   publicKey,
   clvm.delegatedSpend([
-    clvm.createCoin(recipientPuzzleHash, 1000n, clvm.alloc([recipientPuzzleHash])),
-  ])
+    clvm.createCoin(
+      recipientPuzzleHash,
+      1000n,
+      clvm.alloc([recipientPuzzleHash]),
+    ),
+  ]),
 );
 
 // Wrap it in a CatSpend and execute
@@ -306,8 +310,8 @@ clvm.spendCats([
       publicKey,
       clvm.delegatedSpend([
         clvm.createCoin(recipient, combinedAmount, clvm.alloc([recipient])),
-      ])
-    )
+      ]),
+    ),
   ),
 ]);
 ```
@@ -392,25 +396,29 @@ clvm.spendCats([
     clvm.standardSpend(
       publicKey,
       clvm.delegatedSpend([
-        clvm.createCoin(recipientPuzzleHash, cat.coin.amount, clvm.alloc([recipientPuzzleHash])),
-        clvm.assertConcurrentSpend(xchCoin.coinId()),  // Link to XCH spend
-      ])
-    )
+        clvm.createCoin(
+          recipientPuzzleHash,
+          cat.coin.amount,
+          clvm.alloc([recipientPuzzleHash]),
+        ),
+        clvm.assertConcurrentSpend(xchCoin.coinId()), // Link to XCH spend
+      ]),
+    ),
   ),
 ]);
 
 // Spend XCH to pay the fee
-const fee = 100_000_000n;  // 0.0001 XCH
+const fee = 100_000_000n; // 0.0001 XCH
 const change = xchCoin.amount - fee;
 
 const xchConditions = [
   clvm.reserveFee(fee),
-  clvm.assertConcurrentSpend(cat.coin.coinId()),  // Link to CAT spend
+  clvm.assertConcurrentSpend(cat.coin.coinId()), // Link to CAT spend
 ];
 
 if (change > 0n) {
   xchConditions.push(
-    clvm.createCoin(myPuzzleHash, change, clvm.alloc([myPuzzleHash]))
+    clvm.createCoin(myPuzzleHash, change, clvm.alloc([myPuzzleHash])),
   );
 }
 
@@ -557,14 +565,14 @@ function issueAndSpendCat(recipientPuzzleHash: Uint8Array, amount: bigint) {
   clvm.spendStandardCoin(
     alice.coin,
     alice.pk,
-    clvm.delegatedSpend([clvm.createCoin(catInfo.puzzleHash(), amount)])
+    clvm.delegatedSpend([clvm.createCoin(catInfo.puzzleHash(), amount)]),
   );
 
   // Create eve CAT
   const eveCat = new Cat(
     new Coin(alice.coin.coinId(), catInfo.puzzleHash(), amount),
     null,
-    catInfo
+    catInfo,
   );
 
   // Step 2: Spend the CAT with TAIL reveal, then transfer
@@ -574,10 +582,14 @@ function issueAndSpendCat(recipientPuzzleHash: Uint8Array, amount: bigint) {
       clvm.standardSpend(
         alice.pk,
         clvm.delegatedSpend([
-          clvm.createCoin(recipientPuzzleHash, amount, clvm.alloc([recipientPuzzleHash])),
+          clvm.createCoin(
+            recipientPuzzleHash,
+            amount,
+            clvm.alloc([recipientPuzzleHash]),
+          ),
           clvm.runCatTail(tail, clvm.nil()),
-        ])
-      )
+        ]),
+      ),
     ),
   ]);
 
