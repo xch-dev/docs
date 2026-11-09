@@ -292,7 +292,7 @@ Each child (`ParsedChild`) has a `transfer_type`: `Sent`, `Burned` (sent to the 
 `Offered` (sent to the settlement puzzle), or `OfferPreSplit` (locked into a revealed
 `P2ConditionsOrSingleton`). Its `memos` field (`ParsedMemos`) has the effective recipient p2 puzzle
 hash, a decoded `ClawbackV2` if present, any human-readable memos, and the fixed conditions of an offer
-pre-split. On `main` there's also `SecureTheBag` (see [below](#secure-the-bag-payments)). A child with a
+pre-split. On `main` there's also `SecureTheBag` (see [below](#secure-the-bag-payments)). Also on `main`, a child with a
 clawback is always `Sent`. Its p2 puzzle hash is the receiver's, but the sender can still claw it back, so
 it isn't shown as burned, offered, an offer pre-split or a bag.
 
@@ -320,7 +320,8 @@ assertions) are therefore only trusted once the transaction's time bounds rule o
   timeout. That means the vault (or a message-bound spend that isn't a clawback) asserts
   `ASSERT_SECONDS_ABSOLUTE` of at least the clawback's `seconds`. Otherwise parsing fails with
   `UnguaranteedClawbackExpiry`. A receiver spend without a vault message is only shown if the clawback
-  has expired in the same sense.
+  has expired in the same sense, and its conditions are never trusted as guarantees about the rest of the
+  transaction (only a receiver spend that receives a vault message and has expired is).
 - **Push-through**: once a clawback has expired, anyone can push it through to the receiver without a
   signature. If the vault asserts the clawback coin's spend (`ASSERT_CONCURRENT_SPEND`) and that the
   clawback has expired (`ASSERT_SECONDS_ABSOLUTE`), the push-through is shown as a verified spend with
