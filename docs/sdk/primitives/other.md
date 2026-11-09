@@ -32,6 +32,7 @@ let child_vault = vault.child(new_custody_hash, new_amount);
 For vault internals and specification, see [CHIP-0043 (MIPS)](https://github.com/Chia-Network/chips/blob/main/CHIPs/chip-0043.md).
 
 **Use cases:**
+
 - Multi-signature wallets requiring M-of-N approval
 - Time-locked custody arrangements
 - Institutional custody solutions
@@ -63,6 +64,7 @@ let did = Did {
 ```
 
 **Use cases:**
+
 - Creator verification for NFTs
 - On-chain identity for applications
 - Recovery mechanisms with trusted parties
@@ -93,6 +95,7 @@ let option = OptionContract {
 ```
 
 **Use cases:**
+
 - Hedging price risk
 - Speculation on asset prices
 - Structured financial products
@@ -118,6 +121,7 @@ let clawback = ClawbackV2 {
 ```
 
 **Use cases:**
+
 - Reversible payments for dispute resolution
 - Escrow with sender recovery option
 - Safe transfers to new/unverified addresses
@@ -144,6 +148,7 @@ let streamed = StreamedAsset {
 ```
 
 **Use cases:**
+
 - Employee vesting schedules
 - Subscription payments
 - Gradual fund release for projects
@@ -164,6 +169,7 @@ use chia_wallet_sdk::prelude::*;
 ```
 
 **Use cases:**
+
 - On-chain configuration storage
 - Decentralized content publishing
 - Data availability proofs
@@ -191,6 +197,7 @@ let singleton = Singleton {
 ```
 
 **Key properties:**
+
 - Unique identity via launcher_id
 - Lineage proofs ensure authenticity
 - State persists across spends

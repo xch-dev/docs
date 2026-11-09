@@ -1,0 +1,6 @@
+node_modules
+build
+.docusaurus
+pnpm-lock.yaml
+src/openapi.json
+docs/rpc

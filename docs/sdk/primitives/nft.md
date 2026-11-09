@@ -20,21 +20,21 @@ Chia NFTs are built on the singleton pattern, meaning:
 
 NFTs consist of multiple layers:
 
-| Layer | Purpose |
-|-------|---------|
-| Singleton | Ensures uniqueness and provides the launcher ID |
-| NFT State | Holds metadata URIs and hash |
-| NFT Ownership | Controls transfer and royalty logic |
-| Inner (p2) | Defines who can spend the NFT |
+| Layer         | Purpose                                         |
+| ------------- | ----------------------------------------------- |
+| Singleton     | Ensures uniqueness and provides the launcher ID |
+| NFT State     | Holds metadata URIs and hash                    |
+| NFT Ownership | Controls transfer and royalty logic             |
+| Inner (p2)    | Defines who can spend the NFT                   |
 
 ## Key Types
 
-| Type | Description |
-|------|-------------|
-| `Nft<T>` | An NFT with its metadata and inner puzzle info |
-| `NftInfo` | Launcher ID, metadata, owner info, royalties |
-| `NftMetadata` | URIs for data, metadata, and license |
-| `Proof` | Singleton lineage proof for validation |
+| Type          | Description                                    |
+| ------------- | ---------------------------------------------- |
+| `Nft<T>`      | An NFT with its metadata and inner puzzle info |
+| `NftInfo`     | Launcher ID, metadata, owner info, royalties   |
+| `NftMetadata` | URIs for data, metadata, and license           |
+| `Proof`       | Singleton lineage proof for validation         |
 
 ## Minting NFTs
 
@@ -83,7 +83,13 @@ let launcher_id = nft.info.launcher_id;
   <TabItem value="nodejs" label="Node.js">
 
 ```typescript
-import { Clvm, NftMetadata, NftMint, Constants, Simulator } from "chia-wallet-sdk";
+import {
+  Clvm,
+  NftMetadata,
+  NftMint,
+  Constants,
+  Simulator,
+} from "chia-wallet-sdk";
 
 const clvm = new Clvm();
 const sim = new Simulator();
@@ -91,14 +97,14 @@ const alice = sim.bls(1n);
 
 // Define the NFT metadata
 const metadata = new NftMetadata(
-  1n,  // edition number
-  1n,  // edition total
-  ["https://example.com/image.png"],     // data URIs
-  null,                                   // data hash (optional)
+  1n, // edition number
+  1n, // edition total
+  ["https://example.com/image.png"], // data URIs
+  null, // data hash (optional)
   ["https://example.com/metadata.json"], // metadata URIs
-  null,                                   // metadata hash (optional)
-  [],                                     // license URIs
-  null                                    // license hash (optional)
+  null, // metadata hash (optional)
+  [], // license URIs
+  null, // license hash (optional)
 );
 
 // Mint the NFT
@@ -106,9 +112,9 @@ const { nfts, parentConditions } = clvm.mintNfts(alice.coin.coinId(), [
   new NftMint(
     clvm.nftMetadata(metadata),
     Constants.nftMetadataUpdaterDefaultHash(),
-    alice.puzzleHash,     // Royalty puzzle hash
-    alice.puzzleHash,     // Owner p2 puzzle hash
-    300                   // Royalty in basis points (3%)
+    alice.puzzleHash, // Royalty puzzle hash
+    alice.puzzleHash, // Owner p2 puzzle hash
+    300, // Royalty in basis points (3%)
   ),
 ]);
 
@@ -116,7 +122,7 @@ const { nfts, parentConditions } = clvm.mintNfts(alice.coin.coinId(), [
 clvm.spendStandardCoin(
   alice.coin,
   alice.pk,
-  clvm.delegatedSpend(parentConditions)
+  clvm.delegatedSpend(parentConditions),
 );
 
 // The NFT's permanent identifier
@@ -202,7 +208,7 @@ const innerSpend = clvm.standardSpend(
   alice.pk,
   clvm.delegatedSpend([
     clvm.createCoin(newOwnerPuzzleHash, 1n, clvm.alloc([newOwnerPuzzleHash])),
-  ])
+  ]),
 );
 
 const newNft = clvm.spendNft(nft, innerSpend);
@@ -275,7 +281,7 @@ const innerSpend = clvm.standardSpend(
     clvm.createCoinAnnouncement(Buffer.from("nft_action")),
     clvm.reserveFee(feeAmount),
     clvm.createCoin(newOwnerPuzzleHash, 1n, clvm.alloc([newOwnerPuzzleHash])),
-  ])
+  ]),
 );
 
 // Spend with custom conditions
@@ -308,11 +314,11 @@ new_nft = clvm.spend_nft(nft, inner_spend)
 NFTs support royalties that are enforced during trades. The royalty is specified as a percentage in basis points (1/100th of a percent):
 
 | Basis Points | Percentage |
-|--------------|------------|
-| 100 | 1% |
-| 250 | 2.5% |
-| 500 | 5% |
-| 1000 | 10% |
+| ------------ | ---------- |
+| 100          | 1%         |
+| 250          | 2.5%       |
+| 500          | 5%         |
+| 1000         | 10%        |
 
 ```rust
 // 5% royalty
@@ -413,7 +419,13 @@ fn mint_and_transfer_nft(
   <TabItem value="nodejs" label="Node.js">
 
 ```typescript
-import { Clvm, NftMetadata, NftMint, Constants, Simulator } from "chia-wallet-sdk";
+import {
+  Clvm,
+  NftMetadata,
+  NftMint,
+  Constants,
+  Simulator,
+} from "chia-wallet-sdk";
 
 function mintAndTransferNft(recipientPuzzleHash: Uint8Array) {
   const clvm = new Clvm();
@@ -422,9 +434,14 @@ function mintAndTransferNft(recipientPuzzleHash: Uint8Array) {
 
   // Step 1: Mint the NFT
   const metadata = new NftMetadata(
-    1n, 1n,
+    1n,
+    1n,
     ["https://example.com/image.png"],
-    null, [], null, [], null
+    null,
+    [],
+    null,
+    [],
+    null,
   );
 
   const { nfts, parentConditions } = clvm.mintNfts(alice.coin.coinId(), [
@@ -433,14 +450,14 @@ function mintAndTransferNft(recipientPuzzleHash: Uint8Array) {
       Constants.nftMetadataUpdaterDefaultHash(),
       alice.puzzleHash,
       alice.puzzleHash,
-      0  // No royalties
+      0, // No royalties
     ),
   ]);
 
   clvm.spendStandardCoin(
     alice.coin,
     alice.pk,
-    clvm.delegatedSpend(parentConditions)
+    clvm.delegatedSpend(parentConditions),
   );
 
   const launcherId = nfts[0].info.launcherId;
@@ -451,9 +468,13 @@ function mintAndTransferNft(recipientPuzzleHash: Uint8Array) {
     clvm.standardSpend(
       alice.pk,
       clvm.delegatedSpend([
-        clvm.createCoin(recipientPuzzleHash, 1n, clvm.alloc([recipientPuzzleHash])),
-      ])
-    )
+        clvm.createCoin(
+          recipientPuzzleHash,
+          1n,
+          clvm.alloc([recipientPuzzleHash]),
+        ),
+      ]),
+    ),
   );
 
   // Sign and validate

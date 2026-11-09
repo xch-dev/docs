@@ -94,7 +94,7 @@ const alice = sim.bls(1000n);
 // Create multiple test identities
 const alice = sim.bls(1_000_000n);
 const bob = sim.bls(500_000n);
-const charlie = sim.bls(0n);  // No initial funds
+const charlie = sim.bls(0n); // No initial funds
 ```
 
   </TabItem>
@@ -335,13 +335,13 @@ test("issues and spends a cat", (t) => {
   clvm.spendStandardCoin(
     alice.coin,
     alice.pk,
-    clvm.delegatedSpend([clvm.createCoin(catInfo.puzzleHash(), 1n)])
+    clvm.delegatedSpend([clvm.createCoin(catInfo.puzzleHash(), 1n)]),
   );
 
   const eve = new Cat(
     new Coin(alice.coin.coinId(), catInfo.puzzleHash(), 1n),
     null,
-    catInfo
+    catInfo,
   );
 
   clvm.spendCats([
@@ -352,8 +352,8 @@ test("issues and spends a cat", (t) => {
         clvm.delegatedSpend([
           clvm.createCoin(alice.puzzleHash, 1n, clvm.alloc([alice.puzzleHash])),
           clvm.runCatTail(tail, clvm.nil()),
-        ])
-      )
+        ]),
+      ),
     ),
   ]);
 
@@ -536,7 +536,7 @@ test("multi spend", (t) => {
   clvm.spendStandardCoin(
     alice.coin,
     alice.pk,
-    clvm.delegatedSpend([clvm.createCoin(charliePh, 900n, null)])
+    clvm.delegatedSpend([clvm.createCoin(charliePh, 900n, null)]),
   );
 
   // Bob pays the fee
@@ -546,7 +546,7 @@ test("multi spend", (t) => {
     clvm.delegatedSpend([
       clvm.createCoin(bob.puzzleHash, 400n, null),
       clvm.reserveFee(100n),
-    ])
+    ]),
   );
 
   sim.spendCoins(clvm.coinSpends(), [alice.sk, bob.sk]);

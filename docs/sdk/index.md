@@ -98,11 +98,7 @@ const conditions = [
 ];
 
 // Create and spend using delegated spend (p2 puzzle)
-clvm.spendStandardCoin(
-  coin,
-  publicKey,
-  clvm.delegatedSpend(conditions)
-);
+clvm.spendStandardCoin(coin, publicKey, clvm.delegatedSpend(conditions));
 
 // Extract the coin spends for signing and broadcast
 const coinSpends = clvm.coinSpends();
@@ -150,13 +146,13 @@ This example demonstrates the core pattern you'll use throughout the SDK:
 
 The SDK is organized around these key abstractions:
 
-| Concept | Rust | Node.js / Python | Description |
-|---------|------|------------------|-------------|
-| **Context** | `SpendContext` | `Clvm` | Transaction builder that manages memory and collects coin spends |
-| **Conditions** | `Conditions` builder | Method calls (`createCoin`, etc.) | Output conditions (create coin, fees, announcements) |
-| **Actions** | `Action`, `Spends` | `Action`, `Spends` | High-level declarative transaction API |
-| **Primitives** | `Cat`, `Nft`, `Vault`, etc. | `spendCats`, `spendNft`, etc. | High-level APIs for Chia constructs |
-| **Simulator** | `Simulator` | `Simulator` | Test transaction validation locally |
+| Concept        | Rust                        | Node.js / Python                  | Description                                                      |
+| -------------- | --------------------------- | --------------------------------- | ---------------------------------------------------------------- |
+| **Context**    | `SpendContext`              | `Clvm`                            | Transaction builder that manages memory and collects coin spends |
+| **Conditions** | `Conditions` builder        | Method calls (`createCoin`, etc.) | Output conditions (create coin, fees, announcements)             |
+| **Actions**    | `Action`, `Spends`          | `Action`, `Spends`                | High-level declarative transaction API                           |
+| **Primitives** | `Cat`, `Nft`, `Vault`, etc. | `spendCats`, `spendNft`, etc.     | High-level APIs for Chia constructs                              |
+| **Simulator**  | `Simulator`                 | `Simulator`                       | Test transaction validation locally                              |
 
 ## Next Steps
 

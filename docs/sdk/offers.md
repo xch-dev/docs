@@ -35,12 +35,12 @@ let settlement_puzzle_hash: Bytes32 = SETTLEMENT_PAYMENT_HASH.into();
 
 An offer contains:
 
-| Component | Description |
-|-----------|-------------|
-| `spend_bundle` | Maker's pre-signed spends |
-| `offered_coins` | Assets being given (locked to settlement) |
-| `requested_payments` | What the maker wants in return |
-| `asset_info` | Metadata about the assets involved |
+| Component            | Description                               |
+| -------------------- | ----------------------------------------- |
+| `spend_bundle`       | Maker's pre-signed spends                 |
+| `offered_coins`      | Assets being given (locked to settlement) |
+| `requested_payments` | What the maker wants in return            |
+| `asset_info`         | Metadata about the assets involved        |
 
 ### Notarized Payments
 
@@ -466,12 +466,13 @@ fn sign_spends(
 
 :::warning
 Always verify offer terms before accepting:
+
 - Confirm the assets being offered match expectations
 - Verify the requested amounts are acceptable
 - Check NFT royalty terms and amounts
 - Ensure you understand the full transaction
 - Validate with the simulator before mainnet
-:::
+  :::
 
 ## API Reference
 

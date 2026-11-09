@@ -155,7 +155,11 @@ const clvm = new Clvm();
 
 // Include puzzle hash as memo for coin discovery
 const conditions = [
-  clvm.createCoin(recipientPuzzleHash, amount, clvm.alloc([recipientPuzzleHash])),
+  clvm.createCoin(
+    recipientPuzzleHash,
+    amount,
+    clvm.alloc([recipientPuzzleHash]),
+  ),
 ];
 
 clvm.spendStandardCoin(coin, publicKey, clvm.delegatedSpend(conditions));
@@ -624,7 +628,7 @@ function sendXch(
   sourcePublicKey: PublicKey,
   recipientPuzzleHash: Uint8Array,
   amount: bigint,
-  fee: bigint
+  fee: bigint,
 ) {
   const clvm = new Clvm();
   const sourcePuzzleHash = standardPuzzleHash(sourcePublicKey);
@@ -634,33 +638,41 @@ function sendXch(
 
   // Build conditions
   const conditions = [
-    clvm.createCoin(recipientPuzzleHash, amount, clvm.alloc([recipientPuzzleHash])),
+    clvm.createCoin(
+      recipientPuzzleHash,
+      amount,
+      clvm.alloc([recipientPuzzleHash]),
+    ),
     clvm.reserveFee(fee),
   ];
 
   // Add change output if needed
   if (change > 0n) {
     conditions.push(
-      clvm.createCoin(sourcePuzzleHash, change, clvm.alloc([sourcePuzzleHash]))
+      clvm.createCoin(sourcePuzzleHash, change, clvm.alloc([sourcePuzzleHash])),
     );
   }
 
   // Create the spend
-  clvm.spendStandardCoin(sourceCoin, sourcePublicKey, clvm.delegatedSpend(conditions));
+  clvm.spendStandardCoin(
+    sourceCoin,
+    sourcePublicKey,
+    clvm.delegatedSpend(conditions),
+  );
 
   return clvm.coinSpends();
 }
 
 // Example usage with Simulator (handles signing automatically)
 const sim = new Simulator();
-const alice = sim.bls(1000n);  // Creates key pair with 1000 mojo coin
+const alice = sim.bls(1000n); // Creates key pair with 1000 mojo coin
 
 const coinSpends = sendXch(
   alice.coin,
   alice.pk,
   recipientPuzzleHash,
   900n,
-  100n
+  100n,
 );
 
 // Simulator signs and validates the transaction

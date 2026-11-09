@@ -316,7 +316,7 @@ function buildTransaction(
   publicKey: PublicKey,
   recipient: Uint8Array,
   amount: bigint,
-  fee: bigint
+  fee: bigint,
 ): CoinSpend[] {
   // 1. Create context
   const clvm = new Clvm();
