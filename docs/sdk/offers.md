@@ -9,6 +9,8 @@ An offer is a partially complete transaction that trades assets without trusting
 
 The SDK represents an offer as [`Offer`](https://docs.rs/chia-wallet-sdk/latest/chia_wallet_sdk/driver/struct.Offer.html), and both sides are built with the [action system](/sdk/action-system), which is how the SDK's own tests make and take offers. The offer types are in the prelude; the royalty helpers and compression functions are in `chia_wallet_sdk::driver`.
 
+For selling one fungible asset for another in any amount at a fixed price, see [Partial Offers](/sdk/primitives/partial-offers) (CHIP-0052, unreleased), which can be filled many times and are taken as ordinary offers.
+
 ## How offers work
 
 - **Settlement payments puzzle.** `SETTLEMENT_PAYMENT_HASH` (in `chia_wallet_sdk::puzzles`) is a puzzle that anyone can spend, but that can only make notarized payments. For each notarized payment it makes, it creates a puzzle announcement of the payment's hash. Offered assets are sent to this puzzle (inside their CAT, NFT or option layers), and requested payments are made by it.
@@ -45,6 +47,12 @@ To take an offer:
 3. Add `offer.offered_coins().clone()` and your own coins to `Spends`. The settlement coins are spent as settlement spends automatically.
 4. Apply `offer.requested_payments().actions()`, which is an `Action::settle` for each requested notarized payment, plus anything else you want (a fee, royalties). The offered assets go to your change puzzle hash, unless you send them elsewhere.
 5. Finish and sign, then combine your spend bundle with the maker's with `offer.take(spend_bundle)`.
+
+:::note Unreleased
+On the SDK's `main` branch, change is split by who has value left over when you take an offer. Settlement coins return whatever they have left after their payments, and the rest of the change is created by one of your own coins' conditions spends, rather than by the first settlement coin. Usually that means a single change coin, from your own coin, while the offered amount is still paid and asserted by the settlement coins.
+
+`main` also adds `ConditionConfig::return_unplaced_conditions` (`spends.conditions.return_unplaced_conditions = true`). When none of the spends can emit the transaction-wide conditions (for example, a vault taking a one-sided offer without spending any of its own coins), they're returned in `Spends::unplaced_conditions` instead of being emitted by an intermediate coin, so the caller can emit them from its own spend, such as a vault's delegated spend. `finish_with_keys` fails with `DriverError::CannotEmitConditions` if any are left. Together these make a vault's offer take something [clear signing](/sdk/clear-signing) can verify.
+:::
 
 Here's a complete trade of a CAT for XCH, including encoding the offer as a string and parsing it on the taker's side:
 
@@ -163,6 +171,7 @@ Before taking an offer (or showing it to a user), look at what it does:
 - `offer.arbitrage()`: an `Arbitrage` with `offered` and `requested` sides, each an `ArbitrageSide` with `xch`, `cats`, `nfts` and `options`. `requested` is what the offer gives you beyond what it asks for of the same asset, and `offered` is what you need to supply.
 - `offer.fee()`: the fee the maker's spends leave for the farmer, as an `i128` (negative if the spends create more than they spend). `offered_coins().fee` is the fee they asserted with `RESERVE_FEE`.
 - `offer.offered_royalties()` and `offer.requested_royalties()`: the `RoyaltyInfo` of requested and offered NFTs (see below).
+- On `main` (unreleased), `offered_coins().nft_trade_prices` has the trade prices each offered NFT revealed when it was spent into settlement, and `offered_coins().prepaid_royalties` has the royalty payments the maker's settlement spends made up front for requested NFTs.
 
 To cancel an offer you made, spend any of the coins it spends. `offer.cancellable_coin_spends()` returns the maker's spends of coins that weren't created within the offer, which are the coins to spend. Several offers can be combined into one with `offer.extend(other)`, as long as they don't spend the same coins (`DriverError::ConflictingOfferInputs`).
 
@@ -170,7 +179,7 @@ To cancel an offer you made, spend any of the coins it spends. `offer.cancellabl
 
 NFTs with a royalty require a royalty payment whenever they're traded through an offer. The NFT's transfer program asserts that, for each trade price it's told about, the royalty was paid by a settlement coin, with the NFT's launcher id as the nonce. A trade price is an amount and the settlement puzzle hash of the asset it's paid in (`TradePrice`).
 
-When several royalty NFTs are traded together, the price is split evenly between them:
+The maker of an offer that sells royalty NFTs splits the requested price evenly between them when it commits to trade prices, and a maker bidding for royalty NFTs splits the offered price the same way when it pays their royalties up front. These helpers do the math:
 
 | Function                                                          | What it does                                                                                        |
 | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
@@ -182,6 +191,16 @@ When several royalty NFTs are traded together, the price is split evenly between
 | `calculate_royalty_payments(&mut ctx, &trade_prices, &royalties)` | The royalty payments as `RequestedPayments`, whose `.actions()` are `settle` actions that pay them. |
 
 There are two cases, depending on which side the NFT is on.
+
+In 0.37.1, `offer.requested_royalty_amounts()` and `offer.offered_royalty_amounts()` are computed the same way, by splitting the offer's requested (or offered) totals evenly between its royalty NFTs. That's correct for a single maker's offer, but not for aggregated offers whose makers committed to different trade prices.
+
+:::note Unreleased
+On the SDK's `main` branch, royalties come from what's actually in the offer rather than an even split:
+
+- **Offered NFTs.** `OfferCoins::nft_trade_prices` records the trade prices each offered NFT revealed when its maker spent it into settlement. `offer.requested_royalty_payments(&mut ctx)?` returns the royalty payment each NFT asserts for each of its trade prices, as `RequestedPayments` whose `.actions()` pay them, and `requested_royalty_amounts()` is their total. Identical royalties are only paid once, since one payment satisfies every identical assertion, and royalties the offer already prepaid are left out. Both fail with `DriverError::ZeroRoyaltyPayment(launcher_id)` if a trade price's royalty rounds down to zero (settlement can never pay it, so the offer can't be taken), `DriverError::UnknownSettlementAsset` if a trade price is in an asset the offer doesn't know, or `DriverError::AmountOverflow`.
+- **Requested NFTs.** `OfferCoins::prepaid_royalties` holds the royalty payments the maker made up front, in the form an NFT's royalty assertion accepts (a single payment whose memos are exactly the royalty puzzle hash, notarized with the launcher id). `offered_royalty_amounts()` totals them, and `offer.requested_nft_trade_prices(launcher_id)` returns the trade prices the taker should reveal on the NFT they supply so that it asserts exactly those payments.
+- **New helpers.** `payable_trade_prices(&trade_prices, royalty_basis_points)` drops trade prices whose royalty would round down to zero, so a maker never commits to an unpayable trade price (a small sale with only zero royalties can be taken without any royalty payment). `AssetInfo::settlement_puzzle_hash(asset_id)` and `settlement_asset_id(puzzle_hash)` convert between a CAT asset id (`None` for XCH) and its settlement puzzle hash, `OfferAmounts::add_amount(asset_id, amount)` adds to a total, and `RequestedPayments::fungible()`/`fungible_mut(asset_id)` iterate over or extend the XCH and CAT payments together.
+  :::
 
 ### Offering an NFT
 
@@ -297,11 +316,130 @@ fn nft_for_xch_with_royalty() -> anyhow::Result<()> {
 }
 ```
 
-With several royalty NFTs, compute the royalty for each one separately (`calculate_nft_royalty(trade_price, royalty.basis_points)` with the per-NFT trade price), and pay one `settle_royalty` per NFT and asset.
+With several royalty NFTs on 0.37.1, compute the royalty for each one separately (`calculate_nft_royalty(trade_price, royalty.basis_points)` with the per-NFT trade price), and pay one `settle_royalty` per NFT and asset.
+
+On `main` (unreleased), the maker should filter each NFT's trade prices with `payable_trade_prices`, and the taker should pay `offer.requested_royalty_payments(&mut ctx)?.actions()` instead of computing royalties itself. That's what makes aggregated offers work: here two makers sell NFTs with different royalties at different prices, and the taker of the combined offer pays each royalty on the price its NFT committed to, rather than on half of the total:
+
+```rust unreleased
+use chia_wallet_sdk::chia::puzzle_types::{
+    Memos,
+    offer::{NotarizedPayment, Payment},
+};
+use chia_wallet_sdk::driver::{
+    TransferNftById, calculate_trade_price_amounts, calculate_trade_prices, payable_trade_prices,
+};
+use chia_wallet_sdk::prelude::*;
+use chia_wallet_sdk::puzzles::SETTLEMENT_PAYMENT_HASH;
+use chia_wallet_sdk::test::sign_transaction;
+use indexmap::indexmap;
+
+/// Mints an NFT with a royalty, and returns the offer spend bundle that sells it for `price` mojos.
+fn sell_nft(
+    sim: &mut Simulator,
+    ctx: &mut SpendContext,
+    royalty_puzzle_hash: Bytes32,
+    basis_points: u16,
+    price: u64,
+) -> anyhow::Result<SpendBundle> {
+    let maker = sim.bls(1);
+    let keys = indexmap! { maker.puzzle_hash => maker.pk };
+    let hint = ctx.hint(maker.puzzle_hash)?;
+
+    let mut spends = Spends::new(maker.puzzle_hash);
+    spends.add(maker.coin);
+    let deltas =
+        spends.apply(ctx, &[Action::mint_empty_royalty_nft(royalty_puzzle_hash, basis_points)])?;
+    let outputs = spends.finish_with_keys(ctx, &deltas, Relation::None, &keys)?;
+    sim.spend_coins(ctx.take(), std::slice::from_ref(&maker.sk))?;
+    let nft = outputs.nfts[&Id::New(0)];
+    let nft_id = Id::Existing(nft.info.launcher_id);
+
+    let mut requested_payments = RequestedPayments::new();
+    requested_payments.xch.push(NotarizedPayment::new(
+        Offer::nonce(vec![nft.coin.coin_id()]),
+        vec![Payment::new(maker.puzzle_hash, price, hint)],
+    ));
+    let asset_info = AssetInfo::new();
+
+    // Commit to the trade price, leaving out any whose royalty would round down to zero
+    let trade_prices = calculate_trade_prices(
+        &calculate_trade_price_amounts(&requested_payments.amounts(), 1),
+        &asset_info,
+    )?;
+    let trade_prices = payable_trade_prices(&trade_prices, basis_points);
+
+    let mut spends = Spends::new(maker.puzzle_hash);
+    spends.add(nft);
+    spends.conditions.required = spends
+        .conditions
+        .required
+        .extend(requested_payments.assertions(ctx, &asset_info)?);
+    let deltas = spends.apply(
+        ctx,
+        &[
+            Action::update_nft(nft_id, vec![], Some(TransferNftById::new(None, trade_prices))),
+            Action::send(nft_id, SETTLEMENT_PAYMENT_HASH.into(), 1, Memos::None),
+        ],
+    )?;
+    spends.finish_with_keys(ctx, &deltas, Relation::AssertConcurrent, &keys)?;
+
+    let coin_spends = ctx.take();
+    let signature = sign_transaction(&coin_spends, &[maker.sk])?;
+    let offer = Offer::from_input_spend_bundle(
+        ctx,
+        SpendBundle::new(coin_spends, signature),
+        requested_payments,
+        asset_info,
+    )?;
+    Ok(offer.to_spend_bundle(ctx)?)
+}
+
+#[test]
+fn aggregated_royalties() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
+
+    let royalty_a = Bytes32::new([1; 32]);
+    let royalty_b = Bytes32::new([2; 32]);
+
+    // A 5% royalty NFT for 10,000 mojos, and a 10% royalty NFT for 30,000 mojos
+    let first = sell_nft(&mut sim, ctx, royalty_a, 500, 10_000)?;
+    let second = sell_nft(&mut sim, ctx, royalty_b, 1_000, 30_000)?;
+    let offer = Offer::from_spend_bundle(ctx, &SpendBundle::aggregate(&[first, second]))?;
+
+    // 5% of 10,000 plus 10% of 30,000, rather than royalties on 20,000 each
+    assert_eq!(offer.requested_royalty_amounts()?.xch, 500 + 3_000);
+
+    let taker = sim.bls(43_500);
+    let mut spends = Spends::new(taker.puzzle_hash);
+    spends.add(offer.offered_coins().clone());
+    spends.add(taker.coin);
+
+    let mut actions = offer.requested_payments().actions();
+    actions.extend(offer.requested_royalty_payments(ctx)?.actions());
+
+    let deltas = spends.apply(ctx, &actions)?;
+    spends.finish_with_keys(
+        ctx,
+        &deltas,
+        Relation::AssertConcurrent,
+        &indexmap! { taker.puzzle_hash => taker.pk },
+    )?;
+    let coin_spends = ctx.take();
+    let signature = sign_transaction(&coin_spends, &[taker.sk])?;
+    sim.new_transaction(offer.take(SpendBundle::new(coin_spends, signature)))?;
+
+    assert_eq!(sim.unspent_coins(royalty_a, false)[0].amount, 500);
+    assert_eq!(sim.unspent_coins(royalty_b, false)[0].amount, 3_000);
+    assert!(sim.unspent_coins(taker.puzzle_hash, false).is_empty());
+
+    Ok(())
+}
+```
 
 ### Requesting an NFT
 
-When the maker requests an NFT, they pay its royalty up front, since the taker can't be trusted to. The maker adds `NftAssetInfo` for the NFT (which includes its royalty), and adds the royalty payments with `calculate_royalty_payments(...)?.actions()` alongside the offered XCH. The taker reveals the trade prices to the NFT when they spend it, with `update_nft`, computed from the offered amounts:
+When the maker requests an NFT, they pay its royalty up front, since the taker can't be trusted to. The maker adds `NftAssetInfo` for the NFT (which includes its royalty), and adds the royalty payments with `calculate_royalty_payments(...)?.actions()` alongside the offered XCH. The taker reveals the trade prices to the NFT when they spend it, with `update_nft`. On 0.37.1, compute them from the offered amounts as below. On `main` (unreleased), use `offer.requested_nft_trade_prices(launcher_id)` instead, which derives them from the royalties the maker actually prepaid, so they match even when bids are aggregated or a bid requests several NFTs:
 
 ```rust
 use chia_wallet_sdk::chia::puzzle_types::{
@@ -426,6 +564,8 @@ fn xch_for_royalty_nft() -> anyhow::Result<()> {
 }
 ```
 
+On `main`, `offer.offered_royalty_amounts()` in this example is the 30 mojos the maker prepaid, read from its settlement spend, rather than a recomputed even split, and the taker could replace its `calculate_trade_prices(...)` call with `offer.requested_nft_trade_prices(launcher_id)` (which returns the same 1000 mojo trade price here).
+
 The royalty math on its own:
 
 ```rust
@@ -471,6 +611,8 @@ Offers are shared as bech32m strings with the `offer` prefix, containing a zlib-
 | `compress_offer(&spend_bundle)`                   | `SpendBundle` to compressed bytes     |
 | `decompress_offer(&bytes)`                        | Compressed bytes to `SpendBundle`     |
 | `compress_offer_bytes` / `decompress_offer_bytes` | Raw serialized bytes, without parsing |
+
+On `main` (unreleased), the `chip-0052` feature adds `encode_partial_offer` and `decode_partial_offer`, which use the same compression with the `partial` prefix (see [Partial Offers](/sdk/primitives/partial-offers)).
 
 Decompression supports every version of the format the reference wallet has used, and output is capped at 6 MB (`DriverError::DecompressionTooLarge`), matching chia-blockchain. Encode the result of `offer.to_spend_bundle(&mut ctx)?`, not the maker's input spend bundle, since the offer file needs the requested payments.
 

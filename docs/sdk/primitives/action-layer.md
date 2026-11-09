@@ -19,6 +19,9 @@ coins and reserves. All of it is behind the `action-layer` feature, which also e
 chia-wallet-sdk = { version = "...", features = ["action-layer"] }
 ```
 
+On `main` (unreleased), the SDK also has an NFT [auction](/sdk/primitives/auctions) built on the action
+layer, behind the `auction` feature (which implies `action-layer`).
+
 :::note
 This is unrelated to the SDK's [action system](/sdk/action-system) (`Action`, `Spends`), which is a
 transaction builder. The action layer is an on-chain puzzle pattern.
@@ -67,13 +70,14 @@ To follow a singleton on chain, use `from_parent_spend` / `from_spend` on its co
 
 ## Applications
 
-| Application        | Types                                                                                                | What it does                                                                                                                                                                                                                     |
-| ------------------ | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| CATalog            | `CatalogRegistry`, `CatalogRegistryInfo`, `CatalogRegistryState`, `CatalogRegistryConstants`         | A registry of CATs. Registering a CAT (by TAIL hash) mints an NFT that holds its metadata (`CatNftMetadata`). Each TAIL can only be registered once, enforced by slots                                                           |
-| XCHandles          | `XchandlesRegistry`, `XchandlesRegistryInfo`, `XchandlesRegistryState`, `XchandlesConstants`         | A registry of handles (names) with expiration, priced by a pricing puzzle. Handles can be registered, extended, expired and re-registered, and updated                                                                           |
-| Reward distributor | `RewardDistributor`, `RewardDistributorInfo`, `RewardDistributorState`, `RewardDistributorConstants` | Distributes rewards (a CAT held in a `Reserve`) to entries over epochs. Entries are managed by a manager singleton, or are NFTs from a collection, NFTs from a curated DataLayer store, or staked CATs (`RewardDistributorType`) |
-| Medieval vault     | `MedievalVault`, `MedievalVaultInfo`                                                                 | A plain m-of-n BLS multisig singleton, used to administer other singletons                                                                                                                                                       |
-| State scheduler    | `StateScheduler`, `StateSchedulerInfo`                                                               | A singleton that sends a pre-committed sequence of state updates to another singleton at given times (for example to schedule price changes)                                                                                     |
+| Application                             | Types                                                                                                | What it does                                                                                                                                                                                                                     |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CATalog                                 | `CatalogRegistry`, `CatalogRegistryInfo`, `CatalogRegistryState`, `CatalogRegistryConstants`         | A registry of CATs. Registering a CAT (by TAIL hash) mints an NFT that holds its metadata (`CatNftMetadata`). Each TAIL can only be registered once, enforced by slots                                                           |
+| XCHandles                               | `XchandlesRegistry`, `XchandlesRegistryInfo`, `XchandlesRegistryState`, `XchandlesConstants`         | A registry of handles (names) with expiration, priced by a pricing puzzle. Handles can be registered, extended, expired and re-registered, and updated                                                                           |
+| Reward distributor                      | `RewardDistributor`, `RewardDistributorInfo`, `RewardDistributorState`, `RewardDistributorConstants` | Distributes rewards (a CAT held in a `Reserve`) to entries over epochs. Entries are managed by a manager singleton, or are NFTs from a collection, NFTs from a curated DataLayer store, or staked CATs (`RewardDistributorType`) |
+| Medieval vault                          | `MedievalVault`, `MedievalVaultInfo`                                                                 | A plain m-of-n BLS multisig singleton, used to administer other singletons                                                                                                                                                       |
+| State scheduler                         | `StateScheduler`, `StateSchedulerInfo`                                                               | A singleton that sends a pre-committed sequence of state updates to another singleton at given times (for example to schedule price changes)                                                                                     |
+| Auction (unreleased, `auction` feature) | `Auction`, `AuctionInfo`, `AuctionSettings`, `AuctionState`, `AuctionReserve`                        | An English auction for an NFT, with bids in XCH or a CAT held in a reserve coin. It has its own driver (`Auction::spend`) rather than the `pending_spend` flow below. See [Auctions](/sdk/primitives/auctions)                   |
 
 Each registry's actions are separate types:
 
@@ -354,7 +358,14 @@ computes the next generation.
   singleton launcher. Since there's only one possible prelauncher coin per parent and value, it
   guarantees that only one launcher (and so one NFT) exists per registration.
 - **`CatMaker`** and `DefaultCatMakerArgs`: small puzzles that compute a CAT puzzle hash from an inner
-  puzzle hash, so actions can verify payments in a CAT chosen by the registry's state.
+  puzzle hash, so actions can verify payments in a CAT chosen by the registry's state. `CatMaker` has
+  `Default`, `Revocable` and `Xch` variants (with `DefaultCatMakerArgs`, `RevocableCatMakerArgs` and
+  `XchCatMaker` in `chia_wallet_sdk::types::puzzles`). In 0.37.1 they're part of the action layer and
+  need the `action-layer` feature. On `main` (unreleased), they moved out of the action layer (to the
+  driver's `cat_maker` module and the types crate's `cat_makers` module) and are no longer
+  feature-gated, so other primitives such as [partial offers](/sdk/primitives/partial-offers) can use
+  them. The public paths (`chia_wallet_sdk::driver::CatMaker`,
+  `chia_wallet_sdk::types::puzzles::DefaultCatMakerArgs`, ...) are the same in both.
 - **`P2ParentCoin`**: a coin (XCH or CAT) that can be spent by whoever controls its parent's inner
   puzzle. Its solution reveals the parent's inner puzzle with a new solution, the puzzle checks it
   against the parent coin id, and the conditions it outputs become the coin's conditions.

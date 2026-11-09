@@ -80,6 +80,25 @@ const sidebars: SidebarsConfig = {
           id: "sdk/primitives/action-layer",
           label: "Action Layer",
         },
+        {
+          type: "category",
+          label: "Unreleased",
+          items: [
+            {
+              type: "doc",
+              id: "sdk/primitives/partial-offers",
+              label: "Partial Offers",
+            },
+            { type: "doc", id: "sdk/primitives/auctions", label: "Auctions" },
+            { type: "doc", id: "sdk/primitives/splitter", label: "Splitter" },
+            { type: "doc", id: "sdk/primitives/fusion", label: "NFT Fusion" },
+            {
+              type: "doc",
+              id: "sdk/primitives/secure-the-bag",
+              label: "Secure the Bag",
+            },
+          ],
+        },
       ],
     },
     { type: "doc", id: "sdk/offers", label: "Offers" },

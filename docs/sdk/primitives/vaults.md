@@ -540,6 +540,248 @@ The vault path is `P2ConditionsOrSingleton::p2_singleton_spend`, which takes the
 `P2Singleton::spend`. When the vault spends one of these coins, include
 `ASSERT_MY_COIN_ID` in the coin's delegated conditions; [clear signing](/sdk/clear-signing) requires it.
 
+## Signed messages
+
+:::info Unreleased
+Vault message signing is on the SDK's `main` branch and isn't in a release yet (the latest release is
+0.37.1). To try it, depend on the git repository:
+`chia-wallet-sdk = { git = "https://github.com/xch-dev/chia-wallet-sdk" }`
+:::
+
+A vault has no single key, so it can't sign an off-chain message (such as a login challenge or an
+attestation) the way a BLS or secp key does. Instead, the vault's signers sign a vault spend that can
+never be valid on chain. The spend carries the messages, and the signed coin spend is the proof.
+Anyone who knows the vault's launcher id and current custody hash can verify it offline, without
+knowing what kinds of members the vault has.
+
+How it works:
+
+1. `vault_message_envelope(ctx, &vault, &messages)` builds a delegated spend that recreates the vault
+   with the same custody hash and amount, and sends each message (`SEND_MESSAGE` mode `0x17`, at most
+   1,024 bytes each) to `VAULT_MESSAGE_COIN_ID`. That coin has a parent id of all zeros, so it can never
+   exist, and neither can a valid spend that sends it a message.
+2. The vault's signers sign the envelope like any other vault spend (the same `MipsSpend` and
+   `Vault::spend`). Wrap the resulting coin spend and aggregated BLS signature (the default signature if
+   no BLS signatures are needed) in a `VaultMessageProof`.
+3. Send the proof as bytes (`encode` / `decode`) or as a bech32m string with the `vaultsig` prefix
+   (`encode_string` / `decode_string`).
+4. The verifier calls `verify_vault_signed_message(&proof, launcher_id, custody_hash, genesis_challenge, max_cost)`.
+   It checks that the coin is the expected vault, and that the delegated spend is exactly an envelope.
+   Then it runs the spend with consensus rules, alongside a spend of the message coin that receives every
+   message. It returns the messages in order. The vault's own puzzle checks the signatures, thresholds and
+   restrictions, so this works for BLS, secp256r1, passkey and m-of-n custody alike.
+
+Before the signers approve an envelope, [clear signing](/sdk/clear-signing#signed-messages) shows it as
+`VaultTransaction::signed_messages` instead of a transaction. A delegated spend can't both sign messages
+and do something else (`MixedVaultMessageEnvelope`).
+
+```rust unreleased
+use chia_wallet_sdk::driver::{
+    InnerPuzzleSpend, MipsSpend, Reveals, VaultMessageProof, mips_puzzle_hash,
+    parse_vault_transaction, vault_message_envelope, verify_vault_signed_message,
+};
+use chia_wallet_sdk::prelude::*;
+use chia_wallet_sdk::test::sign_transaction;
+use chia_wallet_sdk::types::{TESTNET11_CONSTANTS, puzzles::BlsMember};
+
+#[test]
+fn sign_a_message_with_a_vault() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
+
+    // A vault with a single BLS member.
+    let alice = sim.bls(1);
+    let member = BlsMember::new(alice.pk);
+    let custody_hash = mips_puzzle_hash(0, vec![], member.curry_tree_hash(), true);
+    let (conditions, vault) =
+        Launcher::new(alice.coin.coin_id(), 1).mint_vault(ctx, custody_hash, ())?;
+    StandardLayer::new(alice.pk).spend(ctx, alice.coin, conditions)?;
+    sim.spend_coins(ctx.take(), &[alice.sk.clone()])?;
+
+    // Include a domain, a nonce from the verifier and an expiration, since proofs can be replayed.
+    let messages = vec![Bytes::new(
+        b"Sign in to example.com\nNonce: 4f9a2c\nExpires: 2026-11-01".to_vec(),
+    )];
+    let envelope = vault_message_envelope(ctx, &vault, &messages)?;
+
+    // Clear signing shows the envelope as signed messages, not a transaction.
+    let tx = parse_vault_transaction(Reveals::default(), ctx, vault.info.launcher_id, envelope)?;
+    assert!(tx.signs_messages());
+    assert_eq!(tx.signed_messages, messages);
+    assert!(tx.spends.is_empty());
+
+    // Sign the envelope like any other vault spend.
+    let mut spend = MipsSpend::new(envelope);
+    let member_puzzle = ctx.curry(member)?;
+    spend.members.insert(
+        custody_hash,
+        InnerPuzzleSpend::new(0, vec![], Spend::new(member_puzzle, NodePtr::NIL)),
+    );
+    vault.spend(ctx, &spend)?;
+
+    let coin_spends = ctx.take();
+    let signature = sign_transaction(&coin_spends, &[alice.sk])?;
+    let proof = VaultMessageProof::new(coin_spends[0].clone(), signature);
+
+    // The proof can be shared as a string.
+    let encoded = proof.encode_string()?;
+    assert!(encoded.starts_with("vaultsig1"));
+    let decoded = VaultMessageProof::decode_string(&encoded)?;
+
+    // The verifier only needs the launcher id and a trusted custody hash.
+    let genesis_challenge = TESTNET11_CONSTANTS.genesis_challenge;
+    let verified = verify_vault_signed_message(
+        &decoded,
+        vault.info.launcher_id,
+        custody_hash.into(),
+        genesis_challenge,
+        None,
+    )?;
+    assert_eq!(verified, messages);
+
+    // With any other custody hash, it's rejected.
+    let wrong_custody_hash = Bytes32::new([1; 32]);
+    assert!(
+        verify_vault_signed_message(
+            &decoded,
+            vault.info.launcher_id,
+            wrong_custody_hash,
+            genesis_challenge,
+            None,
+        )
+        .is_err()
+    );
+
+    Ok(())
+}
+```
+
+### What the proof does and doesn't prove
+
+`verify_vault_signed_message` checks everything that consensus would check about the spend itself:
+the puzzle reveal, the custody's signatures, `AGG_SIG_ME` against the given genesis challenge, and
+assertions about the coin. It also requires the vault's actual output to be exactly the recreated vault,
+and rejects any height or time assertion (`VaultMessageTimelocked`). Without the chain it can't check
+those, and a timelocked member such as a recovery path could otherwise sign at any time. It doesn't check
+that the vault coin exists or is unspent, so:
+
+- **The custody hash must come from a trusted source**, such as the vault's current coin on chain.
+  Anyone could make up a custody puzzle for any launcher id that needs no signature. Rekeying the vault
+  changes its custody hash, and with it the signers the proof is checked against.
+- **Proofs can be replayed.** A proof doesn't expire and isn't tied to an application. It stays valid for
+  as long as the custody hash doesn't change. Put a domain, a verifier-chosen nonce and an expiration time
+  in the messages, and check them after verifying.
+- **Verification costs CPU.** The proof is untrusted, and a proof with an invalid signature can still use
+  the whole cost limit before it fails. `max_cost` defaults to `VAULT_MESSAGE_PROOF_DEFAULT_MAX_COST`
+  (1,000,000,000; a 3-of-4 passkey vault costs about 214 million). Services that verify proofs from anyone
+  should rate limit them or pass a lower limit.
+- Consensus runs with the rules from before hard fork 2, in mempool mode. Members that depend on newer
+  operators can't sign messages yet.
+- Don't use the `ForceCoinMessageMod` wrapper (it's rejected) or custom restrictions that require
+  messages for members that should be able to sign messages.
+
+### Vaults controlled by other vaults
+
+A vault's custody can include another vault as a `SingletonMember`, so the controlling vault's signers
+approve its spends. To sign messages with the controlled vault, its envelope is authorized by the
+controller. The controller signs `vault_controller_envelope(ctx, &controller, controlled_coin, delegated_puzzle_hash, fast_forward)`,
+which recreates the controller and sends the envelope's delegated puzzle hash to the controlled vault.
+It also sends the same message to `VAULT_CONTROLLER_MESSAGE_COIN_ID`, a second coin that can never exist,
+so the controller's spend can't be valid on chain either. Set `fast_forward` if the controlled vault's
+member is a fast-forwardable `SingletonMemberWithMode` (mode `0x12`), which receives the message by
+puzzle hash rather than coin id.
+
+The proof then includes the controller spends (`VaultMessageProof::with_controllers`), and is encoded
+with a second version byte. Verify it with `verify_controlled_vault_signed_message`, which takes the
+`VaultInfo` of every controller, since their custody hashes must also be trusted. A controller can itself be
+controlled, up to 16 controller spends in total. `verify_vault_signed_message` rejects proofs with
+controller spends.
+
+```rust unreleased
+use chia_wallet_sdk::driver::{
+    InnerPuzzleSpend, MipsSpend, VaultMessageProof, mips_puzzle_hash, vault_controller_envelope,
+    vault_message_envelope, verify_controlled_vault_signed_message,
+};
+use chia_wallet_sdk::prelude::*;
+use chia_wallet_sdk::test::sign_transaction;
+use chia_wallet_sdk::types::{
+    TESTNET11_CONSTANTS,
+    puzzles::{BlsMember, SingletonMember, SingletonMemberSolution},
+};
+
+fn mint_vault(sim: &mut Simulator, ctx: &mut SpendContext, custody_hash: TreeHash) -> anyhow::Result<Vault> {
+    let funder = sim.bls(1);
+    let (conditions, vault) =
+        Launcher::new(funder.coin.coin_id(), 1).mint_vault(ctx, custody_hash, ())?;
+    StandardLayer::new(funder.pk).spend(ctx, funder.coin, conditions)?;
+    sim.spend_coins(ctx.take(), &[funder.sk])?;
+    Ok(vault)
+}
+
+#[test]
+fn sign_a_message_with_a_controlled_vault() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
+
+    // The controller has a BLS member, and the controlled vault's only member is the controller.
+    let alice = BlsPair::new(0);
+    let bls_member = BlsMember::new(alice.pk);
+    let controller_custody = mips_puzzle_hash(0, vec![], bls_member.curry_tree_hash(), true);
+    let controller = mint_vault(&mut sim, ctx, controller_custody)?;
+
+    let singleton_member = SingletonMember::new(controller.info.launcher_id);
+    let controlled_custody = mips_puzzle_hash(0, vec![], singleton_member.curry_tree_hash(), true);
+    let controlled = mint_vault(&mut sim, ctx, controlled_custody)?;
+
+    // The controlled vault's envelope is approved by its singleton member.
+    let messages = vec![Bytes::new(b"example.com nonce 81c3".to_vec())];
+    let envelope = vault_message_envelope(ctx, &controlled, &messages)?;
+
+    let mut spend = MipsSpend::new(envelope);
+    let member_puzzle = ctx.curry(singleton_member)?;
+    let member_solution = ctx.alloc(&SingletonMemberSolution::new(
+        controller.info.custody_hash.into(),
+        controller.coin.amount,
+    ))?;
+    spend.members.insert(
+        controlled_custody,
+        InnerPuzzleSpend::new(0, vec![], Spend::new(member_puzzle, member_solution)),
+    );
+    controlled.spend(ctx, &spend)?;
+    let vault_spend = ctx.take().remove(0);
+
+    // The controller authorizes the envelope's delegated puzzle hash, which its BLS key signs.
+    let delegated_puzzle_hash = ctx.tree_hash(envelope.puzzle).into();
+    let controller_envelope =
+        vault_controller_envelope(ctx, &controller, controlled.coin, delegated_puzzle_hash, false)?;
+
+    let mut spend = MipsSpend::new(controller_envelope);
+    let member_puzzle = ctx.curry(bls_member)?;
+    spend.members.insert(
+        controller_custody,
+        InnerPuzzleSpend::new(0, vec![], Spend::new(member_puzzle, NodePtr::NIL)),
+    );
+    controller.spend(ctx, &spend)?;
+    let controller_spend = ctx.take().remove(0);
+
+    let signature = sign_transaction(&[vault_spend.clone(), controller_spend.clone()], &[alice.sk])?;
+    let proof = VaultMessageProof::with_controllers(vault_spend, vec![controller_spend], signature);
+
+    // The verifier trusts the custody hashes of both the vault and its controller.
+    let verified = verify_controlled_vault_signed_message(
+        &proof,
+        controlled.info.launcher_id,
+        controlled_custody.into(),
+        &[controller.info],
+        TESTNET11_CONSTANTS.genesis_challenge,
+        None,
+    )?;
+    assert_eq!(verified, messages);
+
+    Ok(())
+}
+```
+
 ## CHIP-0037 puzzles
 
 With the `chip-0037` feature, the SDK adds puzzles for controlling Chia coins from Ethereum-style

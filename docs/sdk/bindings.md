@@ -277,6 +277,11 @@ asyncio.run(main())
 The Python package has the same networking classes as Node.js: `RpcClient`, `Peer`, `Connector`,
 `Certificate` and `FullNodeSimulator.start_server`.
 
+On the SDK's `main` branch (unreleased), the bindings also include partial offers, auctions, the
+splitter, NFT fusion, Secure the Bag and vault signed message verification, with the same names as the
+Rust types (for example `PartialOffer`, `Auction`, `Fusion` and `SecureTheBag`). The binding packages
+enable every feature, so there's nothing to turn on.
+
 ## What isn't in the bindings
 
 The bindings cover building, signing, parsing and validating spends for every primitive, offers, the

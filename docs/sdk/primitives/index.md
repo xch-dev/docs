@@ -235,6 +235,18 @@ In practice you rarely build proofs by hand:
 | [DataLayer](/sdk/primitives/datalayer)               | `Datastore`, `DatastoreInfo`                                                                           | `chip-0035`    |
 | [Action Layer](/sdk/primitives/action-layer)         | `CatalogRegistry`, `XchandlesRegistry`, `RewardDistributor`, `MedievalVault`, `StateScheduler`, `Slot` | `action-layer` |
 
+These primitives are on the SDK's `main` branch and aren't in a release yet:
+
+| Page                                             | Types                                                    | Feature     |
+| ------------------------------------------------ | -------------------------------------------------------- | ----------- |
+| [Partial Offers](/sdk/primitives/partial-offers) | `PartialOffer`, `PartialOfferInfo`, `PartialOfferFill`   | `chip-0052` |
+| [Auctions](/sdk/primitives/auctions)             | `Auction`, `AuctionInfo`, `AuctionSettings`              | `auction`   |
+| [Splitter](/sdk/primitives/splitter)             | `SplitterLayer`, `SplitterArgs`, `SplitterShare`         | `chip-0008` |
+| [NFT Fusion](/sdk/primitives/fusion)             | `Fusion`, `FusionSwap`, `P2FusionLayer`                  | `chip-0021` |
+| [Secure the Bag](/sdk/primitives/secure-the-bag) | `SecureTheBag`, `BagFormat`, `BagPayment`, `SecuredMint` |             |
+
+Vault [signed messages](/sdk/primitives/vaults#signed-messages) are also unreleased.
+
 All primitive types live in `chia_wallet_sdk::driver`, and the most common ones are re-exported from
 `chia_wallet_sdk::prelude`. See the
 [driver rustdoc](https://docs.rs/chia-wallet-sdk/latest/chia_wallet_sdk/driver/) for the full API.
