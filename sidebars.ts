@@ -37,8 +37,8 @@ const sidebars: SidebarsConfig = {
     {
       type: "category",
       label: "Action System",
-      link: { type: "doc", id: "sdk/action-system/index" },
       items: [
+        { type: "doc", id: "sdk/action-system/index", label: "Overview" },
         {
           type: "doc",
           id: "sdk/action-system/actions",
@@ -54,8 +54,8 @@ const sidebars: SidebarsConfig = {
     {
       type: "category",
       label: "Primitives",
-      link: { type: "doc", id: "sdk/primitives/index" },
       items: [
+        { type: "doc", id: "sdk/primitives/index", label: "Overview" },
         { type: "doc", id: "sdk/primitives/standard", label: "Standard (XCH)" },
         { type: "doc", id: "sdk/primitives/cat", label: "CAT" },
         { type: "doc", id: "sdk/primitives/singletons", label: "Singletons" },
@@ -109,8 +109,8 @@ const sidebars: SidebarsConfig = {
     {
       type: "category",
       label: "Testing",
-      link: { type: "doc", id: "sdk/testing/index" },
       items: [
+        { type: "doc", id: "sdk/testing/index", label: "Simulator" },
         {
           type: "doc",
           id: "sdk/testing/peer-simulator",
