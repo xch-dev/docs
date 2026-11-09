@@ -133,6 +133,10 @@ const config: Config = {
               label: "Chialisp Docs",
               href: "https://chialisp.com",
             },
+            {
+              label: "Rue Docs",
+              href: "https://rue-lang.com",
+            },
           ],
         },
         {
