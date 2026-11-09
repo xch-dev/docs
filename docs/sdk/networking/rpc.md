@@ -271,7 +271,7 @@ every RPC method comes with the trait. The method's bounds use `serde`'s `Serial
 
 This wrapper logs every call and then forwards it to another client:
 
-```rust ignore
+```rust
 use chia_wallet_sdk::prelude::*;
 use serde::{Serialize, de::DeserializeOwned};
 

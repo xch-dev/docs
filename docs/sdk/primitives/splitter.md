@@ -54,7 +54,7 @@ paid if the split happens in the same block.
 `payouts(amount)` calculates what each recipient gets, using the same rounding as the puzzle, and
 `inner_spend(ctx, amount)` builds the spend. For an XCH coin, the inner spend is the whole spend:
 
-```rust unreleased
+```rust
 use chia_wallet_sdk::driver::SplitterLayer;
 use chia_wallet_sdk::prelude::*;
 use chia_wallet_sdk::types::puzzles::SplitterShare;
@@ -116,7 +116,7 @@ To split a CAT, use the splitter as the CAT's inner puzzle. Pass the inner spend
 [`Cat::spend_all`](/sdk/primitives/cat), which wraps it in the CAT layer. The children are CATs of the
 same asset with the recipients' puzzle hashes as their p2 puzzle hashes:
 
-```rust unreleased
+```rust
 use chia_wallet_sdk::driver::SplitterLayer;
 use chia_wallet_sdk::prelude::*;
 use chia_wallet_sdk::types::puzzles::SplitterShare;
@@ -176,7 +176,7 @@ other puzzles, and `DriverError::InvalidSplitter` if the scheme is one `Splitter
 or if it doesn't serialize back to the same puzzle hash (for example, a share encoded as a non-canonical
 integer, or extra values after a share, which the puzzle ignores but are part of the puzzle hash):
 
-```rust unreleased
+```rust
 use chia_wallet_sdk::driver::SplitterLayer;
 use chia_wallet_sdk::prelude::*;
 use chia_wallet_sdk::types::puzzles::SplitterShare;

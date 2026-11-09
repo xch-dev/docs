@@ -107,7 +107,7 @@ second claim starts from the closest unspent node on its path. This example buil
 payments with a width of three. It funds the root, claims one payment, then claims a second payment
 from a node that the first claim created:
 
-```rust unreleased
+```rust
 use chia_wallet_sdk::driver::{BagAsset, BagCoin, BagFormat, BagPayment, SecureTheBag};
 use chia_wallet_sdk::prelude::*;
 
@@ -168,7 +168,7 @@ sender can still claw it back before the timeout, as with any [clawback](/sdk/pr
 This example issues a CAT straight into a bag of five payments and one clawback payment, then unrolls
 all of it in one transaction:
 
-```rust unreleased
+```rust
 use chia_wallet_sdk::chia::puzzle_types::cat::GenesisByCoinIdTailArgs;
 use chia_wallet_sdk::driver::{BagAsset, BagFormat, BagPayment, BagCoin, ClawbackV2, SecureTheBag};
 use chia_wallet_sdk::prelude::*;
@@ -254,7 +254,7 @@ data. Cloud Wallet doesn't set a melt key, and the key changes the pre-launcher'
 
 NFT bulk mints keep the mints in order, so they use an unsorted bag:
 
-```rust unreleased
+```rust
 use chia_wallet_sdk::chia::puzzle_types::nft::NftMetadata;
 use chia_wallet_sdk::driver::{BagAsset, BagCoin, BagFormat, SecureTheBag, SecuredMint};
 use chia_wallet_sdk::prelude::*;

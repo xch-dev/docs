@@ -15,7 +15,8 @@
     "typecheck": "pnpm gen-api-docs && tsc",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "sync-openapi": "./scripts/sync-openapi.sh"
+    "sync-openapi": "./scripts/sync-openapi.sh",
+    "check:sdk-examples": "python3 scripts/check-sdk-examples.py"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",

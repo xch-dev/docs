@@ -186,7 +186,7 @@ To launch:
    singleton amount of `AUCTION_SINGLETON_AMOUNT` (1), since the reserve finalizer always recreates the
    singleton with an amount of 1.
 
-```rust unreleased
+```rust
 use std::num::NonZeroU64;
 
 use chia_wallet_sdk::driver::{
@@ -350,7 +350,7 @@ fn auction_launch_bid_and_settle() -> anyhow::Result<()> {
 The seller authorizes a cancel by spending a coin with the payout puzzle hash (any coin, even an empty
 one) that outputs `cancel_authorization`. The NFT goes back to the payout puzzle hash.
 
-```rust unreleased
+```rust
 use std::num::NonZeroU64;
 
 use chia_wallet_sdk::driver::{

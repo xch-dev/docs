@@ -318,7 +318,7 @@ return `success: false`), plus `get_aggsig_additional_data` and a few control en
 :::info Feature flag
 The server needs the `full-node-simulator-http` feature of `chia-sdk-test`. `chia-wallet-sdk` doesn't
 have a feature that enables it, so add `chia-sdk-test` as a direct dependency (at the same version) with
-the feature turned on. The example below is not compiled as part of these docs for that reason.
+the feature turned on.
 
 ```toml
 [dev-dependencies]
@@ -331,7 +331,7 @@ chia-sdk-test = { version = "0.37", features = ["full-node-simulator-http"] }
 the test as well, create it yourself as an `Arc<std::sync::Mutex<FullNodeSimulator>>` and pass it to
 `with_simulator`. The server stops when it's dropped.
 
-```rust ignore
+```rust
 use std::sync::{Arc, Mutex};
 
 use chia_sdk_test::{FullNodeSimulator, FullNodeSimulatorServer};

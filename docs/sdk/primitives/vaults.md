@@ -500,7 +500,7 @@ The struct only stores the hash of the fixed path, so a coin can be reconstructe
 calculates it from the quoted conditions hash and version. When spending the fixed path, the version is
 detected from the quoted conditions (`match_quoted_conditions_hash`).
 
-```rust since-0.37
+```rust
 use chia_wallet_sdk::driver::{P2ConditionsOrSingleton, P2ConditionsOrSingletonVersion};
 use chia_wallet_sdk::prelude::*;
 
@@ -564,7 +564,7 @@ Before the signers approve an envelope, [clear signing](/sdk/clear-signing#signe
 `VaultTransaction::signed_messages` instead of a transaction. A delegated spend can't both sign messages
 and do something else (`MixedVaultMessageEnvelope`).
 
-```rust unreleased
+```rust
 use chia_wallet_sdk::driver::{
     InnerPuzzleSpend, MipsSpend, Reveals, VaultMessageProof, mips_puzzle_hash,
     parse_vault_transaction, vault_message_envelope, verify_vault_signed_message,
@@ -686,7 +686,7 @@ with a second version byte. Verify it with `verify_controlled_vault_signed_messa
 controlled, up to 16 controller spends in total. `verify_vault_signed_message` rejects proofs with
 controller spends.
 
-```rust unreleased
+```rust
 use chia_wallet_sdk::driver::{
     InnerPuzzleSpend, MipsSpend, VaultMessageProof, mips_puzzle_hash, vault_controller_envelope,
     vault_message_envelope, verify_controlled_vault_signed_message,

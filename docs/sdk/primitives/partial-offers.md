@@ -66,7 +66,7 @@ To take it, decode it with `decode_partial_offer` and parse it with `PartialOffe
 
 This example sells 1000 CAT mojos for 400 XCH mojos, with a minimum fill, an expiration and a required fee. Bob fills part of it, then takes the rest from the recreated coin:
 
-```rust unreleased
+```rust
 use std::num::NonZeroU64;
 
 use chia_wallet_sdk::driver::{
@@ -206,7 +206,7 @@ Each fill pays `requested_amount` and releases `requested_amount * price_precisi
 - `PartialOffer::max_requested_amount()` is the smallest payment that releases as much of the coin as possible. Because of rounding, a tiny remainder can be impossible to release, in which case only the maker can reclaim it.
 - `PartialOffer::child(requested)` is the coin that a fill recreates, or `None` if it takes everything.
 
-```rust unreleased
+```rust
 use std::num::NonZeroU64;
 
 use chia_wallet_sdk::driver::{PartialOffer, PartialOfferAsset, PartialOfferInfo};
@@ -267,7 +267,7 @@ To cancel a partial offer, the maker claws back its latest coin with `partial_of
 
 This example creates the partial offer coin on chain right away, has Bob fill part of it, then has Alice find the latest coin from Bob's spend and claw it back:
 
-```rust unreleased
+```rust
 use std::num::NonZeroU64;
 
 use chia_wallet_sdk::driver::{

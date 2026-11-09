@@ -1,0 +1,37 @@
+# Compiles and runs the Rust examples in docs/sdk. Run it with `pnpm check:sdk-examples`, which
+# extracts the examples into src/docs before running `cargo test`.
+#
+# `rev` is the Wallet SDK commit the docs are written against. Update it (and Cargo.lock) whenever the
+# docs are updated for a newer SDK.
+
+[package]
+name = "sdk-examples"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+chia-wallet-sdk = { git = "https://github.com/xch-dev/chia-wallet-sdk", rev = "ad7630cbae5bc2d3c1481eb2fc797249048a16a8", features = [
+    "rustls",
+    "chip-0008",
+    "chip-0021",
+    "chip-0035",
+    "chip-0037",
+    "chip-0052",
+    "action-layer",
+    "auction",
+    "offer-compression",
+    "peer-simulator",
+] }
+# The HTTP full node simulator isn't exposed by a chia-wallet-sdk feature.
+chia-sdk-test = { git = "https://github.com/xch-dev/chia-wallet-sdk", rev = "ad7630cbae5bc2d3c1481eb2fc797249048a16a8", features = [
+    "full-node-simulator-http",
+] }
+anyhow = "1"
+hex = "0.4"
+hex-literal = "1"
+indexmap = "2"
+serde = "1"
+tokio = { version = "1", features = ["full"] }
+
+[workspace]

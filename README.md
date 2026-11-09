@@ -26,6 +26,20 @@ pnpm build
 
 CI runs the same checks on every pull request.
 
+## Wallet SDK examples
+
+Every Rust example in `docs/sdk` is compiled and run against the Wallet SDK. The SDK commit the docs are written against is the `rev` in `sdk-examples/Cargo.toml`. To check the examples (this needs a Rust toolchain):
+
+```sh
+pnpm check:sdk-examples                             # every page
+pnpm check:sdk-examples docs/sdk/primitives/cat.md  # specific pages
+pnpm check:sdk-examples --sdk /path/to/wallet-sdk   # against a local SDK checkout
+```
+
+Each ` ```rust ` block is compiled as its own module, so it needs its own `use` lines. Mark a block ` ```rust ignore ` to skip it, which is only meant for excerpts like struct definitions. CI doesn't run this check yet.
+
+To update the docs for a new SDK release with Claude Code, run `/update-sdk-docs <tag>`.
+
 ## RPC reference
 
 The RPC pages are generated from `src/openapi.json`, which comes from Sage. To update it to a Sage release (this needs git and a Rust toolchain):

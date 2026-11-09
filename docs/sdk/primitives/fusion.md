@@ -72,7 +72,7 @@ coin, the NFTs now `locked`, and the NFTs `unlocked` for the maker, ready for th
 
 This example has a project lock one NFT on side A, then a user fuses two NFTs into it and defuses it back:
 
-```rust unreleased
+```rust
 use chia_wallet_sdk::chia::puzzle_types::nft::NftMetadata;
 use chia_wallet_sdk::chia::puzzle_types::offer::{NotarizedPayment, Payment};
 use chia_wallet_sdk::driver::{Fusion, FusionDirection};
@@ -237,7 +237,7 @@ offered NFT into the settlement puzzle must assert the payment it expects in ret
 Otherwise anyone who sees that spend can pay the NFT to themselves, because settlement coins can be spent
 by anyone:
 
-```rust unreleased
+```rust
 use chia_wallet_sdk::chia::puzzle_types::nft::NftMetadata;
 use chia_wallet_sdk::chia::puzzle_types::offer::{NotarizedPayment, Payment};
 use chia_wallet_sdk::driver::{FusionDirection, FusionUnlock};
@@ -333,7 +333,7 @@ indexer can find fusions by that hint.
   from a confirmed fusion spend, along with the `FusionDirection` of that swap, which tells you which side
   is locked now: after `Fuse` side B is locked, after `Defuse` side A is.
 
-```rust unreleased
+```rust
 use chia_wallet_sdk::chia::puzzle_types::nft::NftMetadata;
 use chia_wallet_sdk::chia::puzzle_types::offer::{NotarizedPayment, Payment};
 use chia_wallet_sdk::driver::{Fusion, FusionDirection, FusionUnlock};
