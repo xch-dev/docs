@@ -13,6 +13,10 @@ This section covers Sage itself: building it from source, where it stores its fi
 If you are looking for download instructions for the app, visit the [Sage Website](https://sagewallet.net).
 :::
 
+:::tip
+If you want to build an app that runs inside Sage, see the [Sage Apps guides](https://fancybudgie.com/sage) on Fancy Budgie.
+:::
+
 ## Source Installation
 
 Sage is built with [Tauri v2](https://tauri.app/), a framework for building efficient cross-platform applications that work on both desktop and mobile devices. You will need to follow the [Prerequisites](https://tauri.app/start/prerequisites/) section of the Tauri docs before proceeding with a source installation.
