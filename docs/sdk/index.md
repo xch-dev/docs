@@ -1,167 +1,119 @@
 ---
+title: Introduction
 slug: /sdk
-title: Quick Start
 ---
 
 # Wallet SDK
 
-The Chia Wallet SDK is a Rust library for building applications that interact with the Chia blockchain. It provides high-level abstractions for creating transactions, managing coins, and working with Chia primitives like CATs, NFTs, and Vaults. It's the same library [Sage](/sage/getting-started) is built on.
+The Chia Wallet SDK is a Rust library for building applications that work with coins on the
+[Chia blockchain](https://chia.net): wallets, dApps, indexers, trading bots, and services that mint or
+custody assets. It knows how to build, parse and sign spends for the standard puzzles (XCH, CATs, NFTs,
+DIDs, vaults, offers and more), how to talk to full nodes, and how to test all of it locally against a
+simulated blockchain. [Sage](/sage/getting-started) is built on it.
+
+It is a library, not a prebuilt wallet. It doesn't store keys, track balances or pick coins for you
+unless you ask it to. You decide where coins and keys come from, and the SDK turns your intent into
+valid coin spends.
 
 :::info
-This documentation assumes familiarity with Chia blockchain concepts such as coins, puzzles, conditions, and singletons. For background, see the [Chia Documentation](https://docs.chia.net) and [Chialisp Documentation](https://chialisp.com).
+These docs assume you know Rust and the basics of Chia's coin set model: coins, puzzles and solutions,
+conditions, and singletons. For background, see the [Chia documentation](https://docs.chia.net) and
+[chialisp.com](https://chialisp.com). The API reference for every item lives on
+[docs.rs](https://docs.rs/chia-wallet-sdk/latest/chia_wallet_sdk/).
 :::
 
 ## Installation
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+Add the crate to your project:
 
-<Tabs>
-  <TabItem value="rust" label="Rust" default>
+```bash
+cargo add chia-wallet-sdk
+```
 
-Add the SDK to your `Cargo.toml`:
+Networking needs a TLS backend, which you choose with a feature flag:
 
 ```toml
 [dependencies]
-chia-wallet-sdk = "0.32"
+chia-wallet-sdk = { version = "0.37", features = ["rustls"] }
 ```
 
-For the latest version and detailed API reference, see [docs.rs/chia-wallet-sdk](https://docs.rs/chia-wallet-sdk).
+### Feature flags
 
-  </TabItem>
-  <TabItem value="nodejs" label="Node.js">
+| Feature             | Enables                                                                                                                                     |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rustls`            | TLS for [peer connections](/sdk/networking/peer), [RPC clients](/sdk/networking/rpc) and the [daemon](/sdk/networking/daemon), using rustls |
+| `native-tls`        | The same, using the platform's native TLS library                                                                                           |
+| `chip-0035`         | [DataLayer stores](/sdk/primitives/datalayer) (CHIP-0035)                                                                                   |
+| `chip-0037`         | The CHIP-0037 controller puzzle and EIP-712 message layers used with [vaults](/sdk/primitives/vaults)                                       |
+| `action-layer`      | [Action layer singletons](/sdk/primitives/action-layer) such as CATalog and XCHandles (implies `chip-0035`)                                 |
+| `offer-compression` | Compressing and decompressing [offer](/sdk/offers) strings                                                                                  |
+| `peer-simulator`    | The [peer simulator](/sdk/testing/peer-simulator), an in-process full node for networking tests                                             |
 
-Install via npm:
+Everything else, including the [simulator](/sdk/testing), is always available.
 
-```bash
-npm install chia-wallet-sdk
-```
+## How the crate is organized
 
-The Node.js bindings provide a similar API with JavaScript/TypeScript support. Full TypeScript type definitions are included.
+`chia-wallet-sdk` is a facade over a workspace of smaller crates. You can depend on just the facade and
+reach everything through it, or depend on the individual crates if you want a smaller build.
 
-  </TabItem>
-  <TabItem value="python" label="Python">
+| Module                     | Crate              | What's in it                                                                                                                                                                                                    |
+| -------------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `chia_wallet_sdk::driver`  | `chia-sdk-driver`  | [SpendContext](/sdk/concepts/spend-context), [layers](/sdk/concepts/layers), [primitives](/sdk/primitives), the [action system](/sdk/action-system), [offers](/sdk/offers), [clear signing](/sdk/clear-signing) |
+| `chia_wallet_sdk::types`   | `chia-sdk-types`   | [Conditions](/sdk/concepts/conditions), puzzle argument and solution types, the `Mod` trait, network constants, Merkle trees                                                                                    |
+| `chia_wallet_sdk::signer`  | `chia-sdk-signer`  | Working out which [signatures](/sdk/concepts/signing) a transaction needs                                                                                                                                       |
+| `chia_wallet_sdk::client`  | `chia-sdk-client`  | [Peer connections](/sdk/networking/peer) over the full node wallet protocol                                                                                                                                     |
+| `chia_wallet_sdk::coinset` | `chia-sdk-coinset` | [RPC clients](/sdk/networking/rpc) for coinset.org and full nodes                                                                                                                                               |
+| `chia_wallet_sdk::daemon`  | `chia-sdk-daemon`  | A [daemon](/sdk/networking/daemon) websocket client                                                                                                                                                             |
+| `chia_wallet_sdk::test`    | `chia-sdk-test`    | The [simulator](/sdk/testing), test key pairs and the [peer simulator](/sdk/testing/peer-simulator)                                                                                                             |
+| `chia_wallet_sdk::utils`   | `chia-sdk-utils`   | [Addresses, coin selection and hex helpers](/sdk/utilities)                                                                                                                                                     |
 
-Install via pip:
+The SDK builds on the [chia_rs](https://github.com/Chia-Network/chia_rs) crates and re-exports the ones you
+need, so you don't have to keep their versions in sync yourself:
 
-```bash
-pip install chia-wallet-sdk
-```
+| Path                                                  | Crate                                                                                           |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `chia_wallet_sdk::chia::protocol`                     | `chia-protocol`: `Coin`, `CoinSpend`, `SpendBundle`, `Bytes32`, `Program` and the wire protocol |
+| `chia_wallet_sdk::chia::bls`                          | `chia-bls`: BLS keys, signatures and key derivation                                             |
+| `chia_wallet_sdk::chia::secp`                         | `chia-secp`: secp256k1 and secp256r1 keys                                                       |
+| `chia_wallet_sdk::chia::puzzle_types`                 | `chia-puzzle-types`: argument and solution types for the standard puzzles                       |
+| `chia_wallet_sdk::chia::consensus`                    | `chia-consensus`: consensus constants and validation                                            |
+| `chia_wallet_sdk::puzzles`                            | `chia-puzzles`: compiled puzzle bytes and their hashes                                          |
+| `chia_wallet_sdk::clvmr`, `clvm_traits`, `clvm_utils` | The CLVM runtime, `ToClvm`/`FromClvm`, and tree hashing and currying                            |
 
-The Python bindings provide a Pythonic API with full type stub support for IDE autocompletion.
-
-  </TabItem>
-</Tabs>
-
-## Quick Example
-
-Here's a minimal example that creates and spends a standard XCH coin:
-
-<Tabs>
-  <TabItem value="rust" label="Rust" default>
+Most programs only need the prelude, which collects the commonly used types:
 
 ```rust
 use chia_wallet_sdk::prelude::*;
 
-// Create a spend context to build the transaction
-let ctx = &mut SpendContext::new();
-
-// Define the conditions for this spend:
-// - Create a new coin with 900 mojos
-// - Reserve 100 mojos as transaction fee
-let conditions = Conditions::new()
-    .create_coin(puzzle_hash, 900, Memos::None)
-    .reserve_fee(100);
-
-// Create the spend using StandardLayer (p2 puzzle)
-StandardLayer::new(public_key).spend(ctx, coin, conditions)?;
-
-// Extract the coin spends for signing and broadcast
-let coin_spends = ctx.take();
+fn takes_common_types(_ctx: &mut SpendContext, _coin: Coin, _conditions: Conditions) {}
 ```
 
-  </TabItem>
-  <TabItem value="nodejs" label="Node.js">
+## The big picture
 
-```typescript
-import { Clvm, Coin, Simulator } from "chia-wallet-sdk";
+Every Chia transaction is a `SpendBundle`: a list of coin spends (each a coin, its puzzle reveal and a
+solution) plus one aggregated signature. Building one with the SDK follows the same shape no matter
+what assets are involved:
 
-// Create a CLVM instance to build the transaction
-const clvm = new Clvm();
+1. **Allocate.** Create a [SpendContext](/sdk/concepts/spend-context). It owns the CLVM memory that puzzles
+   and solutions are built in, and collects the coin spends you add.
+2. **Describe what should happen.** Either spend coins directly with a [primitive](/sdk/primitives) such as
+   `StandardLayer`, `Cat` or `Nft`, passing the [conditions](/sdk/concepts/conditions) each coin should
+   output, or describe the whole transaction declaratively with the [action system](/sdk/action-system)
+   and let it select change, link spends and build the conditions for you.
+3. **Sign.** Work out which signatures the spends require with `RequiredSignature` and sign them with
+   your keys. See [Keys & Signing](/sdk/concepts/signing).
+4. **Submit.** Send the `SpendBundle` to the network through a [peer](/sdk/networking/peer) or an
+   [RPC client](/sdk/networking/rpc), or validate it locally with the [simulator](/sdk/testing).
 
-// Create conditions:
-// - Create a new coin with 900 mojos
-// - Reserve 100 mojos as transaction fee
-const conditions = [
-  clvm.createCoin(puzzleHash, 900n, null),
-  clvm.reserveFee(100n),
-];
+To recognize coins you receive, you go the other way: fetch the parent coin's spend and let a
+primitive parse it (for example `Cat::parse_children` or `Nft::parse_child`). The
+[primitives overview](/sdk/primitives) explains this pattern.
 
-// Create and spend using delegated spend (p2 puzzle)
-clvm.spendStandardCoin(coin, publicKey, clvm.delegatedSpend(conditions));
+## Where to go next
 
-// Extract the coin spends for signing and broadcast
-const coinSpends = clvm.coinSpends();
-```
-
-  </TabItem>
-  <TabItem value="python" label="Python">
-
-```python
-from chia_wallet_sdk import Clvm, Coin, Simulator
-
-# Create a CLVM instance to build the transaction
-clvm = Clvm()
-
-# Create conditions:
-# - Create a new coin with 900 mojos
-# - Reserve 100 mojos as transaction fee
-conditions = [
-    clvm.create_coin(puzzle_hash, 900, None),
-    clvm.reserve_fee(100),
-]
-
-# Create and spend using delegated spend (p2 puzzle)
-clvm.spend_standard_coin(
-    coin,
-    public_key,
-    clvm.delegated_spend(conditions)
-)
-
-# Extract the coin spends for signing and broadcast
-coin_spends = clvm.coin_spends()
-```
-
-  </TabItem>
-</Tabs>
-
-This example demonstrates the core pattern you'll use throughout the SDK:
-
-1. **Create a context** - In Rust, use `SpendContext`; in Node.js/Python, use the `Clvm` class
-2. **Build conditions** - Define what the transaction should do (create coins, fees, announcements)
-3. **Spend coins** - Use primitives like `StandardLayer` (Rust) or `spendStandardCoin` (bindings)
-4. **Extract and broadcast** - Take the collected spends, sign them, and submit to the network
-
-## Core Concepts
-
-The SDK is organized around these key abstractions:
-
-| Concept        | Rust                        | Node.js / Python                  | Description                                                      |
-| -------------- | --------------------------- | --------------------------------- | ---------------------------------------------------------------- |
-| **Context**    | `SpendContext`              | `Clvm`                            | Transaction builder that manages memory and collects coin spends |
-| **Conditions** | `Conditions` builder        | Method calls (`createCoin`, etc.) | Output conditions (create coin, fees, announcements)             |
-| **Actions**    | `Action`, `Spends`          | `Action`, `Spends`                | High-level declarative transaction API                           |
-| **Primitives** | `Cat`, `Nft`, `Vault`, etc. | `spendCats`, `spendNft`, etc.     | High-level APIs for Chia constructs                              |
-| **Simulator**  | `Simulator`                 | `Simulator`                       | Test transaction validation locally                              |
-
-## Next Steps
-
-- [SpendContext](/sdk/spend-context) - Understanding the core transaction builder
-- [Action System](/sdk/actions) - High-level declarative transaction API
-- [Standard (XCH)](/sdk/primitives/standard) - Working with basic XCH coins
-- [CAT](/sdk/primitives/cat) - Issuing and spending custom asset tokens
-- [NFT](/sdk/primitives/nft) - Minting and transferring NFTs
-
-## Relationship to chia-rs
-
-The Wallet SDK builds on top of the lower-level [chia-rs](https://github.com/Chia-Network/chia_rs) crates, providing ergonomic APIs for common operations. If you need lower-level control, the underlying types from `chia-protocol`, `clvm-traits`, and `clvmr` are re-exported through the SDK.
+- [Quick Start](/sdk/quick-start) builds, signs and validates a first transaction.
+- [Core Concepts](/sdk/concepts/clvm) explains the building blocks everything else uses.
+- [Action System](/sdk/action-system) is the easiest way to build multi-asset transactions.
+- [Primitives](/sdk/primitives) covers each asset type in depth.
+- [Testing](/sdk/testing) shows how to test your code against a simulated blockchain.
+- [Bindings](/sdk/bindings) covers using the SDK from Node.js, the browser and Python.

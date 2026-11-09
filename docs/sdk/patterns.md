@@ -1,295 +1,253 @@
 ---
-slug: /sdk/patterns
 title: Application Patterns
 ---
 
 # Application Patterns
 
-This page covers common patterns for structuring applications that use the Wallet SDK.
+The other pages explain individual pieces of the SDK. This one is about putting them together in an
+application: how to organize keys, how to structure transaction building, and the habits that keep
+transactions safe.
 
-## SpendContext Lifecycle
+## Keep keys indexed by puzzle hash
 
-### Single Transaction Pattern
-
-For simple operations, create a SpendContext, use it, and discard:
+Everything the SDK hands you identifies ownership by **p2 puzzle hash**: `Spends::finish_with_keys` takes
+a map from p2 puzzle hash to synthetic key, `SpendableAsset::p2_puzzle_hash` tells you which key a coin
+needs, and parsed primitives expose `info.p2_puzzle_hash`. So the most useful structure for a wallet is a
+map from each derived puzzle hash to the key behind it.
 
 ```rust
-fn send_payment(/* params */) -> Result<SpendBundle> {
+use chia_wallet_sdk::chia::bls::master_to_wallet_unhardened;
+use chia_wallet_sdk::chia::puzzle_types::{DeriveSynthetic, Memos};
+use chia_wallet_sdk::prelude::*;
+use indexmap::IndexMap;
+
+/// The keys for the first `count` addresses of a wallet.
+struct Wallet {
+    secret_keys: Vec<SecretKey>,
+    synthetic_keys: IndexMap<Bytes32, PublicKey>,
+}
+
+impl Wallet {
+    fn new(master_sk: &SecretKey, count: u32) -> Self {
+        let mut secret_keys = Vec::new();
+        let mut synthetic_keys = IndexMap::new();
+
+        for index in 0..count {
+            let sk = master_to_wallet_unhardened(master_sk, index).derive_synthetic();
+            let pk = sk.public_key();
+            synthetic_keys.insert(StandardLayer::new(pk).tree_hash().into(), pk);
+            secret_keys.push(sk);
+        }
+
+        Self { secret_keys, synthetic_keys }
+    }
+
+    fn puzzle_hash(&self, index: usize) -> Bytes32 {
+        *self.synthetic_keys.get_index(index).unwrap().0
+    }
+
+    fn owns(&self, p2_puzzle_hash: Bytes32) -> bool {
+        self.synthetic_keys.contains_key(&p2_puzzle_hash)
+    }
+}
+
+#[test]
+fn spend_coins_from_several_addresses() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
     let ctx = &mut SpendContext::new();
 
-    // Build transaction
-    StandardLayer::new(pk).spend(ctx, coin, conditions)?;
+    let wallet = Wallet::new(&SecretKey::from_seed(&[1; 64]), 5);
+    let bob = BlsPair::new(1);
 
-    // Extract, sign, return
-    let spends = ctx.take();
-    sign_and_bundle(spends)
-}
-```
+    // Coins received on two different addresses.
+    let first = sim.new_coin(wallet.puzzle_hash(0), 300);
+    let second = sim.new_coin(wallet.puzzle_hash(3), 400);
 
-### Reusable Context Pattern
+    let mut spends = Spends::new(wallet.puzzle_hash(0));
+    spends.add(first);
+    spends.add(second);
 
-For multiple transactions, reuse the context to benefit from puzzle caching:
+    let deltas = spends.apply(
+        ctx,
+        &[
+            Action::send(Id::Xch, bob.puzzle_hash, 600, Memos::None),
+            Action::fee(50),
+        ],
+    )?;
 
-```rust
-struct TransactionBuilder {
-    ctx: SpendContext,
-}
+    // Each coin is spent with the key for its own puzzle hash.
+    spends.finish_with_keys(ctx, &deltas, Relation::AssertConcurrent, &wallet.synthetic_keys)?;
+    sim.spend_coins(ctx.take(), &wallet.secret_keys)?;
 
-impl TransactionBuilder {
-    fn new() -> Self {
-        Self {
-            ctx: SpendContext::new(),
-        }
-    }
+    assert!(wallet.owns(wallet.puzzle_hash(0)));
+    assert_eq!(sim.unspent_coins(wallet.puzzle_hash(0), false)[0].amount, 50);
 
-    fn build_payment(&mut self, /* params */) -> Result<Vec<CoinSpend>> {
-        // Use self.ctx for building
-        StandardLayer::new(pk).spend(&mut self.ctx, coin, conditions)?;
-
-        // take() empties the context but preserves puzzle cache
-        Ok(self.ctx.take())
-    }
-}
-```
-
-## Batching Transactions
-
-### Multiple Independent Spends
-
-When spending multiple coins, batch them in one transaction and link them with `assert_concurrent_spend`:
-
-```rust
-let ctx = &mut SpendContext::new();
-let coins: Vec<(Coin, PublicKey)> = /* your coins */;
-
-// Collect all coin IDs for concurrent spend assertions
-let coin_ids: Vec<Bytes32> = coins.iter().map(|(c, _)| c.coin_id()).collect();
-
-// Spend multiple coins in one transaction
-for (i, (coin, pk)) in coins.iter().enumerate() {
-    let mut conditions = Conditions::new()
-        .create_coin(destination, coin.amount, Memos::None);
-
-    // Link to all other coins in the transaction
-    for (j, other_id) in coin_ids.iter().enumerate() {
-        if i != j {
-            conditions = conditions.assert_concurrent_spend(*other_id);
-        }
-    }
-
-    StandardLayer::new(*pk).spend(ctx, *coin, conditions)?;
-}
-
-let spends = ctx.take();
-```
-
-:::warning
-Always use `assert_concurrent_spend` to link coins in a multi-spend transaction. Without it, an attacker could extract individual spends from your signed bundle.
-:::
-
-### Dependent Spends
-
-When spends depend on each other (e.g., parent-child), ensure proper ordering:
-
-```rust
-let ctx = &mut SpendContext::new();
-
-// First spend creates a coin
-let conditions = Conditions::new()
-    .create_coin(intermediate_ph, 1000, Memos::None);
-StandardLayer::new(pk1).spend(ctx, parent_coin, conditions)?;
-
-// Calculate the created coin
-let child_coin = Coin::new(parent_coin.coin_id(), intermediate_ph, 1000);
-
-// Second spend uses the created coin (ephemeral spend)
-let conditions = Conditions::new()
-    .create_coin(final_destination, 900, Memos::None)
-    .reserve_fee(100);
-StandardLayer::new(pk2).spend(ctx, child_coin, conditions)?;
-
-let spends = ctx.take();
-```
-
-## Coin Management
-
-### Coin Selection
-
-When you have multiple coins, select appropriately:
-
-```rust
-fn select_coins(
-    available: &[Coin],
-    target_amount: u64,
-) -> Vec<Coin> {
-    let mut selected = Vec::new();
-    let mut total = 0;
-
-    // Simple greedy selection
-    for coin in available {
-        if total >= target_amount {
-            break;
-        }
-        selected.push(*coin);
-        total += coin.amount;
-    }
-
-    selected
-}
-```
-
-### Change Handling
-
-Always account for change when the input exceeds the output:
-
-```rust
-fn build_with_change(
-    ctx: &mut SpendContext,
-    coin: Coin,
-    pk: PublicKey,
-    send_amount: u64,
-    recipient: Bytes32,
-    fee: u64,
-) -> Result<()> {
-    let sender_ph = StandardLayer::puzzle_hash(pk);
-    let change = coin.amount.saturating_sub(send_amount).saturating_sub(fee);
-
-    let mut conditions = Conditions::new()
-        .create_coin(recipient, send_amount, ctx.hint(recipient)?)
-        .reserve_fee(fee);
-
-    if change > 0 {
-        conditions = conditions.create_coin(sender_ph, change, ctx.hint(sender_ph)?);
-    }
-
-    StandardLayer::new(pk).spend(ctx, coin, conditions)?;
     Ok(())
 }
 ```
 
-## Error Handling
+Real wallets derive keys in batches and keep deriving while new addresses are being used (a "gap
+limit"), and also index hardened keys if they use them. See [Keys & Signing](/sdk/concepts/signing).
 
-### Graceful Error Recovery
+## Separate building, signing and submitting
+
+Building a transaction doesn't need secret keys, only public keys. Keeping the three steps apart makes
+it easy to support watch-only wallets, hardware signers, multi-party signing and offline review:
+
+1. **Build** the coin spends with public keys (the action system or primitives).
+2. **Sign**: compute `RequiredSignature::from_coin_spends` for the target network, hand the messages
+   to whoever holds the keys, and aggregate the signatures that come back. Because every signer signs a
+   specific `(public key, message)` pair, partial signatures from different parties can be added together
+   in any order.
+3. **Submit** the `SpendBundle` through a [peer](/sdk/networking/peer) or [RPC client](/sdk/networking/rpc).
 
 ```rust
-fn try_build_transaction(/* params */) -> Result<Vec<CoinSpend>> {
-    let ctx = &mut SpendContext::new();
+use chia_wallet_sdk::chia::bls::sign;
+use chia_wallet_sdk::prelude::*;
 
-    // Attempt to build
-    match build_complex_spend(ctx, /* params */) {
-        Ok(()) => Ok(ctx.take()),
-        Err(e) => {
-            // Context can be safely dropped
-            // No cleanup needed
-            Err(e)
+/// Signs the messages that belong to one party's key. Other parties do the same with their keys.
+fn partial_signature(required: &[RequiredSignature], sk: &SecretKey) -> Signature {
+    let pk = sk.public_key();
+    let mut signature = Signature::default();
+    for required in required {
+        if let RequiredSignature::Bls(required) = required {
+            if required.public_key == pk {
+                signature += &sign(sk, required.message());
+            }
         }
     }
+    signature
+}
+
+#[test]
+fn two_party_signing() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
+
+    let alice = sim.bls(100);
+    let bob = sim.bls(100);
+
+    // Both coins are spent together, and each needs its owner's signature.
+    StandardLayer::new(alice.pk).spend(
+        ctx,
+        alice.coin,
+        Conditions::new().assert_concurrent_spend(bob.coin.coin_id()).reserve_fee(100),
+    )?;
+    StandardLayer::new(bob.pk).spend(
+        ctx,
+        bob.coin,
+        Conditions::new().assert_concurrent_spend(alice.coin.coin_id()),
+    )?;
+    let coin_spends = ctx.take();
+
+    // The builder shares the required signatures; each party signs only its own.
+    let required = RequiredSignature::from_coin_spends(
+        ctx,
+        &coin_spends,
+        &AggSigConstants::from(&*TESTNET11_CONSTANTS),
+    )?;
+    let signature = partial_signature(&required, &alice.sk) + &partial_signature(&required, &bob.sk);
+
+    sim.new_transaction(SpendBundle::new(coin_spends, signature))?;
+
+    Ok(())
 }
 ```
 
-## Signing Patterns
+If the signer is a separate device or person, they shouldn't sign blindly. For vaults, the
+[clear signing](/sdk/clear-signing) module parses a transaction into what it actually does, so the signer
+can show and check it before signing.
 
-### Collecting Required Signatures
+## Link spends that belong together
+
+A spend bundle's coin spends aren't bound to each other by default. Anyone who sees your bundle in the
+mempool can drop some of the spends and submit the rest, if the rest are still valid on their own. For
+example, they could keep the spend that pays a fee and drop the one that pays you. Always tie the spends
+of one transaction together:
+
+- With the action system, choose a [`Relation`](/sdk/action-system#relations).
+  `Relation::AssertConcurrent` makes every spend assert every other spend, and is the right default.
+- By hand, add `assert_concurrent_spend(other_coin_id)` (or announcements, as described in
+  [Conditions](/sdk/concepts/conditions)) to each spend, as in the example above.
+
+## Spend coins you create in the same transaction
+
+A coin created by one spend can be spent in the same block, as long as both spends are in the bundle.
+The child's `Coin` can be computed before anything is on chain, from the parent coin id, the puzzle hash
+and the amount. This is how intermediate coins work: launchers, the eve spends of singletons, and the
+intermediate coins the action system creates when it needs a spend to emit conditions.
 
 ```rust
-fn sign_spends(
-    coin_spends: &[CoinSpend],
-    secret_keys: &[SecretKey],
-    agg_sig_data: &[u8],
-) -> Result<Signature> {
-    // Calculate what needs to be signed
-    let required = RequiredSignature::from_coin_spends(
-        coin_spends,
-        agg_sig_data,
+use chia_wallet_sdk::prelude::*;
+
+#[test]
+fn spend_a_coin_created_in_the_same_transaction() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
+
+    let alice = sim.bls(1_000);
+    let bob = BlsPair::new(1);
+    let p2 = StandardLayer::new(alice.pk);
+
+    // Alice's coin creates an intermediate coin owned by herself...
+    p2.spend(ctx, alice.coin, Conditions::new().create_coin(alice.puzzle_hash, 1_000, Memos::None))?;
+    let intermediate = Coin::new(alice.coin.coin_id(), alice.puzzle_hash, 1_000);
+
+    // ...which is spent in the same bundle.
+    p2.spend(
+        ctx,
+        intermediate,
+        Conditions::new()
+            .create_coin(bob.puzzle_hash, 900, Memos::None)
+            .reserve_fee(100),
     )?;
 
-    // Sign each requirement
-    let mut signatures = Vec::new();
-    for req in required {
-        let sk = find_key_for_pk(&req.public_key, secret_keys)?;
-        signatures.push(sign(&sk, &req.message));
-    }
+    sim.spend_coins(ctx.take(), &[alice.sk])?;
+    assert_eq!(sim.unspent_coins(bob.puzzle_hash, false).len(), 1);
 
-    // Aggregate signatures
-    Ok(aggregate(&signatures))
+    Ok(())
 }
 ```
 
-### Multi-Party Signing
+Relative timelocks (`assert_seconds_relative`, `assert_height_relative`) can't be satisfied by a coin
+created in the same block, since it has no confirmed height or timestamp yet.
 
-When multiple parties need to sign:
+## Track what you've already spent
 
-```rust
-// Party 1 builds and partially signs
-let spends = build_transaction()?;
-let sig1 = sign_my_portion(&spends, &my_keys)?;
+A coin stays unspent on chain until the block that spends it is farmed, which usually takes under a
+minute but can take longer under load. If your application builds a second transaction before the first
+confirms, it must not select the same coins again, or one of the two transactions will fail.
 
-// Serialize and send to Party 2
-let partial = PartialTransaction { spends, signatures: vec![sig1] };
+- Keep a set of coin ids used by your pending transactions, and exclude them from coin selection until
+  their spends confirm or the transaction is dropped.
+- Subscribe to coin state updates for your puzzle hashes with the [peer protocol](/sdk/networking/peer),
+  or poll an [RPC client](/sdk/networking/rpc), to learn when coins are spent and created.
+- Treat a transaction as failed if its coins are spent by something else, and as dropped if it hasn't
+  confirmed after some time and isn't in the mempool any more. Then release its coins.
 
-// Party 2 adds their signature
-let sig2 = sign_my_portion(&partial.spends, &their_keys)?;
-partial.signatures.push(sig2);
+The action system can help here too. `Deltas::from_actions` tells you how much of each asset a set of
+actions needs before you select coins, so you only reserve what you need. See
+[coin selection with deltas](/sdk/action-system#coin-selection-with-deltas).
 
-// Combine and broadcast
-let final_sig = aggregate(&partial.signatures);
-let bundle = SpendBundle::new(partial.spends, final_sig);
-```
+## Recognize the coins you receive
 
-## State Tracking
+To find out what a coin is, fetch its parent's spend and let the primitives parse it. Check the
+parsers in order (CAT, NFT, DID and so on), and treat the coin as XCH if its puzzle hash is one of yours.
+The [primitives overview](/sdk/primitives#parsing-from-the-parent-coin-spend) has a complete example. Always
+confirm that the parsed p2 puzzle hash is one of yours before you show it as a balance: anyone can send
+or hint anything to your address.
 
-### Tracking Coin State
+## Estimate fees from cost
 
-```rust
-struct WalletState {
-    coins: HashMap<Bytes32, Coin>,
-    pending_spends: HashSet<Bytes32>,
-}
+The mempool prioritizes transactions by fee per cost. `spend_bundle_cost` computes the cost of a set of
+coin spends locally, so you can multiply it by a fee rate before submitting. See
+[estimating cost](/sdk/utilities#estimating-cost) for an example. The SDK's RPC clients don't wrap a fee
+estimate endpoint, so get current fee rates from your full node's `get_fee_estimate` RPC or another
+source.
 
-impl WalletState {
-    fn mark_spent(&mut self, coin_id: Bytes32) {
-        self.pending_spends.insert(coin_id);
-    }
+## Test against the simulator first
 
-    fn confirm_spent(&mut self, coin_id: Bytes32) {
-        self.coins.remove(&coin_id);
-        self.pending_spends.remove(&coin_id);
-    }
-
-    fn available_coins(&self) -> impl Iterator<Item = &Coin> {
-        self.coins.values()
-            .filter(|c| !self.pending_spends.contains(&c.coin_id()))
-    }
-}
-```
-
-### Tracking NFT/CAT State
-
-For singletons and CATs, track the current coin after each spend:
-
-```rust
-struct NftTracker {
-    nft: Nft<NftMetadata>,
-}
-
-impl NftTracker {
-    fn after_transfer(&mut self, new_nft: Nft<NftMetadata>) {
-        self.nft = new_nft;
-    }
-
-    fn current_coin(&self) -> &Coin {
-        &self.nft.coin
-    }
-}
-```
-
-## Best Practices
-
-1. **Link multi-coin spends** - Always use `assert_concurrent_spend` when spending multiple coins
-2. **Validate locally first** - Use the simulator before mainnet
-3. **Handle change** - Never lose funds to missing change outputs
-4. **Use hints** - Include memos for wallet discovery
-5. **Batch when possible** - Reduce fees by combining spends
-6. **Track state** - Keep your local view synchronized
-7. **Reuse SpendContext** - Benefit from puzzle caching
-8. **Handle errors gracefully** - SpendContext cleanup is automatic
+Everything above can be tested without a network. The [simulator](/sdk/testing) validates spend
+bundles the same way a full node does (puzzles, conditions, signatures and timelocks), so most bugs in
+transaction building show up as test failures instead of rejected mainnet transactions. The
+[peer simulator](/sdk/testing/peer-simulator) covers code that talks to a full node.

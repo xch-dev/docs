@@ -1,377 +1,200 @@
 ---
-slug: /sdk/troubleshooting
 title: Troubleshooting
 ---
 
 # Troubleshooting
 
-This page covers common issues when working with the Wallet SDK and how to resolve them.
+Problems with transactions show up in one of three places:
 
-## My spend failed to validate
+- **While building**, as a `DriverError` from the driver crate (for example `InsufficientFunds` from the
+  action system, or `FromClvm` when a puzzle doesn't parse).
+- **While signing**, as a `SignerError` from `RequiredSignature::from_coin_spends`.
+- **While validating**, as an `ErrorCode` from consensus. The [simulator](/sdk/testing) returns these as
+  `SimulatorError::Validation(code)`, and a full node returns the same codes in the `error` of a rejected
+  transaction.
 
-### Symptoms
+This page goes through the common validation errors first, then build-time errors.
 
-- Simulator returns an error
-- Transaction rejected by full node
-- CLVM execution fails
+## Reproduce it in the simulator
 
-### Common Causes
-
-**Incorrect puzzle hash**
-
-The puzzle hash used to create a coin must match the puzzle used to spend it:
-
-```rust
-// When creating a coin
-let puzzle_hash = StandardLayer::puzzle_hash(public_key);
-conditions.create_coin(puzzle_hash, amount, memos);
-
-// When spending, use the same key
-StandardLayer::new(public_key).spend(ctx, coin, conditions)?;
-```
-
-**Mismatched amounts**
-
-Output amounts must not exceed input amounts:
+Before anything else, rebuild the failing transaction in a test against the `Simulator`. It validates
+bundles the same way a full node does, gives you the exact `ErrorCode`, and lets you change one thing at
+a time. Matching on the error code makes the failure precise:
 
 ```rust
-// Input: 1000 mojos
-let coin_amount = 1000;
-
-// Outputs must sum to <= 1000
-let send_amount = 900;
-let fee = 100;
-// Total: 900 + 100 = 1000 ✓
-```
-
-**Missing lineage proof**
-
-CATs and singletons require valid lineage proofs:
-
-```rust
-// Ensure CAT has lineage proof set
-let cat = Cat {
-    coin,
-    info,
-    lineage_proof: Some(lineage_proof), // Required for spending
-};
-```
-
----
-
-## Signature invalid
-
-### Symptoms
-
-- `AggSig validation failed`
-- Transaction rejected with signature error
-- Spend bundle won't aggregate
-
-### Common Causes
-
-**Wrong key used for signing**
-
-Ensure you sign with the key that matches the puzzle:
-
-```rust
-// The public key in the puzzle
-let p2 = StandardLayer::new(alice.pk);
-p2.spend(ctx, coin, conditions)?;
-
-// Must sign with the corresponding secret key
-sim.spend_coins(spends, &[alice.sk])?;  // Not bob.sk!
-```
-
-**Missing signatures**
-
-Multi-input transactions may require multiple signatures:
-
-```rust
-// If spending coins from different keys
-StandardLayer::new(alice.pk).spend(ctx, coin1, conditions1)?;
-StandardLayer::new(bob.pk).spend(ctx, coin2, conditions2)?;
-
-// Both keys must sign
-sim.spend_coins(spends, &[alice.sk, bob.sk])?;
-```
-
-**Incorrect AGG_SIG_ME data**
-
-When signing manually, ensure you use the correct AGG_SIG_ME additional data:
-
-```rust
-// AGG_SIG_ME includes coin_id + genesis_challenge
-// Make sure you're using the right network's genesis challenge
-```
-
----
-
-## Coin not found
-
-### Symptoms
-
-- `Coin not in database`
-- `Unknown coin`
-- Spend references non-existent coin
-
-### Common Causes
-
-**Coin already spent**
-
-A coin can only be spent once. Check if it's already been used:
-
-```rust
-// Each coin has a unique ID
-let coin_id = coin.coin_id();
-
-// If this coin was spent in a previous transaction,
-// you cannot spend it again
-```
-
-**Incorrect coin construction**
-
-When computing child coins, ensure the values match:
-
-```rust
-// The child coin is determined by:
-let child = Coin::new(
-    parent_coin.coin_id(),  // Parent's coin ID
-    puzzle_hash,            // Must match create_coin puzzle hash
-    amount,                 // Must match create_coin amount
-);
-```
-
-**Transaction not confirmed**
-
-If depending on a recent transaction, ensure it's confirmed:
-
-```rust
-// In simulation, spends are instant
-// On mainnet, wait for block confirmation before using outputs
-```
-
----
-
-## Announcement assertion failed
-
-### Symptoms
-
-- `ASSERT_COIN_ANNOUNCEMENT_FAIL`
-- `ASSERT_PUZZLE_ANNOUNCEMENT_FAIL`
-- Announcements don't match
-
-### Common Causes
-
-**Incorrect announcement ID calculation**
-
-Coin announcements include the coin ID:
-
-```rust
-// Coin announcement ID = sha256(coin_id + message)
-// Puzzle announcement ID = sha256(puzzle_hash + message)
-
-// When asserting, the ID must match exactly
-conditions
-    .create_coin_announcement(message)
-    .assert_coin_announcement(expected_announcement_id);
-```
-
-**Missing announcement creation**
-
-Every assertion needs a corresponding creation:
-
-```rust
-// Spend 1: Create the announcement
-let conditions1 = Conditions::new()
-    .create_coin_announcement(b"hello");
-
-// Spend 2: Assert the announcement
-let announcement_id = /* calculate from coin_id + message */;
-let conditions2 = Conditions::new()
-    .assert_coin_announcement(announcement_id);
-```
-
-**Different message bytes**
-
-Ensure message bytes match exactly:
-
-```rust
-// These are different!
-b"hello"      // [104, 101, 108, 108, 111]
-"hello"       // String, needs .as_bytes()
-```
-
----
-
-## Insufficient fee
-
-### Symptoms
-
-- Transaction sits in mempool
-- `Fee too low`
-- Transaction eventually dropped
-
-### Common Causes
-
-**No fee specified**
-
-Always include a fee for mainnet transactions:
-
-```rust
-let conditions = Conditions::new()
-    .create_coin(recipient, amount, memos)
-    .reserve_fee(fee);  // Don't forget this
-```
-
-**Fee calculation**
-
-Fees are in mojos. During high demand, fees may need to be higher:
-
-```rust
-// Minimum fee depends on network conditions
-// Check current fee estimates from a full node
-let fee = 100_000_000;  // 0.0001 XCH = 100M mojos
-```
-
-**Fee in wrong spend**
-
-If batching multiple spends, fee can be in any one of them:
-
-```rust
-// This is fine - fee in second spend
-StandardLayer::new(pk1).spend(ctx, coin1, Conditions::new()
-    .create_coin(dest, amount1, memos))?;
-
-StandardLayer::new(pk2).spend(ctx, coin2, Conditions::new()
-    .create_coin(dest, amount2, memos)
-    .reserve_fee(fee))?;  // Fee here covers both
-```
-
----
-
-## CAT amount mismatch
-
-### Symptoms
-
-- CAT spend fails validation
-- `CAT amount mismatch`
-- Lineage verification fails
-
-### Common Causes
-
-**Input/output imbalance**
-
-CAT amounts must balance (no creation or destruction):
-
-```rust
-// If spending 1000 CAT, must output 1000 CAT
-let cat_spends = [CatSpend::new(
-    cat,  // 1000 CAT input
-    inner_spend_with_conditions,  // Must create exactly 1000 CAT output
-)];
-```
-
-:::info
-CATs cannot pay transaction fees directly. Fees must be paid with XCH in a separate spend within the same transaction.
-:::
-
----
-
-## Spends can be separated / Partial bundle attack
-
-### Symptoms
-
-- Multi-coin transaction behaves unexpectedly
-- Funds lost when only some spends execute
-- Attacker extracts individual spends from your bundle
-
-### Common Causes
-
-**Missing `assert_concurrent_spend`**
-
-When spending multiple coins together, you must link them:
-
-```rust
-// WRONG: Spends can be separated
-let conditions1 = Conditions::new()
-    .create_coin(recipient, 1000, memos);
-StandardLayer::new(pk1).spend(ctx, coin1, conditions1)?;
-
-let conditions2 = Conditions::new()
-    .reserve_fee(100);
-StandardLayer::new(pk2).spend(ctx, coin2, conditions2)?;
-
-// RIGHT: Spends are linked and atomic
-let conditions1 = Conditions::new()
-    .create_coin(recipient, 1000, memos)
-    .assert_concurrent_spend(coin2.coin_id());  // Link to coin2
-StandardLayer::new(pk1).spend(ctx, coin1, conditions1)?;
-
-let conditions2 = Conditions::new()
-    .reserve_fee(100)
-    .assert_concurrent_spend(coin1.coin_id());  // Link to coin1
-StandardLayer::new(pk2).spend(ctx, coin2, conditions2)?;
-```
-
-:::warning
-Without `assert_concurrent_spend`, an attacker can take your signed spend bundle, remove some spends, and submit only the ones beneficial to them. Always link all spends in a multi-coin transaction.
-:::
-
----
-
-## General Debugging Tips
-
-### Use the Simulator
-
-Always test with the simulator first:
-
-```rust
-let mut sim = Simulator::new();
-// Setup state...
-let result = sim.spend_coins(spends, &keys);
-
-if let Err(e) = result {
-    println!("Spend failed: {:?}", e);
+use chia_wallet_sdk::chia::consensus::validation_error::ErrorCode;
+use chia_wallet_sdk::prelude::*;
+
+#[test]
+fn common_validation_errors() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
+    let alice = sim.bls(1_000);
+    let p2 = StandardLayer::new(alice.pk);
+
+    // Outputs exceed the input.
+    p2.spend(ctx, alice.coin, Conditions::new().create_coin(alice.puzzle_hash, 1_001, Memos::None))?;
+    let error = sim.spend_coins(ctx.take(), &[alice.sk.clone()]).unwrap_err();
+    assert!(matches!(error, SimulatorError::Validation(ErrorCode::MintingCoin)));
+
+    // The leftover is smaller than the reserved fee.
+    p2.spend(
+        ctx,
+        alice.coin,
+        Conditions::new()
+            .create_coin(alice.puzzle_hash, 950, Memos::None)
+            .reserve_fee(100),
+    )?;
+    let error = sim.spend_coins(ctx.take(), &[alice.sk.clone()]).unwrap_err();
+    assert!(matches!(error, SimulatorError::Validation(ErrorCode::ReserveFeeConditionFailed)));
+
+    // Asserting a spend that isn't in the bundle.
+    p2.spend(
+        ctx,
+        alice.coin,
+        Conditions::new().assert_concurrent_spend(Bytes32::new([1; 32])),
+    )?;
+    let error = sim.spend_coins(ctx.take(), &[alice.sk.clone()]).unwrap_err();
+    assert!(matches!(error, SimulatorError::Validation(ErrorCode::AssertConcurrentSpendFailed)));
+
+    // Signed for the wrong network: the simulator uses testnet11.
+    p2.spend(ctx, alice.coin, Conditions::new().reserve_fee(1_000))?;
+    let coin_spends = ctx.take();
+    let mut signature = Signature::default();
+    for required in RequiredSignature::from_coin_spends(
+        ctx,
+        &coin_spends,
+        &AggSigConstants::from(&*MAINNET_CONSTANTS),
+    )? {
+        if let RequiredSignature::Bls(required) = required {
+            signature += &chia_wallet_sdk::chia::bls::sign(&alice.sk, required.message());
+        }
+    }
+    let error = sim.new_transaction(SpendBundle::new(coin_spends, signature)).unwrap_err();
+    assert!(matches!(error, SimulatorError::Validation(ErrorCode::BadAggregateSignature)));
+
+    // Spending the same coin twice.
+    p2.spend(ctx, alice.coin, Conditions::new().reserve_fee(1_000))?;
+    sim.spend_coins(ctx.take(), &[alice.sk.clone()])?;
+    p2.spend(ctx, alice.coin, Conditions::new().reserve_fee(1_000))?;
+    let error = sim.spend_coins(ctx.take(), &[alice.sk]).unwrap_err();
+    assert!(matches!(error, SimulatorError::Validation(ErrorCode::DoubleSpend)));
+
+    Ok(())
 }
 ```
 
-### Check Puzzle Hashes
+To see what a spend actually outputs, run its puzzle with its solution and parse the conditions, as
+shown in [Conditions](/sdk/concepts/conditions#parsing-conditions). Most failures become obvious once
+you compare the conditions you expected with the ones the puzzle produced.
 
-Verify puzzle hashes match:
+## Validation errors
 
-```rust
-println!("Expected: {}", StandardLayer::puzzle_hash(pk));
-println!("Actual: {}", coin.puzzle_hash);
-```
+| Error code                                                                             | What it usually means                                                                                                                                                       |
+| -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MintingCoin`                                                                          | The outputs of the bundle add up to more than its inputs. Check your amounts and change.                                                                                    |
+| `ReserveFeeConditionFailed`                                                            | The bundle's leftover value (inputs minus outputs) is less than the sum of `RESERVE_FEE` conditions.                                                                        |
+| `BadAggregateSignature`                                                                | A signature is missing, made with the wrong key, or made for the wrong network. See [Signing](#signature-problems).                                                         |
+| `DoubleSpend`                                                                          | The coin was already spent, or the same coin appears twice in the bundle.                                                                                                   |
+| `UnknownUnspent`                                                                       | The coin doesn't exist yet (it isn't confirmed, or its parent isn't in the bundle), or the coin's id is wrong because the puzzle hash or amount you built it with is wrong. |
+| `WrongPuzzleHash`                                                                      | The puzzle reveal doesn't hash to the coin's puzzle hash. You're spending the coin with the wrong key, inner puzzle, or layer arguments.                                    |
+| `GeneratorRuntimeError`                                                                | The puzzle raised an error (`x`) or failed to run with the solution. This includes failed CAT, singleton and NFT checks, which are enforced inside the puzzles.             |
+| `AssertConcurrentSpendFailed`, `AssertConcurrentPuzzleFailed`                          | A spend asserted another spend that isn't in the bundle.                                                                                                                    |
+| `AssertCoinAnnouncementFailed`, `AssertPuzzleAnnouncementFailed`                       | An announcement was asserted but not created. The announcement id is `sha256(coin_id or puzzle_hash + message)`, so check which side you hashed.                            |
+| `MessageNotSentOrReceived`                                                             | A `SEND_MESSAGE` and `RECEIVE_MESSAGE` don't pair up. Both sides must agree on the mode, message and the coin they commit to.                                               |
+| `AssertSecondsRelativeFailed`, `AssertHeightRelativeFailed`, and the absolute variants | A timelock hasn't passed yet. In the simulator, use `pass_time` and `create_block`.                                                                                         |
+| `EphemeralRelativeCondition`                                                           | A relative timelock on a coin that was created in the same block. It has no confirmed height or timestamp yet.                                                              |
+| `AssertBeforeSecondsAbsoluteFailed` and friends                                        | The transaction expired.                                                                                                                                                    |
+| `CostExceeded`                                                                         | The bundle is too expensive. Split it into several transactions.                                                                                                            |
 
-### Verify Amounts
+### Signature problems
 
-Ensure amounts balance:
+A `BadAggregateSignature` means the aggregate signature doesn't match the messages the spends require.
+The usual causes:
 
-```rust
-let total_input: u64 = coins.iter().map(|c| c.amount).sum();
-let total_output: u64 = /* sum of create_coin amounts + fee */;
+- **Wrong network.** `AGG_SIG_ME` and its variants commit to the network's genesis challenge, so a
+  signature made with `MAINNET_CONSTANTS` is invalid on testnet11 and vice versa. The simulator uses
+  testnet11. See [Keys & Signing](/sdk/concepts/signing).
+- **Wrong key.** Wallet coins are locked with a **synthetic** key. Signing with the unsynthesized wallet
+  key gives a valid signature for the wrong public key. Derive the synthetic secret key with
+  `DeriveSynthetic` and sign with that.
+- **Missing signer.** Every spend that requires a signature needs one. In a multi-key transaction,
+  collect the required signatures once and make sure every one of them is signed.
+- **Changed spends.** If you modify the coin spends after signing, the messages change and the signature
+  no longer matches. Sign last.
 
-assert_eq!(total_input, total_output, "Amount mismatch");
-```
+`Simulator::spend_coins` returns `SimulatorError::MissingKey` instead, if it isn't given a secret key that
+matches a required public key.
 
-### Inspect Conditions
+### Coin ids that don't match
 
-Print conditions before spending:
+Coin ids are `sha256(parent_coin_id + puzzle_hash + amount)`. If you compute a child coin yourself and
+the network says it doesn't exist (`UnknownUnspent`), one of the three inputs is wrong. Common mistakes:
 
-```rust
-let conditions = Conditions::new()
-    .create_coin(ph, amount, memos)
-    .reserve_fee(fee);
+- Using the **p2** puzzle hash for a CAT, NFT or DID child. Their coins' puzzle hashes are the full,
+  wrapped puzzle hash. Use the primitive's `child` methods (for example `Cat::child`) or
+  `info.puzzle_hash()` instead of building the `Coin` yourself.
+- Building a CAT's `Coin` from the parent's id and amount, but with the inner puzzle hash from a
+  `CREATE_COIN` condition, rather than the outer puzzle hash.
 
-println!("Conditions: {:?}", conditions);
-```
+### Spends that can be separated
 
-## Getting Help
+If someone else's transaction confirms with only part of your bundle, the spends weren't linked. Anyone
+can take a valid subset of a bundle from the mempool and submit it on its own. Link every spend in a
+transaction with `assert_concurrent_spend`, announcements, or a `Relation` in the action system. See
+[Application Patterns](/sdk/patterns#link-spends-that-belong-together).
 
-If you're stuck:
+## Errors while building
 
-1. Check the [SDK rustdocs](https://docs.rs/chia-wallet-sdk) for API details
-2. Review the [examples](https://github.com/Chia-Network/chia-wallet-sdk/tree/main/examples)
-3. Search existing issues on [GitHub](https://github.com/Chia-Network/chia-wallet-sdk/issues)
-4. Ask in the Chia developer community
+| `DriverError`                   | Cause and fix                                                                                                                                                                   |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `InsufficientFunds`             | The coins added to `Spends` don't cover the actions. Select more coins using `Deltas`, as shown in [coin selection with deltas](/sdk/action-system#coin-selection-with-deltas). |
+| `MissingKey`                    | `finish_with_keys` found a coin whose p2 puzzle hash isn't in the key map.                                                                                                      |
+| `MissingSpend`                  | `Spends::spend` wasn't given a p2 spend for every item in `unspent()`. See [Custom Spends](/sdk/action-system/custom-spends).                                                   |
+| `CannotEmitConditions`          | The action system needed a spend to emit transaction-wide conditions, and no coin could. Add an XCH coin.                                                                       |
+| `DuplicateSettlementPayment`    | Two settlement coins would make the same notarized payment. Use distinct nonces.                                                                                                |
+| `SingletonAmountMismatch`       | A `send` or `melt_singleton` action's amount doesn't match the singleton's amount.                                                                                              |
+| `AmountOverflow`, `FeeOverflow` | An amount doesn't fit in a `u64`.                                                                                                                                               |
+| `MissingChild`                  | The spend you parsed or performed didn't recreate the singleton (for example it was melted), so there's no child to return.                                                     |
+| `NotRevocable`                  | `add_for_revocation` was called with a CAT that has no hidden puzzle.                                                                                                           |
+| `FromClvm`, `ToClvm`            | A value didn't have the shape its type expects. Usually a puzzle or solution of a different type, or a different version of a puzzle.                                           |
+| `Eval`                          | Running a puzzle failed. The same spend would fail on chain.                                                                                                                    |
+| `OldSettlementPayment`          | The offer uses the old version of the settlement payments puzzle, which isn't supported.                                                                                        |
+
+The SDK's parsers return `Ok(None)` when a puzzle simply isn't the type you asked for (for example
+`Cat::parse_children` on an NFT spend), and an error only when it looks like that type but is malformed.
+So an `Ok(None)` while you expected a value usually means you're parsing the wrong spend, often the coin's
+own spend instead of its parent's. See the [primitives overview](/sdk/primitives#parsing-from-the-parent-coin-spend).
+
+## Errors while signing
+
+`RequiredSignature::from_coin_spends` runs every puzzle to find its `AGG_SIG_*` conditions, so a puzzle
+that fails to run fails here, as `SignerError::Eval`, before anything is submitted. Other variants:
+
+| `SignerError`                    | Cause                                                                                                                   |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `Eval`                           | A puzzle failed to run with its solution. The spend is invalid.                                                         |
+| `FromClvm`                       | A puzzle's output isn't a valid list of conditions.                                                                     |
+| `InfinityPublicKey`              | A condition asks for a signature from the infinity public key, which can't sign.                                        |
+| `InvalidSecpKey`                 | A secp condition contains an invalid public key.                                                                        |
+| `PuzzleHashMismatch`             | A coin spend's puzzle reveal doesn't hash to the coin's puzzle hash.                                                    |
+| `UnsafeMessageHasAdditionalData` | An `AGG_SIG_UNSAFE` message ends with the network's additional data, which would let it be replayed as an `AGG_SIG_ME`. |
+| `AggSigMessageTooLong`           | A message is longer than consensus allows.                                                                              |
+
+## Networking problems
+
+- **Requests that never return.** If a peer disconnects, outstanding requests can wait forever. Wrap
+  peer requests in `tokio::time::timeout`, as described in [Peer Protocol](/sdk/networking/peer).
+- **`WrongNetwork` on connect.** The network id you passed doesn't match the node's (`"mainnet"` or
+  `"testnet11"`).
+- **TLS errors.** Networking requires the `rustls` or `native-tls` feature, and full nodes require a
+  client certificate. See [certificates and connectors](/sdk/networking/peer#certificates-and-connectors).
+- **A transaction is accepted but never confirms.** It might have been outbid, or dropped by the node you
+  sent it to. Check whether it's still in the mempool, rebroadcast it to other peers, or replace it with a
+  higher fee.
+
+## Getting help
+
+If you've narrowed a problem down to a small simulator test and it still looks wrong, open an issue on
+[chia-wallet-sdk](https://github.com/xch-dev/chia-wallet-sdk/issues) with the test, or ask in the
+[Sage Discord](https://discord.gg/sagewallet).
