@@ -1,6 +1,6 @@
 ---
 title: Setup
-slug: /rpc/setup
+slug: /sage/rpc/setup
 ---
 
 # RPC Setup
@@ -37,7 +37,7 @@ Do not run the command line RPC server at the same time as the GUI. They may ove
 
 ## SSL Certificate
 
-The CLI will load the certificate automatically, but if you want to connect to the RPC server from your own client (for example, in a Node.js app), you can find the SSL certificate on the [Files](/files) page.
+The CLI will load the certificate automatically, but if you want to connect to the RPC server from your own client (for example, in a Node.js app), you can find the SSL certificate on the [Files](/sage/files) page.
 
 Here is an example of how you need to connect:
 

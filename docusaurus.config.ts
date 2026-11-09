@@ -31,7 +31,7 @@ const config: Config = {
           docItemComponent: "@theme/ApiItem",
           // Generated RPC pages have no source file to edit.
           editUrl: ({ docPath }) =>
-            docPath.startsWith("rpc/")
+            docPath.startsWith("sage/rpc/")
               ? undefined
               : `https://github.com/xch-dev/docs/tree/main/docs/${docPath}`,
         },
@@ -51,7 +51,7 @@ const config: Config = {
         config: {
           sage_rpc: {
             specPath: "src/openapi.json",
-            outputDir: "docs/rpc/",
+            outputDir: "docs/sage/rpc/",
             sidebarOptions: {
               groupPathsBy: "tag",
             },

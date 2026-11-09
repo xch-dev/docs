@@ -5,7 +5,7 @@ title: Quick Start
 
 # Wallet SDK
 
-The Chia Wallet SDK is a Rust library for building applications that interact with the Chia blockchain. It provides high-level abstractions for creating transactions, managing coins, and working with Chia primitives like CATs, NFTs, and Vaults. It's the same library [Sage](/getting-started) is built on.
+The Chia Wallet SDK is a Rust library for building applications that interact with the Chia blockchain. It provides high-level abstractions for creating transactions, managing coins, and working with Chia primitives like CATs, NFTs, and Vaults. It's the same library [Sage](/sage/getting-started) is built on.
 
 :::info
 This documentation assumes familiarity with Chia blockchain concepts such as coins, puzzles, conditions, and singletons. For background, see the [Chia Documentation](https://docs.chia.net) and [Chialisp Documentation](https://chialisp.com).

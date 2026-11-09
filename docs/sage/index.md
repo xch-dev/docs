@@ -1,5 +1,5 @@
 ---
-slug: /getting-started
+slug: /sage/getting-started
 ---
 
 import Tabs from '@theme/Tabs';

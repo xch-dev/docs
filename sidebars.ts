@@ -1,15 +1,18 @@
 import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
-import apiSidebarModule from "./docs/rpc/sidebar";
+import apiSidebarModule from "./docs/sage/rpc/sidebar";
 
 const sidebars: SidebarsConfig = {
   sage: [
-    { type: "doc", id: "index" },
-    { type: "doc", id: "files" },
-    { type: "doc", id: "config" },
+    { type: "doc", id: "sage/index" },
+    { type: "doc", id: "sage/files" },
+    { type: "doc", id: "sage/config" },
     {
       type: "category",
       label: "RPC",
-      items: [{ type: "doc", id: "rpc-setup" }, ...apiSidebarModule.slice(1)],
+      items: [
+        { type: "doc", id: "sage/rpc-setup" },
+        ...apiSidebarModule.slice(1),
+      ],
     },
   ],
   sdk: [
