@@ -28,10 +28,19 @@ const config: Config = {
         docs: {
           sidebarPath: "./sidebars.ts",
           routeBasePath: "",
+          // Skip RPC pages generated at docs/rpc before the Sage docs moved to
+          // docs/sage, so stale local output isn't built alongside the new pages.
+          exclude: [
+            "**/_*.{js,jsx,ts,tsx,md,mdx}",
+            "**/_*/**",
+            "**/*.test.{js,jsx,ts,tsx}",
+            "**/__tests__/**",
+            "rpc/**",
+          ],
           docItemComponent: "@theme/ApiItem",
           // Generated RPC pages have no source file to edit.
           editUrl: ({ docPath }) =>
-            docPath.startsWith("rpc/")
+            docPath.startsWith("sage/rpc/")
               ? undefined
               : `https://github.com/xch-dev/docs/tree/main/docs/${docPath}`,
         },
@@ -44,6 +53,17 @@ const config: Config = {
   ],
   plugins: [
     [
+      "@docusaurus/plugin-client-redirects",
+      {
+        redirects: [{ from: "/sage", to: "/sage/getting-started" }],
+        // Sage pages used to be served without the /sage prefix.
+        createRedirects: (existingPath: string) =>
+          existingPath.startsWith("/sage/")
+            ? [existingPath.slice("/sage".length)]
+            : undefined,
+      },
+    ],
+    [
       "docusaurus-plugin-openapi-docs",
       {
         id: "api",
@@ -51,7 +71,7 @@ const config: Config = {
         config: {
           sage_rpc: {
             specPath: "src/openapi.json",
-            outputDir: "docs/rpc/",
+            outputDir: "docs/sage/rpc/",
             sidebarOptions: {
               groupPathsBy: "tag",
             },
@@ -82,9 +102,15 @@ const config: Config = {
       items: [
         {
           type: "docSidebar",
-          sidebarId: "sidebar",
+          sidebarId: "sage",
           position: "left",
-          label: "Docs",
+          label: "Sage",
+        },
+        {
+          type: "docSidebar",
+          sidebarId: "sdk",
+          position: "left",
+          label: "Wallet SDK",
         },
         {
           href: "https://github.com/xch-dev/docs",

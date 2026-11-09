@@ -14,7 +14,7 @@ pnpm install
 pnpm start
 ```
 
-`pnpm start` and `pnpm build` both generate the RPC reference pages first. The generated pages go to `docs/rpc`, which is gitignored. To regenerate them on their own, run `pnpm gen-api-docs`.
+`pnpm start` and `pnpm build` both generate the RPC reference pages first. The generated pages go to `docs/sage/rpc`, which is gitignored. To regenerate them on their own, run `pnpm gen-api-docs`.
 
 Before opening a PR, run:
 

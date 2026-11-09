@@ -1,5 +1,5 @@
 ---
-slug: /config
+slug: /sage/config
 ---
 
 # Config

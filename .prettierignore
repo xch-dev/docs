@@ -3,4 +3,5 @@ build
 .docusaurus
 pnpm-lock.yaml
 src/openapi.json
+docs/sage/rpc
 docs/rpc
