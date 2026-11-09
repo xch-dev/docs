@@ -325,11 +325,6 @@ The hint isn't always the p2 puzzle hash. A DID sent with a [ClawbackV2](/sdk/pr
 hinted to the receiver, but its p2 puzzle is the clawback. In that case, decode the clawback from the
 memos and replace `did.info.p2_puzzle_hash` with the clawback's puzzle hash if that produces the coin.
 
-:::note
-Version 0.37.0 verified the hint inside `parse_child` and returned `None` on a mismatch. 0.37.1
-reverted this, because it rejected DIDs sent with a clawback. The check above works on every version.
-:::
-
 The other parsers:
 
 - `Did::parse(allocator, coin, puzzle, solution)` parses a DID coin's own spend, returning the `Did` and

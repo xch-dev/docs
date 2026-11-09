@@ -45,27 +45,13 @@ chia-wallet-sdk = { version = "0.37", features = ["rustls"] }
 | `native-tls`        | The same, using the platform's native TLS library                                                                                           |
 | `chip-0035`         | [DataLayer stores](/sdk/primitives/datalayer) (CHIP-0035)                                                                                   |
 | `chip-0037`         | The CHIP-0037 controller puzzle and EIP-712 message layers used with [vaults](/sdk/primitives/vaults)                                       |
+| `chip-0008`         | The [splitter](/sdk/primitives/splitter) puzzle (CHIP-0008)                                                                                 |
+| `chip-0021`         | [NFT fusion](/sdk/primitives/fusion) (CHIP-0021)                                                                                            |
+| `chip-0052`         | [Partial offers](/sdk/primitives/partial-offers) (CHIP-0052)                                                                                |
 | `action-layer`      | [Action layer singletons](/sdk/primitives/action-layer) such as CATalog and XCHandles (implies `chip-0035`)                                 |
+| `auction`           | [Auctions](/sdk/primitives/auctions) (implies `action-layer`)                                                                               |
 | `offer-compression` | Compressing and decompressing [offer](/sdk/offers) strings                                                                                  |
 | `peer-simulator`    | The [peer simulator](/sdk/testing/peer-simulator), an in-process full node for networking tests                                             |
-
-The SDK's `main` branch adds four more feature flags that aren't in a release yet:
-
-| Feature     | Enables                                                       |
-| ----------- | ------------------------------------------------------------- |
-| `chip-0008` | The [splitter](/sdk/primitives/splitter) puzzle (CHIP-0008)   |
-| `chip-0021` | [NFT fusion](/sdk/primitives/fusion) (CHIP-0021)              |
-| `chip-0052` | [Partial offers](/sdk/primitives/partial-offers) (CHIP-0052)  |
-| `auction`   | [Auctions](/sdk/primitives/auctions) (implies `action-layer`) |
-
-To use them before they're released, depend on the git repository:
-
-```toml
-[dependencies]
-chia-wallet-sdk = { git = "https://github.com/xch-dev/chia-wallet-sdk", features = ["rustls", "chip-0052"] }
-```
-
-Pages and sections that cover unreleased features say so at the top.
 
 Everything else, including the [simulator](/sdk/testing), is always available.
 

@@ -17,12 +17,6 @@ to be guaranteed now and let the recipients (or anyone else) pay the fees to cla
 works for XCH, CATs and revocable CATs. It can also secure NFT bulk mints, through the secure the mint
 pre-launcher puzzle (`SecuredMint`).
 
-:::info Unreleased
-This feature is on the SDK's `main` branch and isn't in a release yet (the latest release is 0.37.1).
-To try it, depend on the git repository:
-`chia-wallet-sdk = { git = "https://github.com/xch-dev/chia-wallet-sdk" }`
-:::
-
 There's no feature flag. Everything on this page is in `chia_wallet_sdk::driver`.
 
 ## The types

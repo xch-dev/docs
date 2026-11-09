@@ -8,12 +8,6 @@ A partial offer ([CHIP-0052](https://github.com/Chia-Network/chips/blob/main/CHI
 
 Use a partial offer when you want order-book style trading of a single pair, for example "1000 CATs at 0.4 XCH each, in any amount". For trading several assets at once, NFTs or options, or anything that has to be taken all at once, use a normal [offer](/sdk/offers).
 
-:::info Unreleased
-This feature is on the SDK's `main` branch and isn't in a release yet (the latest release is 0.37.1).
-To try it, depend on the git repository with the `chip-0052` feature:
-`chia-wallet-sdk = { git = "https://github.com/xch-dev/chia-wallet-sdk", features = ["chip-0052"] }`
-:::
-
 The driver types are in [`chia_wallet_sdk::driver`](https://docs.rs/chia-wallet-sdk/latest/chia_wallet_sdk/driver/index.html) and the puzzle types in `chia_wallet_sdk::types::puzzles`. None of them are in the prelude.
 
 ## Partial offers and normal offers

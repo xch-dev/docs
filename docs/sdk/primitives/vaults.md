@@ -500,11 +500,6 @@ The struct only stores the hash of the fixed path, so a coin can be reconstructe
 calculates it from the quoted conditions hash and version. When spending the fixed path, the version is
 detected from the quoted conditions (`match_quoted_conditions_hash`).
 
-:::note
-This changed in 0.37.0. In earlier versions, `new` took the quoted conditions hash and version and
-stored them on the struct.
-:::
-
 ```rust since-0.37
 use chia_wallet_sdk::driver::{P2ConditionsOrSingleton, P2ConditionsOrSingletonVersion};
 use chia_wallet_sdk::prelude::*;
@@ -541,12 +536,6 @@ The vault path is `P2ConditionsOrSingleton::p2_singleton_spend`, which takes the
 `ASSERT_MY_COIN_ID` in the coin's delegated conditions; [clear signing](/sdk/clear-signing) requires it.
 
 ## Signed messages
-
-:::info Unreleased
-Vault message signing is on the SDK's `main` branch and isn't in a release yet (the latest release is
-0.37.1). To try it, depend on the git repository:
-`chia-wallet-sdk = { git = "https://github.com/xch-dev/chia-wallet-sdk" }`
-:::
 
 A vault has no single key, so it can't sign an off-chain message (such as a login challenge or an
 attestation) the way a BLS or secp key does. Instead, the vault's signers sign a vault spend that can

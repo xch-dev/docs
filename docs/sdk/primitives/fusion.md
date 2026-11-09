@@ -12,12 +12,6 @@ take that offer against the fusion. The swap can be reversed the same way, any n
 combine several NFTs into one, divide one into several, or upgrade an NFT to a new version while keeping
 the original recoverable.
 
-:::info Unreleased
-This feature is on the SDK's `main` branch and isn't in a release yet (the latest release is 0.37.1).
-To try it, depend on the git repository with the `chip-0021` feature:
-`chia-wallet-sdk = { git = "https://github.com/xch-dev/chia-wallet-sdk", features = ["chip-0021"] }`
-:::
-
 ## Concepts
 
 - **Sides.** A fusion has two fixed lists of NFT launcher IDs, side A and side B, curried into its puzzle.

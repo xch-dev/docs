@@ -12,12 +12,6 @@ is paid out to the seller, the fee recipients and the NFT's royalty address. The
 the [action layer](/sdk/primitives/action-layer), so no one controls it once it's launched, the seller
 included.
 
-:::info Unreleased
-This feature is on the SDK's `main` branch and isn't in a release yet (the latest release is 0.37.1).
-To try it, depend on the git repository with the `auction` feature:
-`chia-wallet-sdk = { git = "https://github.com/xch-dev/chia-wallet-sdk", features = ["auction"] }`
-:::
-
 The `auction` feature implies `action-layer`. The drivers are in `chia_wallet_sdk::driver` (`Auction`,
 `AuctionInfo`, `AuctionSettings`, ...) and the puzzle types are in `chia_wallet_sdk::types::puzzles`
 (`AuctionBid`, `AuctionState`, `AuctionTimings`, `AuctionPayments`, ...).

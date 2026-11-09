@@ -12,12 +12,6 @@ same. The usual use is splitting NFT royalties between several creators, or with
 splitter's puzzle hash as the NFT's royalty puzzle hash. It works the same way for any asset whose outer
 puzzle wraps a p2 puzzle, such as a CAT.
 
-:::info Unreleased
-This feature is on the SDK's `main` branch and isn't in a release yet (the latest release is 0.37.1).
-To try it, depend on the git repository with the `chip-0008` feature:
-`chia-wallet-sdk = { git = "https://github.com/xch-dev/chia-wallet-sdk", features = ["chip-0008"] }`
-:::
-
 ## How the puzzle works
 
 The curried argument is the payout scheme, a list of `(puzzle_hash share)` pairs. The solution is the

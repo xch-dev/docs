@@ -20,12 +20,9 @@ asserting that it's spent), and only if the coin's conditions can't be changed w
 that commitment. Anything that could be swapped out by whoever assembles the final spend bundle is
 either left out or causes an error.
 
-:::note Unreleased
-The SDK's `main` branch (not in a release yet; the latest release is 0.37.1) adds several clear signing
-features: signed messages, vaults controlled by other vaults, Secure the Bag payments and expired
-clawback push-throughs. It's also stricter in a few places. These are marked "On `main`" below.
-Everything else describes 0.37.1, which `main` still does the same way.
-:::
+Besides ordinary spends, it understands clawback push-throughs, [Secure the Bag](#secure-the-bag-payments)
+payments, [signed messages](#signed-messages), [vaults controlled by other vaults](#vaults-controlled-by-other-vaults)
+and [linked offers](#linked-offers).
 
 ## How it works
 
@@ -34,30 +31,27 @@ Everything else describes 0.37.1, which `main` still does the same way.
    because a delegated puzzle that computes its conditions from the solution would be malleable.
 2. From those conditions it reads the vault's own effects: the odd `CREATE_COIN` that recreates the
    vault (`vault_child`), any even "drop" coins (`drop_coins`), `RESERVE_FEE`, expiration
-   (`ASSERT_BEFORE_SECONDS_ABSOLUTE`), and every `SEND_MESSAGE`.
+   (`ASSERT_BEFORE_SECONDS_ABSOLUTE`), and every `SEND_MESSAGE`. The vault must be recreated with an
+   amount of 1 (`VAULT_AMOUNT`), or parsing fails with `InvalidVaultAmount`. Clear signing doesn't know
+   the vault coin's actual amount, so if the vault could have more, recreating it with 1 would hide that
+   the rest goes to the fee.
 3. Each `SEND_MESSAGE` must have the vault format: sender committed by puzzle, receiver committed by
    coin id. The message names the coin the vault is authorizing. That coin's spend must be revealed,
    its p2 puzzle must be one of the vault's (`P2Singleton`, `P2ConditionsOrSingleton`, or a clawback
    around one of those), and the message must equal the tree hash of the coin's delegated conditions.
 4. The children of every verified spend are parsed: XCH, CATs (including revocable CATs), NFTs, and
    bulletins, with their memos, hints and clawbacks decoded. Spends of those children that are
-   asserted by the vault (`ASSERT_CONCURRENT_SPEND`) are verified recursively.
+   asserted by the vault (`ASSERT_CONCURRENT_SPEND`) are verified recursively. A coin that's visited
+   before anything asserts its spend is visited again once a later spend asserts it, so the result
+   doesn't depend on the order the spends are traversed in.
 5. Settlement payments that the transaction asserts are matched against revealed requested payments,
    which is how offers are summarized.
 
-On `main` (unreleased), there are a few differences:
-
-- The vault must be recreated with an amount of 1 (`VAULT_AMOUNT`), or parsing fails with
-  `InvalidVaultAmount`. Clear signing doesn't know the vault coin's actual amount, so if the vault could
-  have more, recreating it with 1 would hide that the rest goes to the fee.
-- A revealed spend that can't be parsed is ignored if nothing links it to the vault. On 0.37.1 any
-  unparsable revealed spend fails the whole transaction. On `main` the error is still returned if the spend
-  receives a vault message or the transaction asserts it.
-- If the delegated spend authorizes a revealed controlled vault, or is a message envelope, it's parsed
-  as described in [Vaults controlled by other vaults](#vaults-controlled-by-other-vaults) and
-  [Signed messages](#signed-messages).
-- Coins that are visited before anything asserts their spend are visited again once a later spend
-  asserts them. The result no longer depends on the order the spends are traversed in.
+A revealed spend that can't be parsed is ignored if nothing links it to the vault. If the spend receives
+a vault message or the transaction asserts it, the parse error is returned. If the delegated spend
+authorizes a revealed controlled vault, or is a message envelope, it's parsed as described in
+[Vaults controlled by other vaults](#vaults-controlled-by-other-vaults) and
+[Signed messages](#signed-messages).
 
 ## Example
 
@@ -247,15 +241,15 @@ p2 spend (see [Custom Spends](/sdk/action-system/custom-spends)), then pass the 
 | `reveal_clawback`                   | A `ClawbackV2` p2 puzzle, so spends of coins locked in it can be recognized                                 |
 | `reveal_p2_conditions_or_singleton` | A `P2ConditionsOrSingleton`, so children locked to it are recognized as offer pre-splits                    |
 | `reveal_vault_nonce`                | An extra `P2Singleton` nonce the vault uses (nonce 0 is always included)                                    |
-| `reveal_bag` (`main`)               | A `SecureTheBag`, so a coin created with its root is shown as the bag's payments                            |
-| `reveal_signing_vault` (`main`)     | The current custody hash (and optionally the coin) of the vault being signed for                            |
-| `reveal_controlled_vault` (`main`)  | The spend of a vault controlled by the vault being signed for (`RevealedControlledVault`)                   |
+| `reveal_bag`                        | A `SecureTheBag`, so a coin created with its root is shown as the bag's payments                            |
+| `reveal_signing_vault`              | The current custody hash (and optionally the coin) of the vault being signed for                            |
+| `reveal_controlled_vault`           | The spend of a vault controlled by the vault being signed for (`RevealedControlledVault`)                   |
 
 Coins created by the transaction are only recognized as returning to the vault if their puzzle hash is
 one of the vault's p2 puzzle hashes. These are calculated from the revealed nonces and reported in
 `VaultTransaction::p2_puzzle_hashes`.
 
-On `main`, `reveal_signing_vault(custody_hash, coin)` tells the parser the signing vault's current
+`reveal_signing_vault(custody_hash, coin)` tells the parser the signing vault's current
 custody hash. Clear signing can't look it up, so it's only checked by the signature. Calculate the
 message that the members sign (`calculate_vault_puzzle_message` or `calculate_vault_coin_message`) from
 the returned `VaultTransaction::signing_vault`, not from anything else in the request. Then a wrong
@@ -277,24 +271,20 @@ vault's puzzle hash (`WrongSigningVaultPuzzleHash`) and an amount of 1.
 | `linked_offer`          | Summary of the offer this transaction pre-splits coins for, if any                                                  |
 | `reserved_fee`          | Total `RESERVE_FEE` of the vault and its verified spends                                                            |
 | `delegated_puzzle_hash` | The hash the signers are signing                                                                                    |
-
-On `main`, `VaultTransaction` also has:
-
-| Field                | Meaning                                                                                               |
-| -------------------- | ----------------------------------------------------------------------------------------------------- |
-| `launcher_id`        | The vault whose transaction it is: the signing vault, or the last vault in `authorization_path`       |
-| `custody_hash`       | That vault's current custody hash, if known. Compare it with `vault_child` to detect a custody change |
-| `signed_messages`    | The messages signed by a message envelope, in order. `signs_messages()` is true if there are any      |
-| `authorization_path` | The controlled vaults that the signing vault authorizes, down to the vault whose transaction it is    |
-| `signing_vault`      | The `SigningVault` (custody hash, puzzle hash, coin) revealed with `reveal_signing_vault`             |
+| `launcher_id`           | The vault whose transaction it is: the signing vault, or the last vault in `authorization_path`                     |
+| `custody_hash`          | That vault's current custody hash, if known. Compare it with `vault_child` to detect a custody change               |
+| `signed_messages`       | The messages signed by a message envelope, in order. `signs_messages()` is true if there are any                    |
+| `authorization_path`    | The controlled vaults that the signing vault authorizes, down to the vault whose transaction it is                  |
+| `signing_vault`         | The `SigningVault` (custody hash, puzzle hash, coin) revealed with `reveal_signing_vault`                           |
 
 Each child (`ParsedChild`) has a `transfer_type`: `Sent`, `Burned` (sent to the burn puzzle hash),
-`Offered` (sent to the settlement puzzle), or `OfferPreSplit` (locked into a revealed
-`P2ConditionsOrSingleton`). Its `memos` field (`ParsedMemos`) has the effective recipient p2 puzzle
-hash, a decoded `ClawbackV2` if present, any human-readable memos, and the fixed conditions of an offer
-pre-split. On `main` there's also `SecureTheBag` (see [below](#secure-the-bag-payments)). Also on `main`, a child with a
-clawback is always `Sent`. Its p2 puzzle hash is the receiver's, but the sender can still claw it back, so
-it isn't shown as burned, offered, an offer pre-split or a bag.
+`Offered` (sent to the settlement puzzle), `OfferPreSplit` (locked into a revealed
+`P2ConditionsOrSingleton`), or `SecureTheBag` (the root of a revealed bag, see
+[below](#secure-the-bag-payments)). A child with a clawback is always `Sent`: its p2 puzzle hash is the
+receiver's, but the sender can still claw it back, so it isn't shown as burned, offered, an offer
+pre-split or a bag. Its `memos` field (`ParsedMemos`) has the effective recipient p2 puzzle hash, a
+decoded `ClawbackV2` if present, any human-readable memos, and the fixed conditions of an offer
+pre-split.
 
 To validate a custody change, compare `vault_child.custody_hash` against a [`MipsMemo`](/sdk/primitives/vaults#recovering-a-vaults-configuration-from-memos)
 for the new configuration.
@@ -302,20 +292,16 @@ for the new configuration.
 ## Clawbacks and expiration
 
 Coins in a [`ClawbackV2`](/sdk/primitives/clawback) puzzle can be spent by the sender before the
-timeout and by the receiver after it. If the transaction uses the sender path, it is only valid until
-the clawback expires. The parser requires the vault to commit to an expiration
-(`ASSERT_BEFORE_SECONDS_ABSOLUTE`) no later than that, and otherwise fails with
-`DriverError::UnguaranteedClawBack`, since a transaction that could be held and replayed after the
-timeout would do something different.
+timeout and by the receiver after it, and pushed through to the receiver by anyone once it has expired.
+A vault message is received by a coin, not by a puzzle, so another path of the same clawback could
+consume the message without outputting the conditions it commits to. A clawback spend's conditions (its
+fees, announcement and concurrent spend assertions) are therefore only trusted once the transaction's
+time bounds rule out the other paths:
 
-On `main` (unreleased), clawback spends are handled more carefully. A vault message is received by a
-coin, not by a puzzle, so another path of the same clawback could consume the message without outputting
-the conditions it commits to. A clawback spend's conditions (its fees, announcement and concurrent spend
-assertions) are therefore only trusted once the transaction's time bounds rule out the other paths:
-
-- **Sender path**: trusted once the transaction expires no later than the clawback's timeout. If a spend
-  found later in the traversal lowers the expiration, the sender spend is trusted after the fact.
-  Without that, it still fails with `UnguaranteedClawBack`.
+- **Sender path**: the transaction must expire (`ASSERT_BEFORE_SECONDS_ABSOLUTE`) no later than the
+  clawback's timeout, or parsing fails with `DriverError::UnguaranteedClawBack`, since a transaction that
+  could be held and replayed after the timeout would do something different. If a spend found later in
+  the traversal lowers the expiration, the sender spend is trusted after the fact.
 - **Receiver path** with a vault message: the transaction must also be unable to be valid before the
   timeout. That means the vault (or a message-bound spend that isn't a clawback) asserts
   `ASSERT_SECONDS_ABSOLUTE` of at least the clawback's `seconds`. Otherwise parsing fails with
@@ -331,7 +317,7 @@ assertions) are therefore only trusted once the transaction's time bounds rule o
 The time bounds only come from the vault's own conditions and from message-bound spends that aren't
 clawbacks, never from clawback spends themselves.
 
-```rust unreleased
+```rust
 use chia_wallet_sdk::driver::{
     ClawbackInfo, ClawbackPath, ClawbackV2, InnerPuzzleSpend, MipsSpend, P2Singleton, Reveals,
     mips_puzzle_hash, parse_vault_transaction,
@@ -418,8 +404,7 @@ fn clear_sign_push_through() -> anyhow::Result<()> {
 
 ## Secure the Bag payments
 
-On `main` (unreleased), a vault can fund a [Secure the Bag](/sdk/primitives/secure-the-bag). Without
-help, the root coin looks like a payment to an unknown puzzle hash. Reveal the bag with
+A vault can fund a [Secure the Bag](/sdk/primitives/secure-the-bag). Without help, the root coin looks like a payment to an unknown puzzle hash. Reveal the bag with
 `Reveals::reveal_bag(bag)` and a child created with the bag's root hash and the same asset (including the
 CAT asset id and a revocable CAT's hidden puzzle hash) gets `TransferType::SecureTheBag(SecureTheBagInfo)`.
 The child must also have exactly the bag's total amount. `SecureTheBagInfo` has the bag's format and its
@@ -432,7 +417,7 @@ to the vault, since they're only paid when someone unrolls the bag. Compare the 
 with `p2_puzzle_hashes` to show which ones return to the vault. A Legacy bag with a single payment and no
 clawback has no nodes, so `reveal_bag` ignores it and the payment is shown as a normal child.
 
-```rust unreleased
+```rust
 use chia_wallet_sdk::driver::{
     BURN_PUZZLE_HASH, BagAsset, BagFormat, BagPayment, InnerPuzzleSpend, MipsSpend, P2Singleton,
     Reveals, SecureTheBag, TransferType, mips_puzzle_hash, parse_vault_transaction,
@@ -533,14 +518,13 @@ fn clear_sign_secure_the_bag() -> anyhow::Result<()> {
 
 A verified CAT spend that runs its TAIL is reported in `issuances` as an `Issuance`, with the coin id,
 asset id, `extra_delta` and `IssuanceKind`. The `extra_delta` comes from the spend's solution, which the
-vault's message doesn't cover. On `main` (unreleased), `Issuance::verified` is true only if the vault also
-sends a message that authorizes the extra delta (for a TAIL of kind `EverythingWithSingleton`). Only
+vault's message doesn't cover, so `Issuance::verified` is true only if the vault also sends a message that authorizes the extra delta (for a TAIL of kind `EverythingWithSingleton`). Only
 verified extra deltas count toward the issued and melted amounts in `asset_flows`. An unverified one could
 be different when the transaction is included in a block.
 
 ## Signed messages
 
-On `main` (unreleased), a vault can [sign off-chain messages](/sdk/primitives/vaults#signed-messages)
+A vault can [sign off-chain messages](/sdk/primitives/vaults#signed-messages)
 with a `vault_message_envelope`. When the delegated spend is an envelope, `parse_vault_transaction`
 returns the messages in `signed_messages` (and `signs_messages()` is true), and nothing else. The only
 other condition is `vault_child`, which recreates the vault. If the signing vault's custody hash is
@@ -551,7 +535,7 @@ fails with `MixedVaultMessageEnvelope`, so a transaction can't pass as a message
 
 ## Vaults controlled by other vaults
 
-On `main` (unreleased), a vault's custody can include another vault as a singleton member, so one vault
+A vault's custody can include another vault as a singleton member, so one vault
 (the controller) approves the spends of another. When the vault being signed for sends a message to a
 vault that's revealed with `reveal_controlled_vault`, clear signing follows it down to that vault. That
 vault can control another vault in turn, up to `MAX_CONTROLLED_VAULT_DEPTH` (8) vaults. The returned
@@ -592,9 +576,9 @@ When the `P2ConditionsOrSingleton` puzzles are revealed, `VaultTransaction::link
 the future offer: its reserved fee and the payments it requests (split into ones paid back to the vault
 and external ones). For making and taking offers in general, see [Offers](/sdk/offers).
 
-On `main` (unreleased), the action system builds offer takes that clear signing can verify when a vault
-is the taker. Settlement coins return only their own surplus, and the rest of the change comes from the
-taker's own coins. Set `ConditionConfig::return_unplaced_conditions` on the `Spends`. Then, if no coin
+When a vault is the taker, build the take with the action system so that clear signing can verify it.
+Settlement coins return only their own surplus, and the rest of the change comes from the taker's own
+coins. Set `ConditionConfig::return_unplaced_conditions` on the `Spends`. Then, if no coin
 spend can emit the transaction-wide conditions (such as the assertions of the settlement payments, when
 the vault spends none of its coins), they're returned in `Spends::unplaced_conditions` and no
 intermediate coin is created. Add them to the vault's delegated spend. `finish_with_keys` rejects unplaced
@@ -616,21 +600,16 @@ external signers:
 
 Parsing is conservative, so many unusual but valid transactions are rejected. Common errors:
 
-| Error                                       | Cause                                                                                  |
-| ------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `InvalidDelegatedSpendFormat`               | The vault's delegated puzzle isn't a quoted list of conditions                         |
-| `InvalidVaultMessageFormat`                 | A `SEND_MESSAGE` from the vault doesn't use the puzzle-to-coin format with one coin id |
-| `MissingSpend`                              | A coin the vault sends a message to isn't revealed                                     |
-| `InvalidLinkedCustody`                      | A messaged coin's p2 puzzle isn't a recognized vault custody puzzle                    |
-| `UnmatchedVaultMessage` / `WrongConditions` | A message doesn't match the coin's delegated conditions                                |
-| `DuplicateVaultMessage`                     | The same coin is authorized twice                                                      |
-| `MissingP2ConditionsOrSingletonAssertion`   | A vault spend of a `P2ConditionsOrSingleton` coin doesn't include `ASSERT_MY_COIN_ID`  |
-| `UnguaranteedClawBack`                      | A clawback sender path is used without a matching expiration                           |
-
-On `main` (unreleased), these are added:
-
 | Error                                                             | Cause                                                                                  |
 | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `InvalidDelegatedSpendFormat`                                     | The vault's delegated puzzle isn't a quoted list of conditions                         |
+| `InvalidVaultMessageFormat`                                       | A `SEND_MESSAGE` from the vault doesn't use the puzzle-to-coin format with one coin id |
+| `MissingSpend`                                                    | A coin the vault sends a message to isn't revealed                                     |
+| `InvalidLinkedCustody`                                            | A messaged coin's p2 puzzle isn't a recognized vault custody puzzle                    |
+| `UnmatchedVaultMessage` / `WrongConditions`                       | A message doesn't match the coin's delegated conditions                                |
+| `DuplicateVaultMessage`                                           | The same coin is authorized twice                                                      |
+| `MissingP2ConditionsOrSingletonAssertion`                         | A vault spend of a `P2ConditionsOrSingleton` coin doesn't include `ASSERT_MY_COIN_ID`  |
+| `UnguaranteedClawBack`                                            | A clawback sender path is used without a matching expiration                           |
 | `InvalidVaultAmount`                                              | A vault is recreated, or revealed, with an amount other than 1                         |
 | `UnguaranteedClawbackExpiry`                                      | A clawback receiver path is used without asserting that the clawback has expired       |
 | `MixedVaultMessageEnvelope`                                       | A delegated spend signs messages and also does something else                          |
