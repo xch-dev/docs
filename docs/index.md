@@ -7,7 +7,7 @@ import TabItem from '@theme/TabItem';
 
 # Getting Started
 
-The goal of this website is to provide documentation for Sage and the Wallet SDK it's built with. It will cover a wide range of topics, from configuring and using Sage and its RPCs to building your own applications that utilize the Wallet SDK library to connect to the Chia blockchain.
+This section covers Sage itself: building it from source, where it stores its files, how to configure it, and how to use its RPC. If you want to build your own application on the Chia blockchain, see the [Wallet SDK](/sdk) docs, which cover the Rust library Sage is built with.
 
 :::info
 If you are looking for download instructions for the app, visit the [Sage Website](https://sagewallet.net).

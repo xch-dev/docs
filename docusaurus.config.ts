@@ -82,9 +82,15 @@ const config: Config = {
       items: [
         {
           type: "docSidebar",
-          sidebarId: "sidebar",
+          sidebarId: "sage",
           position: "left",
-          label: "Docs",
+          label: "Sage",
+        },
+        {
+          type: "docSidebar",
+          sidebarId: "sdk",
+          position: "left",
+          label: "Wallet SDK",
         },
         {
           href: "https://github.com/xch-dev/docs",
