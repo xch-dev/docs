@@ -12,7 +12,11 @@ const config: Config = {
   organizationName: "xch-dev",
   projectName: "docs",
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "warn",
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+    },
+  },
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
@@ -25,7 +29,13 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           routeBasePath: "",
           docItemComponent: "@theme/ApiItem",
+          // Generated RPC pages have no source file to edit.
+          editUrl: ({ docPath }) =>
+            docPath.startsWith("rpc/")
+              ? undefined
+              : `https://github.com/xch-dev/docs/tree/main/docs/${docPath}`,
         },
+        blog: false,
         theme: {
           customCss: "./src/css/custom.css",
         },
@@ -50,7 +60,18 @@ const config: Config = {
       },
     ],
   ],
-  themes: ["docusaurus-theme-openapi-docs"],
+  themes: [
+    "docusaurus-theme-openapi-docs",
+    [
+      "@easyops-cn/docusaurus-search-local",
+      {
+        hashed: true,
+        docsRouteBasePath: "/",
+        indexBlog: false,
+        highlightSearchTermsOnTargetPage: true,
+      },
+    ],
+  ],
   themeConfig: {
     navbar: {
       title: "xch.dev",

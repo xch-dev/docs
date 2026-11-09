@@ -1,0 +1,10 @@
+allowBuilds:
+  "@parcel/watcher": true
+  core-js: true
+  core-js-pure: true
+  postman-code-generators: true
+
+# Patched releases within the ranges that upstream packages pin.
+overrides:
+  js-yaml@4: ^4.3.2
+  yaml@1: ^1.10.3

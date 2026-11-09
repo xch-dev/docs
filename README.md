@@ -1,25 +1,41 @@
-# Website
+# xch.dev
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+Source for [xch.dev](https://xch.dev), the documentation for Sage and the Chia Wallet SDK. It's built with [Docusaurus](https://docusaurus.io/).
 
-### Installation
+## Requirements
 
-```
+- Node.js 24 (see `.nvmrc`; 20 or newer works)
+- pnpm, at the version pinned in `package.json`'s `packageManager` field. Running `corepack enable` picks it up automatically.
+
+## Development
+
+```sh
 pnpm install
-```
-
-### Local Development
-
-```
 pnpm start
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+`pnpm start` and `pnpm build` both generate the RPC reference pages first. The generated pages go to `docs/rpc`, which is gitignored. To regenerate them on their own, run `pnpm gen-api-docs`.
 
-### Build
+Before opening a PR, run:
 
-```
+```sh
+pnpm format:check   # or `pnpm format` to fix
+pnpm typecheck
 pnpm build
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+CI runs the same checks on every pull request.
+
+## RPC reference
+
+The RPC pages are generated from `src/openapi.json`, which comes from Sage. To update it to a Sage release (this needs git and a Rust toolchain):
+
+```sh
+pnpm sync-openapi v0.13.1   # omit the tag to use the latest release
+```
+
+To use a local Sage checkout instead, set `SAGE_DIR=/path/to/sage`.
+
+## Deployment
+
+Every push to `main` builds the site and deploys it to GitHub Pages through `.github/workflows/ci.yml`.
