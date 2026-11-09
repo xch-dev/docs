@@ -28,6 +28,15 @@ const config: Config = {
         docs: {
           sidebarPath: "./sidebars.ts",
           routeBasePath: "",
+          // Skip RPC pages generated at docs/rpc before the Sage docs moved to
+          // docs/sage, so stale local output isn't built alongside the new pages.
+          exclude: [
+            "**/_*.{js,jsx,ts,tsx,md,mdx}",
+            "**/_*/**",
+            "**/*.test.{js,jsx,ts,tsx}",
+            "**/__tests__/**",
+            "rpc/**",
+          ],
           docItemComponent: "@theme/ApiItem",
           // Generated RPC pages have no source file to edit.
           editUrl: ({ docPath }) =>
@@ -43,6 +52,17 @@ const config: Config = {
     ],
   ],
   plugins: [
+    [
+      "@docusaurus/plugin-client-redirects",
+      {
+        redirects: [{ from: "/sage", to: "/sage/getting-started" }],
+        // Sage pages used to be served without the /sage prefix.
+        createRedirects: (existingPath: string) =>
+          existingPath.startsWith("/sage/")
+            ? [existingPath.slice("/sage".length)]
+            : undefined,
+      },
+    ],
     [
       "docusaurus-plugin-openapi-docs",
       {

@@ -10,6 +10,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "RPC",
       items: [
+        apiSidebarModule[0],
         { type: "doc", id: "sage/rpc-setup" },
         ...apiSidebarModule.slice(1),
       ],

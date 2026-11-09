@@ -8,6 +8,8 @@
 .docusaurus
 .cache-loader
 /docs/sage/rpc
+# Generated RPC pages from before the Sage docs moved to docs/sage
+/docs/rpc
 
 # Misc
 .DS_Store
