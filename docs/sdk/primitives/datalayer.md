@@ -44,12 +44,12 @@ The metadata type is generic: `DatastoreMetadata` is the standard format, but an
 When a store has delegated puzzles, its inner puzzle is a `DelegationLayer` that can be spent either by
 the owner or by any delegated puzzle in a merkle tree:
 
-| Role   | Can do                                                                                                                                                                                                   |
-| ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Owner  | Anything: update metadata, change the delegated puzzles, transfer ownership, melt                                                                                                                        |
-| Admin  | Update metadata and replace the set of delegated puzzles (`UpdateDatastoreMerkleRoot`)                                                                                                                   |
-| Writer | Only update metadata. The `WriterLayer` filters out every other condition                                                                                                                                |
-| Oracle | Anyone can spend it, as long as they pay `fee` mojos to the oracle puzzle hash. The spend makes an announcement that the payer can assert, so it can be used to prove the store's current state on chain |
+| Role   | Can do                                                                                                                                                                                                                                                                       |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Owner  | Anything: update metadata, change the delegated puzzles, transfer ownership, melt                                                                                                                                                                                            |
+| Admin  | Update metadata and replace the set of delegated puzzles (`UpdateDatastoreMerkleRoot`)                                                                                                                                                                                       |
+| Writer | Update metadata, but not the delegated puzzles. The `WriterLayer` raises if the inner puzzle outputs `UpdateDatastoreMerkleRoot`                                                                                                                                             |
+| Oracle | Anyone can spend it, as long as they pay `fee` mojos to the oracle puzzle hash (the fee must be even; `OracleLayer::new` returns `None` otherwise). The spend makes an announcement that the payer can assert, so it can be used to prove the store's current state on chain |
 
 ## Launching and updating a store
 
@@ -274,7 +274,8 @@ which destroys the singleton. Admins and writers can't melt it.
 
 - `Datastore::spend` consumes the store and returns a `CoinSpend`. It doesn't insert it into the
   `SpendContext`; call `ctx.insert(coin_spend)` yourself.
-- A writer spend can only update metadata, and an admin spend can't change the owner. Conditions they
+- A writer spend can't change the delegated puzzles, and neither admins nor writers can change the owner,
+  recreate the coin themselves or melt it. Conditions they
   aren't allowed to output make the spend fail.
 - `Datastore::from_spend` verifies that the memos are consistent with the created puzzle hash, so you
   can't be tricked into tracking a different owner than the one actually on chain.

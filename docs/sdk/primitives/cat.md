@@ -54,8 +54,9 @@ the eve coin is spent immediately with a `RUN_CAT_TAIL` condition that reveals t
 helpers do both. They add the eve spend to the context, and return the conditions the parent must output
 plus the resulting CAT coins.
 
-The eve coin's outputs are the `extra_conditions` you pass in. They must create exactly `amount` worth of
-coins (the TAIL is checked against the delta), and those coins become the issued CATs.
+The eve coin's outputs are the `extra_conditions` you pass in. They should create exactly `amount` worth of
+coins, and those coins become the issued CATs. Any difference is passed to the TAIL as a delta, which
+the single issuance TAIL rejects and other TAILs may treat as an extra mint or melt.
 
 ### Single issuance
 
@@ -572,8 +573,8 @@ need the hash the CAT layer sees, for example in lineage proofs. The `Cat` metho
 - Spend different asset IDs in separate `spend_all` calls; they can't share a ring.
 - Every output inside a CAT spend becomes a CAT of the same asset. To pay a fee or send XCH, spend an XCH
   coin in the same bundle and link it (for example with `assert_concurrent_spend`).
-- The issuance outputs must sum to exactly the issued amount. Too much or too little makes the TAIL fail
-  with a `clvm raise` error.
+- With `single_issuance`, the outputs must sum to exactly the issued amount. Too much or too little
+  makes the TAIL fail with a `clvm raise` error. Other TAILs see the difference as a mint or melt.
 - The eve coin used during issuance has no hint and is spent immediately, so you don't need to track it.
 
 See the [`Cat` rustdoc](https://docs.rs/chia-wallet-sdk/latest/chia_wallet_sdk/driver/) for the complete

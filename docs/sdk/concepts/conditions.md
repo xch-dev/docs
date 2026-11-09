@@ -321,7 +321,7 @@ The type parameter `T` controls how the open-ended parts of a condition are pars
 ## Gotchas
 
 - **Conditions don't sign anything.** An `AGG_SIG_*` condition only states that a signature is required. You still have to produce the signature; see [Keys & Signing](/sdk/concepts/signing).
-- **Fees are implicit.** The fee is whatever input value isn't spent on outputs. `reserve_fee` only asserts that the fee is at least the given amount, and protects against a bundle being stripped of its fee-paying spend.
+- **Fees are implicit.** The fee is whatever input value isn't spent on outputs. `reserve_fee` only asserts that the bundle's total fee is at least the given amount; it doesn't move any value by itself.
 - **Memos must be allocated in the same allocator as the spend.** `Memos<NodePtr>` points into a specific `SpendContext`. Build it with that context's `hint` or `memos`.
 - **Only the first memo is a hint, and only if it's exactly 32 bytes.**
 - **Condition order isn't significant** to consensus, but duplicate `CREATE_COIN` conditions with the same puzzle hash and amount create the same coin id and fail. Vary the amount, or use separate parents.

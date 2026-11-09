@@ -149,7 +149,7 @@ fn derived_types() -> anyhow::Result<()> {
 }
 ```
 
-The derive macros generate code that refers to the `clvm_traits` crate by name. `use chia_wallet_sdk::prelude::*;` brings that name into scope, so derives work without adding `clvm-traits` as a direct dependency. If you don't import the prelude, add `use chia_wallet_sdk::clvm_traits;` or pass `#[clvm(crate_name = chia_wallet_sdk::clvm_traits)]`.
+The derive macros generate code that refers to the `clvm_traits` crate by name. `use chia_wallet_sdk::prelude::*;` brings that name into scope, so derives work without adding `clvm-traits` as a direct dependency. If you don't import the prelude, add `use chia_wallet_sdk::clvm_traits;`. (`#[clvm(crate_name = ...)]` takes a single identifier, not a path, so it can't point at `chia_wallet_sdk::clvm_traits` directly.)
 
 Use `NodePtr` as a field type (or a generic parameter that you later set to `NodePtr`) to leave part of a value unparsed. Most SDK solution types, like `StandardSolution<P, S>` and `CatSolution<I>`, are generic for exactly this reason.
 
@@ -454,5 +454,5 @@ In debug builds and tests, puzzles run under Rue's debug dialect, which records 
 - **Pointers belong to one allocator.** Using a `NodePtr` with a different `Allocator` (or after `SpendContext::reset`) doesn't fail loudly; it points at whatever is at that index. Keep a single `SpendContext` per transaction you build.
 - **Zero is nil.** `0u64`, `false`, `None`, `()` and an empty string all encode to the same nil atom, so `Option<u64>` can't distinguish `Some(0)` from `None`.
 - **`list` is lenient, `proper_list` is strict.** `#[clvm(list)]` ignores extra trailing items when parsing. That's usually what you want for solutions and conditions, but it means a round trip doesn't preserve them.
-- **Integer parsing only checks the length.** `FromClvm` for integers fails if the atom is too long for the type, but doesn't check for a minimal encoding or, for unsigned types, the sign bit. The atom `0x80` is -128 in CLVM but parses as `128u8`. When the exact value matters for security, compare against the encoding the puzzle itself would see, or parse as `Bytes`.
+- **Integer parsing doesn't require a minimal encoding.** `FromClvm` for integers fails if the value doesn't fit the type, and unsigned types reject atoms with the sign bit set (the atom `0x80` is -128, so it fails as `u8`). Redundant leading padding is accepted, though: `0x0001` parses as `1u8` even though a puzzle would see a different atom than `0x01`. When the exact encoding matters for security, compare against the encoding the puzzle itself would see, or parse as `Bytes`.
 - **Tree hashes aren't SHA-256 of the serialized bytes.** Always use `tree_hash`, `ToTreeHash` or `tree_hash_from_bytes` to get a puzzle hash.

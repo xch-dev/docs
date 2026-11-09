@@ -166,7 +166,7 @@ example, they could keep the spend that pays a fee and drop the one that pays yo
 of one transaction together:
 
 - With the action system, choose a [`Relation`](/sdk/action-system#relations).
-  `Relation::AssertConcurrent` makes every spend assert every other spend, and is the right default.
+  `Relation::AssertConcurrent` makes each spend assert the previous one in a ring, so none can be dropped, and is the right default.
 - By hand, add `assert_concurrent_spend(other_coin_id)` (or announcements, as described in
   [Conditions](/sdk/concepts/conditions)) to each spend, as in the example above.
 

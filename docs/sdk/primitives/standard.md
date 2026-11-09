@@ -14,7 +14,7 @@ state beyond the coin itself, so there is no separate `Xch` type. A plain `Coin`
 owns it is all you need.
 
 :::tip
-For ordinary payments with change and fees, the [Action System](/sdk/action-system) can select coins,
+For ordinary payments with change and fees, the [Action System](/sdk/action-system) can create change,
 balance amounts and produce the spends for you (`Action::send`, `Action::fee`). This page covers the
 underlying primitive, which is what you need for custom flows or when you want full control.
 :::

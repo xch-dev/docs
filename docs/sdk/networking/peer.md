@@ -23,7 +23,7 @@ not compiled. `Peer`, `PeerOptions`, `Network` and the rate limiter types are al
 
 ```toml
 [dependencies]
-chia-wallet-sdk = { version = "0.36", features = ["rustls"] }
+chia-wallet-sdk = { version = "0.37", features = ["rustls"] }
 tokio = { version = "1", features = ["full"] }
 ```
 
@@ -467,7 +467,7 @@ Every fallible function returns `ClientError`. The variants you'll handle most o
 | `WebSocket`, `Io`                                                   | The connection couldn't be opened or was lost                                   |
 | `WrongNetwork`, `WrongNodeType`                                     | The handshake succeeded but the peer is on another network or isn't a full node |
 | `MissingHandshake`                                                  | The connection closed before the peer sent its handshake                        |
-| `InvalidResponse`, `UnexpectedMessage`                              | The peer replied with a message of the wrong type                               |
+| `InvalidResponse`                                                   | The peer replied with a message of the wrong type                               |
 | `Recv`                                                              | The response channel for a request was dropped                                  |
 | `Streamable`                                                        | A message couldn't be decoded                                                   |
 | `Ssl`, `Rustls`, `NativeTls`, `Pem`, `MissingPkcs8Key`, `MissingCa` | Certificate or TLS setup failed                                                 |

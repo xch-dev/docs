@@ -45,16 +45,16 @@ translation:
 
 Types are converted at the boundary:
 
-| Rust                      | Node.js                        | WASM                | Python                           |
-| ------------------------- | ------------------------------ | ------------------- | -------------------------------- |
-| `Bytes32`, `Bytes`        | `Uint8Array` in, `Buffer` out  | `Uint8Array`        | `bytes`                          |
-| `u64`, `u128`, `BigInt`   | `bigint` (`1000n`)             | `bigint`            | `int`                            |
-| `u8`, `u16`, `u32`        | `number`                       | `number`            | `int`                            |
-| `Option<T>`               | `T`, `null` or `undefined`     | `T` or `undefined`  | `T` or `None`                    |
-| `Vec<T>`                  | Array                          | Array               | `list`                           |
-| `Result<T, E>`            | Returns `T`, throws an `Error` | Returns `T`, throws | Returns `T`, raises `ValueError` |
-| `async fn`                | Returns a `Promise`            | Returns a `Promise` | Awaitable (use with `asyncio`)   |
-| `snake_case` method names | `camelCase`                    | `camelCase`         | `snake_case`                     |
+| Rust                      | Node.js                                        | WASM                | Python                           |
+| ------------------------- | ---------------------------------------------- | ------------------- | -------------------------------- |
+| `Bytes32`, `Bytes`        | `Uint8Array` in, `Buffer` out                  | `Uint8Array`        | `bytes`                          |
+| `u64`, `u128`, `BigInt`   | `bigint` (`1000n`)                             | `bigint`            | `int`                            |
+| `u8`, `u16`, `u32`        | `number`                                       | `number`            | `int`                            |
+| `Option<T>`               | `T` or `null` (inputs also accept `undefined`) | `T` or `undefined`  | `T` or `None`                    |
+| `Vec<T>`                  | Array                                          | Array               | `list`                           |
+| `Result<T, E>`            | Returns `T`, throws an `Error`                 | Returns `T`, throws | Returns `T`, raises `ValueError` |
+| `async fn`                | Returns a `Promise`                            | Returns a `Promise` | Awaitable (use with `asyncio`)   |
+| `snake_case` method names | `camelCase`                                    | `camelCase`         | `snake_case`                     |
 
 Structs such as `Coin`, `CoinSpend`, `SpendBundle` and `CatInfo` become classes with a constructor and
 properties for their fields. Passing an object to a method doesn't consume it, so you can keep using it

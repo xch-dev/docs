@@ -19,7 +19,7 @@ usually only needed in tests, so enable it in `dev-dependencies`:
 
 ```toml
 [dev-dependencies]
-chia-wallet-sdk = { version = "0.36", features = ["peer-simulator"] }
+chia-wallet-sdk = { version = "0.37", features = ["peer-simulator"] }
 tokio = { version = "1", features = ["full"] }
 ```
 
@@ -239,7 +239,7 @@ The simulator logs an error and closes that connection, so the request never get
 | ------------------------- | ----------------------------- | -------------------------------------------------------------------------------------------- |
 | `genesis_challenge`       | testnet11's genesis challenge | The header hash to pass with `previous_height: None` in state requests                       |
 | `max_subscriptions`       | 200,000                       | Subscriptions allowed per peer before requests are rejected with `ExceededSubscriptionLimit` |
-| `max_response_coins`      | 100,000                       | Maximum coin states returned by `request_coin_state`                                         |
+| `max_response_coins`      | 100,000                       | Maximum coin states `request_puzzle_state` considers for one response                        |
 | `puzzle_state_batch_size` | 30,000                        | Above this many coin states, `request_puzzle_state` splits the response into pages           |
 
 `reset()` replaces the simulator state and all subscriptions with fresh ones, without restarting the

@@ -62,7 +62,7 @@ When you're done, get the coin spends back with:
 
 - `ctx.take()`, which removes and returns them, leaving the context ready for another transaction.
 - `ctx.iter()`, to inspect them without removing them.
-- `for coin_spend in ctx` (`IntoIterator`), to consume the context.
+- `for coin_spend in ctx` (`IntoIterator`), to consume an owned `SpendContext`.
 
 ```rust
 use chia_wallet_sdk::prelude::*;

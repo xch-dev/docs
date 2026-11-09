@@ -153,7 +153,7 @@ The mempool follows the full node's rules:
   and the spend can be fast-forwarded, the simulator rewrites it to spend the singleton's latest coin.
 
 `farm_block(n)` farms `n` blocks (at least one). Each block includes every mempool item that's still
-valid and doesn't conflict with one already included, and returns its `BlockRecord`.
+valid and doesn't conflict with one already included, and it returns the new blocks' `BlockRecord`s.
 
 ```rust
 use chia_wallet_sdk::chia::consensus::validation_error::ErrorCode;
@@ -322,7 +322,7 @@ the feature turned on. The example below is not compiled as part of these docs f
 
 ```toml
 [dev-dependencies]
-chia-sdk-test = { version = "0.36", features = ["full-node-simulator-http"] }
+chia-sdk-test = { version = "0.37", features = ["full-node-simulator-http"] }
 ```
 
 :::

@@ -43,8 +43,8 @@ variants when you need the `Spend` to wrap in another layer, for example with `C
 To let the receiver's wallet find and decode the clawback, create the coin with memos of the form
 `(receiver_puzzle_hash, (clawback.memo(), ...))`. The first memo is a hint, so the coin shows up when the
 receiver looks up coins hinted to their puzzle hash. The second is `(sender_puzzle_hash, (seconds, ()))`,
-which together with the coin's amount and the hint lets anyone reconstruct the `ClawbackV2` with
-`ClawbackV2::from_memo`. `from_memo` checks the reconstructed puzzle hash against the coin, so a bad
+which together with the coin's amount, the hint and the `hinted` flag lets anyone reconstruct the
+`ClawbackV2` with `ClawbackV2::from_memo`. `from_memo` checks the reconstructed puzzle hash against the coin, so a bad
 memo just returns `None`.
 
 This example sends a clawback from Alice to Bob, has Bob discover it from the chain, and then claims it
@@ -293,6 +293,7 @@ with a hint. For custom spends, use `receiver_spend` and `sender_spend`.
   to control block timestamps (see [Simulator](/sdk/testing)).
 - `amount` and `hinted` are part of a `ClawbackV2`'s puzzle hash. The push-through path pays exactly
   `amount`, so the coin's amount must match it.
-- If the receiver is a vault, the paths are spent with the vault's p2 spend as the inner spend. Clear
-  signing requires vault transactions that use the sender path to expire before the clawback does; see
+- If the sender or receiver is a vault, its path is spent with the vault's p2 spend as the inner spend.
+  Clear signing requires vault transactions that use the sender path to expire no later than the
+  clawback's `seconds`; see
   [Clear Signing](/sdk/clear-signing#clawbacks-and-expiration).

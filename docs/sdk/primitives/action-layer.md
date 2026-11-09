@@ -67,13 +67,13 @@ To follow a singleton on chain, use `from_parent_spend` / `from_spend` on its co
 
 ## Applications
 
-| Application        | Types                                                                                                | What it does                                                                                                                                                             |
-| ------------------ | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| CATalog            | `CatalogRegistry`, `CatalogRegistryInfo`, `CatalogRegistryState`, `CatalogRegistryConstants`         | A registry of CATs. Registering a CAT (by TAIL hash) mints an NFT that holds its metadata (`CatNftMetadata`). Each TAIL can only be registered once, enforced by slots   |
-| XCHandles          | `XchandlesRegistry`, `XchandlesRegistryInfo`, `XchandlesRegistryState`, `XchandlesConstants`         | A registry of handles (names) with expiration, priced by a pricing puzzle. Handles can be registered, extended, expired and re-registered, and updated                   |
-| Reward distributor | `RewardDistributor`, `RewardDistributorInfo`, `RewardDistributorState`, `RewardDistributorConstants` | Distributes rewards (a CAT held in a `Reserve`) to entries over epochs. Entries are managed by a manager singleton, NFT stakers or CAT stakers (`RewardDistributorType`) |
-| Medieval vault     | `MedievalVault`, `MedievalVaultInfo`                                                                 | A plain m-of-n BLS multisig singleton, used to administer other singletons                                                                                               |
-| State scheduler    | `StateScheduler`, `StateSchedulerInfo`                                                               | A singleton that sends a pre-committed sequence of state updates to another singleton at given times (for example to schedule price changes)                             |
+| Application        | Types                                                                                                | What it does                                                                                                                                                                                                                     |
+| ------------------ | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CATalog            | `CatalogRegistry`, `CatalogRegistryInfo`, `CatalogRegistryState`, `CatalogRegistryConstants`         | A registry of CATs. Registering a CAT (by TAIL hash) mints an NFT that holds its metadata (`CatNftMetadata`). Each TAIL can only be registered once, enforced by slots                                                           |
+| XCHandles          | `XchandlesRegistry`, `XchandlesRegistryInfo`, `XchandlesRegistryState`, `XchandlesConstants`         | A registry of handles (names) with expiration, priced by a pricing puzzle. Handles can be registered, extended, expired and re-registered, and updated                                                                           |
+| Reward distributor | `RewardDistributor`, `RewardDistributorInfo`, `RewardDistributorState`, `RewardDistributorConstants` | Distributes rewards (a CAT held in a `Reserve`) to entries over epochs. Entries are managed by a manager singleton, or are NFTs from a collection, NFTs from a curated DataLayer store, or staked CATs (`RewardDistributorType`) |
+| Medieval vault     | `MedievalVault`, `MedievalVaultInfo`                                                                 | A plain m-of-n BLS multisig singleton, used to administer other singletons                                                                                                                                                       |
+| State scheduler    | `StateScheduler`, `StateSchedulerInfo`                                                               | A singleton that sends a pre-committed sequence of state updates to another singleton at given times (for example to schedule price changes)                                                                                     |
 
 Each registry's actions are separate types:
 
@@ -326,9 +326,9 @@ fn medieval_vault_rekey() -> anyhow::Result<()> {
 }
 ```
 
-`MedievalVault::spend` makes the delegated puzzle non-replayable by asserting the coin id and the
-network's genesis challenge (`delegated_conditions`), so pass the genesis challenge of the network you
-are on. `spend_sunsafe` skips that, and `delegated_puzzle_for_rekey` /
+`MedievalVault::spend` makes the delegated puzzle non-replayable by asserting the coin id (unless the
+conditions already assert the coin or parent id) and adding the network's genesis challenge as a
+`REMARK` (`delegated_conditions`), so pass the genesis challenge of the network you are on. `spend_sunsafe` skips that, and `delegated_puzzle_for_rekey` /
 `delegated_puzzle_for_flexible_send_message` build delegated puzzles for signers that sign offline.
 
 ## State scheduler

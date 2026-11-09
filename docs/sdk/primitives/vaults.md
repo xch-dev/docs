@@ -5,7 +5,7 @@ title: Vaults & MIPS
 # Vaults & MIPS
 
 A **vault** is a singleton whose inner puzzle is a custody configuration built with **MIPS**, the
-multi-issuer puzzle system (CHIP-0043, see the [CHIPs repository](https://github.com/Chia-Network/chips)). Instead of
+Meta Inner Puzzle Spec ([CHIP-0043](https://github.com/Chia-Network/chips/blob/main/CHIPs/chip-0043.md)). Instead of
 holding funds directly, a vault controls other coins (XCH, CATs, NFTs) whose p2 puzzle is locked to
 the vault's launcher id. Because the vault is a singleton, its custody rules can be changed (rekeyed)
 without moving any of those coins.
@@ -61,7 +61,7 @@ sign its tree hash, not the conditions themselves, so every member in a quorum s
 | `FixedPuzzleMember`                          | Only allows one specific delegated puzzle hash                       |
 | `Eip712Member` (`chip-0037`)                 | secp256k1 key signing an EIP-712 typed message                       |
 
-Each secp/BLS member also has a `...PuzzleAssert` variant (for example `K1MemberPuzzleAssert`) that
+Each secp/BLS member except `Eip712Member` also has a `...PuzzleAssert` variant (for example `K1MemberPuzzleAssert`) that
 commits to the vault's puzzle hash instead of the coin id. These are used for "fast forward" spends,
 where the same signature needs to stay valid even if the vault coin is replaced by a newer coin with the
 same puzzle hash.
@@ -71,7 +71,7 @@ same puzzle hash.
 A `Restriction` has a `RestrictionKind` and a puzzle hash:
 
 - `MemberCondition`: a validator that inspects the conditions output by the member or quorum. For
-  example `Timelock` requires an `ASSERT_SECONDS_RELATIVE` of at least some number of seconds.
+  example `Timelock` requires an `ASSERT_SECONDS_RELATIVE` with its curried number of seconds.
 - `DelegatedPuzzleHash`: a validator that inspects the delegated puzzle hash.
 - `DelegatedPuzzleWrapper`: a wrapper puzzle that is wrapped around the delegated puzzle and can filter
   or add conditions. The SDK enforces these with the `EnforceDelegatedPuzzleWrappers` validator.
@@ -247,8 +247,8 @@ than the number of items, since such a puzzle is either spendable by anyone or n
 ## Restricting what a member can do
 
 Restrictions are attached to a node via the `restrictions` argument of `mips_puzzle_hash` and
-`InnerPuzzleSpend`. Delegated puzzle wrappers also need a spend in `MipsSpend::restrictions`, keyed by
-the wrapper's puzzle hash.
+`InnerPuzzleSpend`. Each restriction (validator or wrapper) also needs a spend in
+`MipsSpend::restrictions`, keyed by its puzzle hash.
 
 Here the vault's only member is wrapped in `PreventConditionOpcode`, so it can't create coin
 announcements. A normal spend still works, but one that tries to output `CREATE_COIN_ANNOUNCEMENT`

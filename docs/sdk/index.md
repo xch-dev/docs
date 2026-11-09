@@ -99,7 +99,7 @@ what assets are involved:
 2. **Describe what should happen.** Either spend coins directly with a [primitive](/sdk/primitives) such as
    `StandardLayer`, `Cat` or `Nft`, passing the [conditions](/sdk/concepts/conditions) each coin should
    output, or describe the whole transaction declaratively with the [action system](/sdk/action-system)
-   and let it select change, link spends and build the conditions for you.
+   and let it create change, link spends and build the conditions for you.
 3. **Sign.** Work out which signatures the spends require with `RequiredSignature` and sign them with
    your keys. See [Keys & Signing](/sdk/concepts/signing).
 4. **Submit.** Send the `SpendBundle` to the network through a [peer](/sdk/networking/peer) or an

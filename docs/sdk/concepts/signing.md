@@ -86,7 +86,7 @@ fn derive_wallet_keys() -> anyhow::Result<()> {
 
 You don't need to work out signature messages yourself. `RequiredSignature::from_coin_spends` runs each coin spend, collects its `AGG_SIG_*` conditions, and returns a `RequiredSignature` for each one:
 
-- `RequiredSignature::Bls(RequiredBlsSignature)` has the `public_key` and the full `message()` to sign. The message is the condition's raw message, followed by the coin information the condition commits to (for `AGG_SIG_ME`, the coin id), followed by a network-specific domain string.
+- `RequiredSignature::Bls(RequiredBlsSignature)` has the `public_key` and the full `message()` to sign. The message is the condition's raw message, followed by the coin information the condition commits to (for `AGG_SIG_ME`, the coin id), followed by a network-specific domain string. `AGG_SIG_UNSAFE` is the exception: its message is signed as is, with no coin information or domain string.
 - `RequiredSignature::Secp(RequiredSecpSignature)` is a secp256k1 or secp256r1 signature that a puzzle verifies itself. See [Secp keys](#secp-keys).
 
 The domain strings come from `AggSigConstants`, which you build from the network's consensus constants. Mainnet and testnet11 have different genesis challenges, so the same spend needs a different signature on each network:

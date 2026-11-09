@@ -432,7 +432,7 @@ fn did_lifecycle() -> anyhow::Result<()> {
 
 `Action::mint_option(creator_puzzle_hash, seconds, underlying_id, underlying_amount, strike_type, amount)` mints an [option contract](/sdk/primitives/options) singleton from an XCH coin, and locks `underlying_amount` of the underlying asset (XCH, a CAT, or an NFT, by `underlying_id`) in a coin that the option controls. Until the `seconds` timestamp, the owner of the option can exercise it by paying the `strike_type` (an `OptionType`) to `creator_puzzle_hash`. After that, the creator can reclaim the underlying asset.
 
-The option is `Id::New(index)`, and its owner is the p2 puzzle hash of the XCH coin it was minted from. Send it elsewhere with `Action::send`. When the underlying is an NFT, the NFT is locked in the same transaction, so no other action can use it afterwards (they fail with `DriverError::NoSourceForOutput`).
+The option is `Id::New(index)`. Unless it's sent elsewhere with `Action::send`, the option goes to the change puzzle hash. When the underlying is an NFT, the NFT is locked in the same transaction, so no other action can use it afterwards (they fail with `DriverError::NoSourceForOutput`).
 
 ### Exercising with `Action::melt_singleton`
 
