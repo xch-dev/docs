@@ -1,658 +1,581 @@
 ---
-slug: /sdk/primitives/cat
 title: CAT
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+# CAT
 
-# CAT (Chia Asset Tokens)
+CATs (Chia Asset Tokens) are fungible tokens. A CAT coin is an ordinary coin whose puzzle is the CAT
+outer puzzle wrapped around an inner ("p2") puzzle, usually the [standard puzzle](/sdk/primitives/standard)
+of the owner. The outer puzzle guarantees that the total amount of a CAT can only change when its
+**TAIL** (Token and Asset Issuance Limitations) program allows it. The tree hash of the TAIL is the
+CAT's **asset ID**.
 
-CATs (Chia Asset Tokens) are fungible tokens on the Chia blockchain. Each CAT has a unique asset ID derived from its TAIL (Token and Asset Issuance Limiter) program, which controls how the token can be minted.
+The SDK represents a spendable CAT coin with the `Cat` primitive. This page covers issuing CATs,
+spending one or many CAT coins, lineage, parsing CATs from the blockchain, melting, and revocable CATs.
+For background on the puzzle itself see [CATs on chialisp.com](https://chialisp.com/cats).
 
-## Overview
+:::tip
+The [Action System](/sdk/action-system) handles CAT issuance, sends, change, melting and fees with
+`Action::single_issue_cat`, `Action::issue_cat`, `Action::send`, `Action::run_tail` and `Action::burn`,
+including multi-asset transactions. Use it unless you need the control the low-level API on this page
+gives you.
+:::
 
-CATs work by wrapping an inner puzzle (typically a standard p2 puzzle) with the CAT layer. The CAT layer:
+## The `Cat` type
 
-- Enforces that the total CAT amount is preserved across spends (no creation/destruction)
-- Identifies the token by its asset ID
-- Requires lineage proofs to verify the CAT's history
+```rust ignore
+pub struct Cat {
+    pub coin: Coin,
+    pub lineage_proof: Option<LineageProof>,
+    pub info: CatInfo,
+}
 
-## Key Types
+pub struct CatInfo {
+    pub asset_id: Bytes32,
+    pub hidden_puzzle_hash: Option<Bytes32>, // Some for revocable CATs
+    pub p2_puzzle_hash: Bytes32,             // the owner's puzzle hash
+}
+```
 
-| Type           | Description                                         |
-| -------------- | --------------------------------------------------- |
-| `Cat`          | A CAT coin with its info and optional lineage proof |
-| `CatInfo`      | Asset ID and inner puzzle hash                      |
-| `CatSpend`     | Combines a CAT with an inner spend                  |
-| `LineageProof` | Proof of the CAT's parent for validation            |
+- `info` is everything needed to construct the outer puzzle. `CatInfo::puzzle_hash` computes the full
+  puzzle hash, which must equal `coin.puzzle_hash`.
+- `lineage_proof` proves that the coin's parent was also a CAT of the same asset ID. It is only `None`
+  for an "eve" coin whose spend runs the TAIL.
+- The p2 puzzle itself is not stored. You provide its spend each time you spend the CAT, so any p2
+  puzzle (standard, vault, clawback, custom) works.
 
-## Issuing CATs
+A `Cat` together with knowledge of how to spend its `p2_puzzle_hash` is everything you need to store in
+a database to spend the coin later.
 
-The simplest way to issue a new CAT is using the single-issuance TAIL (genesis by coin ID):
+## Issuing a CAT
 
-<Tabs>
-  <TabItem value="rust" label="Rust" default>
+Issuance happens in two steps in the same transaction: a parent coin creates an **eve** CAT coin, and
+the eve coin is spent immediately with a `RUN_CAT_TAIL` condition that reveals the TAIL. The issue
+helpers do both. They add the eve spend to the context, and return the conditions the parent must output
+plus the resulting CAT coins.
+
+The eve coin's outputs are the `extra_conditions` you pass in. They should create exactly `amount` worth of
+coins, and those coins become the issued CATs. Any difference is passed to the TAIL as a delta, which
+the single issuance TAIL rejects and other TAILs may treat as an extra mint or melt.
+
+### Single issuance
+
+`Cat::single_issuance` uses the `genesis_by_coin_id` TAIL, curried with the ID of the parent coin. Since a
+coin can only be spent once, the supply is fixed forever after this transaction.
 
 ```rust
+use chia_wallet_sdk::chia::puzzle_types::cat::GenesisByCoinIdTailArgs;
 use chia_wallet_sdk::prelude::*;
 
-let ctx = &mut SpendContext::new();
+#[test]
+fn single_issuance() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
 
-// The p2 layer for ownership
-let p2 = StandardLayer::new(public_key);
+    let alice = sim.bls(1_000);
+    let alice_p2 = StandardLayer::new(alice.pk);
 
-// Create hint memos for coin discovery
-let memos = ctx.hint(puzzle_hash)?;
+    let memos = ctx.hint(alice.puzzle_hash)?;
+    let (issue_cat, cats) = Cat::single_issuance(
+        ctx,
+        alice.coin.coin_id(),
+        None, // not revocable
+        1_000,
+        Conditions::new().create_coin(alice.puzzle_hash, 1_000, memos),
+    )?;
 
-// Conditions for the newly created CAT coins
-let conditions = Conditions::new()
-    .create_coin(puzzle_hash, 1_000, memos);
+    // The parent (genesis) coin creates the eve CAT.
+    alice_p2.spend(ctx, alice.coin, issue_cat)?;
+    sim.spend_coins(ctx.take(), &[alice.sk])?;
 
-// Issue the CAT - this returns:
-// - issue_cat: Conditions to add to the parent spend
-// - cats: Vector of created Cat objects
-let (issue_cat, cats) = Cat::issue_with_coin(
-    ctx,
-    parent_coin_id,  // The coin ID that will be spent to issue
-    1_000,           // Total amount to issue
-    conditions,      // Output conditions
-)?;
+    let cat = cats[0];
+    assert_eq!(
+        cat.info.asset_id,
+        GenesisByCoinIdTailArgs::curry_tree_hash(alice.coin.coin_id()).into()
+    );
+    assert_eq!(cat.info.p2_puzzle_hash, alice.puzzle_hash);
+    assert!(sim.coin_state(cat.coin.coin_id()).is_some());
 
-// Spend the parent coin with the issuance conditions
-p2.spend(ctx, parent_coin, issue_cat)?;
-
-// The asset ID is derived from the parent coin ID
-let asset_id = cats[0].info.asset_id;
+    Ok(())
+}
 ```
 
-  </TabItem>
-  <TabItem value="nodejs" label="Node.js">
+You can split the supply among several outputs, or send it straight to other people, by adding more
+`create_coin` conditions to `extra_conditions`.
 
-```typescript
-import { Clvm, Coin, CatInfo, Cat, CatSpend, Simulator } from "chia-wallet-sdk";
+### Multi issuance
 
-const clvm = new Clvm();
-const sim = new Simulator();
-const alice = sim.bls(1000n);
+`Cat::multi_issuance` uses the `everything_with_signature` TAIL, curried with a public key. The TAIL
+allows any supply change that is signed by that key, so the issuer can mint more later (or melt) and the
+asset ID stays the same because it only depends on the key.
 
-// Create a simple TAIL (genesis by coin ID uses nil TAIL for single issuance)
-const tail = clvm.nil();
-const assetId = tail.treeHash();
+```rust
+use chia_wallet_sdk::chia::puzzle_types::cat::EverythingWithSignatureTailArgs;
+use chia_wallet_sdk::prelude::*;
 
-// Create CAT info with the asset ID and inner puzzle hash
-const catInfo = new CatInfo(assetId, null, alice.puzzleHash);
+#[test]
+fn multi_issuance() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
 
-// Issue the CAT by spending the parent coin
-clvm.spendStandardCoin(
-  alice.coin,
-  alice.pk,
-  clvm.delegatedSpend([clvm.createCoin(catInfo.puzzleHash(), 1000n)]),
-);
+    let alice = sim.bls(100);
+    let alice_p2 = StandardLayer::new(alice.pk);
+    let memos = ctx.hint(alice.puzzle_hash)?;
 
-// Create the eve CAT (first CAT coin)
-const eveCat = new Cat(
-  new Coin(alice.coin.coinId(), catInfo.puzzleHash(), 1000n),
-  null, // No lineage proof for eve
-  catInfo,
-);
+    let (issue_cat, first) = Cat::multi_issuance(
+        ctx,
+        alice.coin.coin_id(),
+        alice.pk,
+        None,
+        100,
+        Conditions::new().create_coin(alice.puzzle_hash, 100, memos),
+    )?;
+    alice_p2.spend(ctx, alice.coin, issue_cat)?;
+    sim.spend_coins(ctx.take(), &[alice.sk.clone()])?;
+
+    // Later, issue more of the same asset from a different XCH coin.
+    let coin = sim.new_coin(alice.puzzle_hash, 50);
+    let (issue_cat, second) = Cat::multi_issuance(
+        ctx,
+        coin.coin_id(),
+        alice.pk,
+        None,
+        50,
+        Conditions::new().create_coin(alice.puzzle_hash, 50, memos),
+    )?;
+    alice_p2.spend(ctx, coin, issue_cat)?;
+    // The TAIL requires a signature from `alice.pk`, provided here by the simulator.
+    sim.spend_coins(ctx.take(), &[alice.sk])?;
+
+    let asset_id: Bytes32 = EverythingWithSignatureTailArgs::curry_tree_hash(alice.pk).into();
+    assert_eq!(first[0].info.asset_id, asset_id);
+    assert_eq!(second[0].info.asset_id, asset_id);
+
+    Ok(())
+}
 ```
 
-  </TabItem>
-  <TabItem value="python" label="Python">
+### Custom TAILs
 
-```python
-from chia_wallet_sdk import Clvm, Coin, CatInfo, Cat, CatSpend, Simulator
+Both helpers are thin wrappers around `Cat::issue`, which takes a `RunCatTail` condition with any TAIL
+program and solution. The asset ID is the tree hash of the program you pass:
 
-clvm = Clvm()
-sim = Simulator()
-alice = sim.bls(1000)
+```rust
+use chia_wallet_sdk::chia::puzzle_types::cat::EverythingWithSignatureTailArgs;
+use chia_wallet_sdk::prelude::*;
 
-# Create a simple TAIL (genesis by coin ID uses nil TAIL for single issuance)
-tail = clvm.nil()
-asset_id = tail.tree_hash()
+#[test]
+fn issue_with_custom_tail() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
 
-# Create CAT info with the asset ID and inner puzzle hash
-cat_info = CatInfo(asset_id, None, alice.puzzle_hash)
+    let alice = sim.bls(1);
+    let alice_p2 = StandardLayer::new(alice.pk);
 
-# Issue the CAT by spending the parent coin
-clvm.spend_standard_coin(
-    alice.coin,
-    alice.pk,
-    clvm.delegated_spend([clvm.create_coin(cat_info.puzzle_hash(), 1000)])
-)
+    // Any curried TAIL works here. This one is equivalent to `multi_issuance`.
+    let tail = ctx.curry(EverythingWithSignatureTailArgs::new(alice.pk))?;
+    let asset_id: Bytes32 = ctx.tree_hash(tail).into();
 
-# Create the eve CAT (first CAT coin)
-eve_cat = Cat(
-    Coin(alice.coin.coin_id(), cat_info.puzzle_hash(), 1000),
-    None,  # No lineage proof for eve
-    cat_info
-)
+    let memos = ctx.hint(alice.puzzle_hash)?;
+    let (issue_cat, cats) = Cat::issue(
+        ctx,
+        alice.coin.coin_id(),
+        None,
+        1,
+        RunCatTail::new(tail, NodePtr::NIL), // TAIL program and its solution
+        Conditions::new().create_coin(alice.puzzle_hash, 1, memos),
+    )?;
+    alice_p2.spend(ctx, alice.coin, issue_cat)?;
+    sim.spend_coins(ctx.take(), &[alice.sk])?;
+
+    assert_eq!(cats[0].info.asset_id, asset_id);
+
+    Ok(())
+}
 ```
 
-  </TabItem>
-</Tabs>
-
-:::info
-The asset ID for single-issuance CATs is deterministically derived from the parent coin ID. This means you can calculate the asset ID before issuing.
-:::
+If you write your own TAIL in Chialisp or Rue, compile it with `compile_chialisp` or `compile_rue` (see
+[CLVM Values](/sdk/concepts/clvm)) and pass the resulting program. The TAIL decides when the supply may
+change; the SDK doesn't validate that ahead of time, so test issuance and melting with the
+[Simulator](/sdk/testing).
 
 ## Spending CATs
 
-CAT spends require creating a `CatSpend` that combines the CAT with its inner puzzle spend:
-
-<Tabs>
-  <TabItem value="rust" label="Rust" default>
-
-```rust
-use chia_wallet_sdk::prelude::*;
-
-let ctx = &mut SpendContext::new();
-
-// Setup
-let p2 = StandardLayer::new(public_key);
-let memos = ctx.hint(recipient_puzzle_hash)?;
-
-// Create the inner spend (what the standard layer would do)
-let inner_spend = p2.spend_with_conditions(
-    ctx,
-    Conditions::new().create_coin(recipient_puzzle_hash, 1_000, memos),
-)?;
-
-// Wrap it in a CatSpend
-let cat_spends = [CatSpend::new(cat, inner_spend)];
-
-// Execute all CAT spends
-Cat::spend_all(ctx, &cat_spends)?;
-
-let coin_spends = ctx.take();
-```
-
-  </TabItem>
-  <TabItem value="nodejs" label="Node.js">
-
-```typescript
-import { Clvm, CatSpend } from "chia-wallet-sdk";
-
-const clvm = new Clvm();
-
-// Create the inner spend with conditions
-const innerSpend = clvm.standardSpend(
-  publicKey,
-  clvm.delegatedSpend([
-    clvm.createCoin(
-      recipientPuzzleHash,
-      1000n,
-      clvm.alloc([recipientPuzzleHash]),
-    ),
-  ]),
-);
-
-// Wrap it in a CatSpend and execute
-clvm.spendCats([new CatSpend(cat, innerSpend)]);
-
-const coinSpends = clvm.coinSpends();
-```
-
-  </TabItem>
-  <TabItem value="python" label="Python">
-
-```python
-from chia_wallet_sdk import Clvm, CatSpend
-
-clvm = Clvm()
-
-# Create the inner spend with conditions
-inner_spend = clvm.standard_spend(
-    public_key,
-    clvm.delegated_spend([
-        clvm.create_coin(recipient_puzzle_hash, 1000, clvm.alloc([recipient_puzzle_hash])),
-    ])
-)
-
-# Wrap it in a CatSpend and execute
-clvm.spend_cats([CatSpend(cat, inner_spend)])
-
-coin_spends = clvm.coin_spends()
-```
-
-  </TabItem>
-</Tabs>
-
-### Why `spend_all`?
-
-CAT spends must be validated together because the CAT layer verifies that the total amount in equals the total amount out. The `Cat::spend_all` function handles:
-
-- Linking CAT spends via announcements
-- Ensuring amount conservation
-- Validating lineage proofs
-
-## Computing Child Coins
-
-After spending a CAT, you can compute the child CAT:
-
-<Tabs>
-  <TabItem value="rust" label="Rust" default>
-
-```rust
-// After spending, compute the new CAT
-let child_cat = cat.child(recipient_puzzle_hash, 1_000);
-
-// Access the underlying coin
-let child_coin = child_cat.coin;
-```
-
-  </TabItem>
-  <TabItem value="nodejs" label="Node.js">
-
-```typescript
-// After spending, compute the new CAT
-const childCat = cat.child(recipientPuzzleHash, 1000n);
-
-// Access the underlying coin
-const childCoin = childCat.coin;
-```
-
-  </TabItem>
-  <TabItem value="python" label="Python">
-
-```python
-# After spending, compute the new CAT
-child_cat = cat.child(recipient_puzzle_hash, 1000)
-
-# Access the underlying coin
-child_coin = child_cat.coin
-```
-
-  </TabItem>
-</Tabs>
-
-## Multi-Input CAT Spends
-
-When spending multiple CATs of the same asset type together:
-
-<Tabs>
-  <TabItem value="rust" label="Rust" default>
-
-```rust
-let ctx = &mut SpendContext::new();
-let p2 = StandardLayer::new(public_key);
-
-// Build spends for multiple CAT coins
-let cat_spends = [
-    CatSpend::new(
-        cat1,
-        p2.spend_with_conditions(ctx, Conditions::new())?,
-    ),
-    CatSpend::new(
-        cat2,
-        p2.spend_with_conditions(
-            ctx,
-            Conditions::new()
-                .create_coin(recipient, combined_amount, ctx.hint(recipient)?),
-        )?,
-    ),
-];
-
-Cat::spend_all(ctx, &cat_spends)?;
-```
-
-  </TabItem>
-  <TabItem value="nodejs" label="Node.js">
-
-```typescript
-// Build spends for multiple CAT coins
-clvm.spendCats([
-  new CatSpend(cat1, clvm.standardSpend(publicKey, clvm.delegatedSpend([]))),
-  new CatSpend(
-    cat2,
-    clvm.standardSpend(
-      publicKey,
-      clvm.delegatedSpend([
-        clvm.createCoin(recipient, combinedAmount, clvm.alloc([recipient])),
-      ]),
-    ),
-  ),
-]);
-```
-
-  </TabItem>
-  <TabItem value="python" label="Python">
-
-```python
-# Build spends for multiple CAT coins
-clvm.spend_cats([
-    CatSpend(cat1, clvm.standard_spend(public_key, clvm.delegated_spend([]))),
-    CatSpend(
-        cat2,
-        clvm.standard_spend(
-            public_key,
-            clvm.delegated_spend([
-                clvm.create_coin(recipient, combined_amount, clvm.alloc([recipient])),
-            ])
-        )
-    ),
-])
-```
-
-  </TabItem>
-</Tabs>
-
-## Paying Fees
-
-CATs cannot pay transaction fees directly. To pay fees when spending CATs, you must include an XCH spend in the same transaction and use `assert_concurrent_spend` to link them together:
-
-<Tabs>
-  <TabItem value="rust" label="Rust" default>
+A CAT spend wraps a p2 spend. Build the p2 spend (for the standard puzzle, with
+`StandardLayer::spend_with_conditions`), pair it with the `Cat` in a `CatSpend`, and pass every
+`CatSpend` of that asset to `Cat::spend_all`:
 
 ```rust
 use chia_wallet_sdk::prelude::*;
 
-let ctx = &mut SpendContext::new();
-let p2 = StandardLayer::new(public_key);
+#[test]
+fn send_cat() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
 
-// Spend the CAT
-let memos = ctx.hint(recipient_puzzle_hash)?;
-let inner_spend = p2.spend_with_conditions(
-    ctx,
-    Conditions::new()
-        .create_coin(recipient_puzzle_hash, cat.coin.amount, memos)
-        .assert_concurrent_spend(xch_coin.coin_id()),  // Link to XCH spend
-)?;
+    let alice = sim.bls(1_000);
+    let alice_p2 = StandardLayer::new(alice.pk);
+    let bob = sim.bls(0);
 
-Cat::spend_all(ctx, &[CatSpend::new(cat, inner_spend)])?;
+    let alice_memos = ctx.hint(alice.puzzle_hash)?;
+    let (issue_cat, cats) = Cat::single_issuance(
+        ctx,
+        alice.coin.coin_id(),
+        None,
+        1_000,
+        Conditions::new().create_coin(alice.puzzle_hash, 1_000, alice_memos),
+    )?;
+    alice_p2.spend(ctx, alice.coin, issue_cat)?;
+    sim.spend_coins(ctx.take(), &[alice.sk.clone()])?;
 
-// Spend XCH to pay the fee
-let fee = 100_000_000;  // 0.0001 XCH
-let change = xch_coin.amount - fee;
+    // Send 250 to Bob and keep 750 as change. The p2 conditions use the
+    // recipient's p2 puzzle hash; the CAT layer wraps the outputs for you.
+    let bob_memos = ctx.hint(bob.puzzle_hash)?;
+    let p2_spend = alice_p2.spend_with_conditions(
+        ctx,
+        Conditions::new()
+            .create_coin(bob.puzzle_hash, 250, bob_memos)
+            .create_coin(alice.puzzle_hash, 750, alice_memos),
+    )?;
 
-let mut xch_conditions = Conditions::new()
-    .reserve_fee(fee)
-    .assert_concurrent_spend(cat.coin.coin_id());  // Link to CAT spend
+    let children = Cat::spend_all(ctx, &[CatSpend::new(cats[0], p2_spend)])?;
+    sim.spend_coins(ctx.take(), &[alice.sk])?;
 
-if change > 0 {
-    xch_conditions = xch_conditions.create_coin(
-        my_puzzle_hash,
-        change,
-        ctx.hint(my_puzzle_hash)?,
-    );
+    // `spend_all` returns the child CATs, ready to be spent again.
+    assert_eq!(children[0].info.p2_puzzle_hash, bob.puzzle_hash);
+    assert_eq!(children[0].coin.amount, 250);
+    assert_eq!(children[1].info.p2_puzzle_hash, alice.puzzle_hash);
+
+    Ok(())
 }
-
-p2.spend(ctx, xch_coin, xch_conditions)?;
-
-let coin_spends = ctx.take();
 ```
 
-  </TabItem>
-  <TabItem value="nodejs" label="Node.js">
+Inside a CAT, `CREATE_COIN` conditions refer to the **inner** puzzle hash. The CAT layer rewrites each
+one to the full CAT puzzle hash of the same asset, so you send to Bob's normal address. Hint outputs with
+the p2 puzzle hash so Bob's wallet can find them.
 
-```typescript
-const clvm = new Clvm();
+### Spending many CAT coins at once
 
-// Spend the CAT (linked to XCH spend)
-clvm.spendCats([
-  new CatSpend(
-    cat,
-    clvm.standardSpend(
-      publicKey,
-      clvm.delegatedSpend([
-        clvm.createCoin(
-          recipientPuzzleHash,
-          cat.coin.amount,
-          clvm.alloc([recipientPuzzleHash]),
-        ),
-        clvm.assertConcurrentSpend(xchCoin.coinId()), // Link to XCH spend
-      ]),
-    ),
-  ),
-]);
+All CAT coins of the same asset in a transaction must be spent together in a single `spend_all` call.
+The CAT puzzle links them in a ring of announcements and checks that the sum of inputs equals the sum of
+outputs across the ring (unless the TAIL runs). That means one coin can create outputs worth more than
+itself as long as another coin in the ring makes up the difference. `spend_all` calculates the ring,
+subtotals and proofs, so you only describe the outputs.
 
-// Spend XCH to pay the fee
-const fee = 100_000_000n; // 0.0001 XCH
-const change = xchCoin.amount - fee;
+```rust
+use chia_wallet_sdk::prelude::*;
 
-const xchConditions = [
-  clvm.reserveFee(fee),
-  clvm.assertConcurrentSpend(cat.coin.coinId()), // Link to CAT spend
-];
+#[test]
+fn combine_cats_and_pay_fee() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
 
-if (change > 0n) {
-  xchConditions.push(
-    clvm.createCoin(myPuzzleHash, change, clvm.alloc([myPuzzleHash])),
-  );
+    let alice = sim.bls(300);
+    let alice_p2 = StandardLayer::new(alice.pk);
+    let memos = ctx.hint(alice.puzzle_hash)?;
+
+    // Issue three separate CAT coins.
+    let (issue_cat, cats) = Cat::single_issuance(
+        ctx,
+        alice.coin.coin_id(),
+        None,
+        300,
+        Conditions::new()
+            .create_coin(alice.puzzle_hash, 100, memos)
+            .create_coin(alice.puzzle_hash, 150, memos)
+            .create_coin(alice.puzzle_hash, 50, memos),
+    )?;
+    alice_p2.spend(ctx, alice.coin, issue_cat)?;
+    sim.spend_coins(ctx.take(), &[alice.sk.clone()])?;
+
+    // An XCH coin to pay the transaction fee.
+    let fee_coin = sim.new_coin(alice.puzzle_hash, 10);
+
+    // The first coin creates a single combined output, the rest create nothing.
+    let mut cat_spends = Vec::new();
+    for (i, &cat) in cats.iter().enumerate() {
+        let mut conditions = Conditions::new();
+        if i == 0 {
+            conditions = conditions
+                .create_coin(alice.puzzle_hash, 300, memos)
+                .assert_concurrent_spend(fee_coin.coin_id());
+        }
+        cat_spends.push(CatSpend::new(cat, alice_p2.spend_with_conditions(ctx, conditions)?));
+    }
+    let children = Cat::spend_all(ctx, &cat_spends)?;
+
+    // XCH and CAT spends are separate rings, so link them explicitly.
+    alice_p2.spend(
+        ctx,
+        fee_coin,
+        Conditions::new()
+            .reserve_fee(10)
+            .assert_concurrent_spend(cats[0].coin.coin_id()),
+    )?;
+
+    sim.spend_coins(ctx.take(), &[alice.sk])?;
+
+    assert_eq!(children.len(), 1);
+    assert_eq!(children[0].coin.amount, 300);
+
+    Ok(())
 }
-
-clvm.spendStandardCoin(xchCoin, publicKey, clvm.delegatedSpend(xchConditions));
-
-const coinSpends = clvm.coinSpends();
 ```
 
-  </TabItem>
-  <TabItem value="python" label="Python">
+Fees are always paid in XCH, so a CAT transaction that pays a fee also spends at least one XCH coin.
 
-```python
-clvm = Clvm()
+`CatSpend` doesn't care what the p2 puzzle is. You can mix coins owned by the standard puzzle, vaults or
+custom puzzles in the same ring, as long as you provide a valid `Spend` for each.
 
-# Spend the CAT (linked to XCH spend)
-clvm.spend_cats([
-    CatSpend(
-        cat,
-        clvm.standard_spend(
-            public_key,
-            clvm.delegated_spend([
-                clvm.create_coin(recipient_puzzle_hash, cat.coin.amount, clvm.alloc([recipient_puzzle_hash])),
-                clvm.assert_concurrent_spend(xch_coin.coin_id()),  # Link to XCH spend
-            ])
-        )
-    ),
-])
+### Lower-level spending
 
-# Spend XCH to pay the fee
-fee = 100_000_000  # 0.0001 XCH
-change = xch_coin.amount - fee
+`Cat::spend` spends a single coin with an explicit `SingleCatSpend` (previous coin ID, next coin proof,
+subtotal and extra delta). You rarely need it; `spend_all` calls it for each coin after computing the
+ring. If you want to inspect or build the outer layers yourself, `CatInfo::construct_puzzle` and the
+`CatLayer` / `RevocationLayer` types are described in [Layers & Puzzles](/sdk/concepts/layers).
 
-xch_conditions = [
-    clvm.reserve_fee(fee),
-    clvm.assert_concurrent_spend(cat.coin.coin_id()),  # Link to CAT spend
-]
+## Lineage proofs
 
-if change > 0:
-    xch_conditions.append(
-        clvm.create_coin(my_puzzle_hash, change, clvm.alloc([my_puzzle_hash]))
-    )
+The CAT puzzle needs to know that its parent was a CAT of the same asset ID, otherwise anyone could
+create a coin with the CAT puzzle hash out of thin air. The `LineageProof` contains the parent's parent
+coin ID, the parent's **inner** puzzle hash and the parent's amount, from which the puzzle recomputes the
+parent coin ID and checks it against its own parent.
 
-clvm.spend_standard_coin(xch_coin, public_key, clvm.delegated_spend(xch_conditions))
+You can compute lineage without looking anything up when you know the parent `Cat`:
 
-coin_spends = clvm.coin_spends()
+- `Cat::child_lineage_proof` returns the proof for any child of a CAT.
+- `Cat::child(p2_puzzle_hash, amount)` returns the full child `Cat` (same asset and revocation layer).
+- `Cat::spend_all` returns the children it creates, with lineage filled in.
+
+For coins you receive from someone else, you have to look at the parent spend instead.
+
+## Parsing CATs from the blockchain
+
+When your wallet sees a hinted coin (for example from a peer's puzzle hash subscription), you only have
+the `Coin`. To spend it you need its `CatInfo` and lineage proof, which come from the parent coin's spend.
+Fetch the parent's puzzle reveal and solution, then call `Cat::parse_children`, which runs the parent's p2
+spend and returns every CAT child it created. Pick the one that matches your coin:
+
+```rust
+use chia_wallet_sdk::prelude::*;
+
+#[test]
+fn parse_received_cat() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
+
+    let alice = sim.bls(10);
+    let alice_p2 = StandardLayer::new(alice.pk);
+    let bob = sim.bls(0);
+
+    let memos = ctx.hint(bob.puzzle_hash)?;
+    let (issue_cat, cats) = Cat::single_issuance(
+        ctx,
+        alice.coin.coin_id(),
+        None,
+        10,
+        Conditions::new().create_coin(bob.puzzle_hash, 10, memos),
+    )?;
+    alice_p2.spend(ctx, alice.coin, issue_cat)?;
+    sim.spend_coins(ctx.take(), &[alice.sk])?;
+
+    // Bob only knows the coin (e.g. from `sim.hinted_coins` or a peer subscription).
+    let coin = sim.coin_state(cats[0].coin.coin_id()).unwrap().coin;
+
+    // Look up the parent spend. With a real node, use the peer or RPC client.
+    let parent_spend = sim.coin_spend(coin.parent_coin_info).unwrap();
+    let parent_puzzle = ctx.alloc(&parent_spend.puzzle_reveal)?;
+    let parent_puzzle = Puzzle::parse(ctx, parent_puzzle);
+    let parent_solution = ctx.alloc(&parent_spend.solution)?;
+
+    let children = Cat::parse_children(ctx, parent_spend.coin, parent_puzzle, parent_solution)?
+        .expect("parent is not a CAT");
+    let cat = children
+        .into_iter()
+        .find(|child| child.coin == coin)
+        .expect("coin not found among the children");
+
+    assert_eq!(cat, cats[0]);
+
+    // Bob can now spend it.
+    let bob_p2 = StandardLayer::new(bob.pk);
+    let p2_spend = bob_p2.spend_with_conditions(
+        ctx,
+        Conditions::new().create_coin(bob.puzzle_hash, 10, memos),
+    )?;
+    Cat::spend_all(ctx, &[CatSpend::new(cat, p2_spend)])?;
+    sim.spend_coins(ctx.take(), &[bob.sk])?;
+
+    Ok(())
+}
 ```
 
-  </TabItem>
-</Tabs>
+`parse_children` returns `Ok(None)` if the parent isn't a CAT, and an error if it looks like a CAT but
+is malformed. Always compare the parsed child with the coin you actually have: parsing returns every
+child of the parent, and it trusts the parent's outputs, not the hint.
+
+Related parsing functions:
+
+| Function              | Input                                | Output                                                                                                    |
+| --------------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| `Cat::parse_children` | parent coin, puzzle and solution     | every child `Cat` created by the parent spend                                                             |
+| `Cat::parse`          | a CAT coin's own puzzle and solution | `ParsedCat`: the `Cat`, its p2 puzzle and solution, and whether it was revoked                            |
+| `CatInfo::parse`      | a puzzle only                        | `CatInfo` and the p2 puzzle (`None` for revocable CATs, whose p2 puzzle is only revealed in the solution) |
+
+See [Peer Protocol](/sdk/networking/peer) and [RPC Clients](/sdk/networking/rpc) for fetching coin spends
+from a real node, and the [Primitives overview](/sdk/primitives) for the general pattern.
+
+## Melting
+
+Melting removes CAT supply by making the outputs of the ring less than its inputs. That's only allowed
+when one of the spends reveals the TAIL with `RUN_CAT_TAIL` and the TAIL approves the negative delta.
+With the `everything_with_signature` TAIL, the issuer's signature is enough:
+
+```rust
+use chia_wallet_sdk::chia::puzzle_types::cat::EverythingWithSignatureTailArgs;
+use chia_wallet_sdk::prelude::*;
+
+#[test]
+fn melt_cat() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
+
+    let alice = sim.bls(10_000);
+    let alice_p2 = StandardLayer::new(alice.pk);
+    let memos = ctx.hint(alice.puzzle_hash)?;
+
+    let (issue_cat, cats) = Cat::multi_issuance(
+        ctx,
+        alice.coin.coin_id(),
+        alice.pk,
+        None,
+        10_000,
+        Conditions::new().create_coin(alice.puzzle_hash, 10_000, memos),
+    )?;
+    alice_p2.spend(ctx, alice.coin, issue_cat)?;
+    sim.spend_coins(ctx.take(), &[alice.sk.clone()])?;
+
+    // Keep 7,000 and melt 3,000 by revealing the TAIL.
+    let tail = ctx.curry(EverythingWithSignatureTailArgs::new(alice.pk))?;
+    let p2_spend = alice_p2.spend_with_conditions(
+        ctx,
+        Conditions::new()
+            .create_coin(alice.puzzle_hash, 7_000, memos)
+            .run_cat_tail(tail, NodePtr::NIL),
+    )?;
+    let children = Cat::spend_all(ctx, &[CatSpend::new(cats[0], p2_spend)])?;
+    sim.spend_coins(ctx.take(), &[alice.sk])?;
+
+    assert_eq!(children[0].coin.amount, 7_000);
+
+    Ok(())
+}
+```
+
+The same mechanism with a positive delta issues more supply from existing CAT coins. `spend_all` puts
+the required `extra_delta` on whichever spend in the ring outputs `RUN_CAT_TAIL`, so the TAIL can be
+revealed by any coin. The melted mojos stay in the transaction as XCH value: they can go to the fee, or
+an XCH spend in the same bundle can output more than its input to reclaim them. A `genesis_by_coin_id`
+CAT can never be melted, because its TAIL only allows the genesis spend.
+
+## Revocable CATs
+
+A revocable CAT has a `RevocationLayer` between the CAT layer and the p2 puzzle. It is curried with a
+**hidden puzzle hash** chosen by the issuer. Each spend either runs the owner's p2 puzzle as usual, or
+reveals the hidden puzzle instead, which lets the issuer take back (revoke) the coins. The asset ID still
+comes from the TAIL, so a revocable CAT is identified by its asset ID plus `hidden_puzzle_hash`.
+
+Pass `Some(hidden_puzzle_hash)` to any issuance function to make the issued coins revocable. Normal spends
+keep the revocation layer: outputs of a non-revoking spend are wrapped in the same layer automatically,
+so `Cat::child` and `spend_all` preserve it.
+
+To revoke, use `CatSpend::revoke` with a spend of the hidden puzzle (here the issuer's standard puzzle).
+In a revocation spend, outputs are **not** wrapped automatically. A plain output becomes an ordinary,
+non-revocable CAT. To keep an output revocable, create it at the revocation-wrapped puzzle hash and hint
+it with the p2 puzzle hash; the parsing code uses that hint to recognize it.
+
+```rust
+use chia_wallet_sdk::chia::puzzle_types::cat::EverythingWithSignatureTailArgs;
+use chia_wallet_sdk::prelude::*;
+use chia_wallet_sdk::types::puzzles::RevocationArgs;
+
+#[test]
+fn revocable_cat() -> anyhow::Result<()> {
+    let mut sim = Simulator::new();
+    let ctx = &mut SpendContext::new();
+
+    let issuer = sim.bls(10);
+    let issuer_p2 = StandardLayer::new(issuer.pk);
+    let bob = sim.bls(0);
+    let bob_p2 = StandardLayer::new(bob.pk);
+
+    // The issuer's own puzzle hash is the hidden puzzle hash.
+    let bob_memos = ctx.hint(bob.puzzle_hash)?;
+    let (issue_cat, cats) = Cat::multi_issuance(
+        ctx,
+        issuer.coin.coin_id(),
+        issuer.pk,
+        Some(issuer.puzzle_hash),
+        10,
+        Conditions::new().create_coin(bob.puzzle_hash, 10, bob_memos),
+    )?;
+    issuer_p2.spend(ctx, issuer.coin, issue_cat)?;
+    sim.spend_coins(ctx.take(), &[issuer.sk.clone()])?;
+    assert_eq!(cats[0].info.hidden_puzzle_hash, Some(issuer.puzzle_hash));
+
+    // Bob spends normally. The child stays revocable.
+    let p2_spend = bob_p2.spend_with_conditions(
+        ctx,
+        Conditions::new().create_coin(bob.puzzle_hash, 10, bob_memos),
+    )?;
+    let cats = Cat::spend_all(ctx, &[CatSpend::new(cats[0], p2_spend)])?;
+    sim.spend_coins(ctx.take(), &[bob.sk])?;
+    assert_eq!(cats[0].info.hidden_puzzle_hash, Some(issuer.puzzle_hash));
+
+    // The issuer revokes: 5 become a plain CAT, 5 stay revocable.
+    let issuer_memos = ctx.hint(issuer.puzzle_hash)?;
+    let revocable_puzzle_hash: Bytes32 =
+        RevocationArgs::new(issuer.puzzle_hash, issuer.puzzle_hash)
+            .curry_tree_hash()
+            .into();
+
+    let hidden_spend = issuer_p2.spend_with_conditions(
+        ctx,
+        Conditions::new()
+            .create_coin(issuer.puzzle_hash, 5, issuer_memos)
+            .create_coin(revocable_puzzle_hash, 5, issuer_memos),
+    )?;
+    let revoked = Cat::spend_all(ctx, &[CatSpend::revoke(cats[0], hidden_spend)])?;
+    sim.spend_coins(ctx.take(), &[issuer.sk])?;
+
+    assert_eq!(revoked[0].info.hidden_puzzle_hash, None);
+    assert_eq!(revoked[1].info.hidden_puzzle_hash, Some(issuer.puzzle_hash));
+    assert_eq!(revoked[1].info.p2_puzzle_hash, issuer.puzzle_hash);
+
+    Ok(())
+}
+```
+
+`Cat::unrevocable_child` and `Cat::child_with` let you construct children with a different revocation
+setting when you build outputs by hand. When parsing, `Cat::parse_children` applies the same rules, and
+`ParsedCat::revoked` tells you whether a spend was a revocation.
 
 :::warning
-Always use `assert_concurrent_spend` to link CAT and XCH spends together. Without this, an attacker could extract and submit only the XCH spend (with the fee) while discarding your CAT spend.
+For revocable CATs the p2 puzzle hash is **not** the inner puzzle hash of the CAT layer, because the
+revocation layer sits in between. Use `CatInfo::inner_puzzle_hash` (not `p2_puzzle_hash`) whenever you
+need the hash the CAT layer sees, for example in lineage proofs. The `Cat` methods already do this.
 :::
 
-## Lineage Proofs
+## Gotchas
 
-CATs require lineage proofs to verify their authenticity. When parsing CATs from the blockchain, you'll need to track the parent information:
+- Never call `spend_all` twice for the same asset in one transaction. Each call forms a separate ring
+  that must balance on its own, so value can't move between the two groups.
+- Spend different asset IDs in separate `spend_all` calls; they can't share a ring.
+- Every output inside a CAT spend becomes a CAT of the same asset. To pay a fee or send XCH, spend an XCH
+  coin in the same bundle and link it (for example with `assert_concurrent_spend`).
+- With `single_issuance`, the outputs must sum to exactly the issued amount. Too much or too little
+  makes the TAIL fail with a `clvm raise` error. Other TAILs see the difference as a mint or melt.
+- The eve coin used during issuance has no hint and is spent immediately, so you don't need to track it.
 
-```rust
-// A CAT with its lineage proof
-let cat = Cat {
-    coin,
-    info: CatInfo {
-        asset_id,
-        inner_puzzle_hash,
-    },
-    lineage_proof: Some(LineageProof {
-        parent_parent_coin_info: parent_coin.parent_coin_info,
-        parent_inner_puzzle_hash: parent_inner_puzzle_hash,
-        parent_amount: parent_coin.amount,
-    }),
-};
-```
-
-When issuing new CATs, the lineage proof is handled automatically by the SDK.
-
-## Complete Example
-
-Here's a full example of issuing a CAT and then spending it:
-
-<Tabs>
-  <TabItem value="rust" label="Rust" default>
-
-```rust
-use chia_wallet_sdk::prelude::*;
-
-fn issue_and_spend_cat(
-    issuer_coin: Coin,
-    issuer_public_key: PublicKey,
-    recipient_puzzle_hash: Bytes32,
-    amount: u64,
-) -> Result<(Bytes32, Vec<CoinSpend>), DriverError> {
-    let ctx = &mut SpendContext::new();
-    let p2 = StandardLayer::new(issuer_public_key);
-    let issuer_puzzle_hash = StandardLayer::puzzle_hash(issuer_public_key);
-
-    // Step 1: Issue the CAT
-    let memos = ctx.hint(issuer_puzzle_hash)?;
-    let issue_conditions = Conditions::new()
-        .create_coin(issuer_puzzle_hash, amount, memos);
-
-    let (issue_cat, cats) = Cat::issue_with_coin(
-        ctx,
-        issuer_coin.coin_id(),
-        amount,
-        issue_conditions,
-    )?;
-
-    p2.spend(ctx, issuer_coin, issue_cat)?;
-
-    let asset_id = cats[0].info.asset_id;
-    let cat = cats[0];
-
-    // Step 2: Immediately spend the CAT to the recipient
-    let transfer_memos = ctx.hint(recipient_puzzle_hash)?;
-    let inner_spend = p2.spend_with_conditions(
-        ctx,
-        Conditions::new().create_coin(recipient_puzzle_hash, amount, transfer_memos),
-    )?;
-
-    Cat::spend_all(ctx, &[CatSpend::new(cat, inner_spend)])?;
-
-    Ok((asset_id, ctx.take()))
-}
-```
-
-  </TabItem>
-  <TabItem value="nodejs" label="Node.js">
-
-```typescript
-import { Clvm, Coin, CatInfo, Cat, CatSpend, Simulator } from "chia-wallet-sdk";
-
-function issueAndSpendCat(recipientPuzzleHash: Uint8Array, amount: bigint) {
-  const clvm = new Clvm();
-  const sim = new Simulator();
-  const alice = sim.bls(amount);
-
-  // Step 1: Create TAIL and issue CAT
-  const tail = clvm.nil();
-  const assetId = tail.treeHash();
-  const catInfo = new CatInfo(assetId, null, alice.puzzleHash);
-
-  // Issue the CAT
-  clvm.spendStandardCoin(
-    alice.coin,
-    alice.pk,
-    clvm.delegatedSpend([clvm.createCoin(catInfo.puzzleHash(), amount)]),
-  );
-
-  // Create eve CAT
-  const eveCat = new Cat(
-    new Coin(alice.coin.coinId(), catInfo.puzzleHash(), amount),
-    null,
-    catInfo,
-  );
-
-  // Step 2: Spend the CAT with TAIL reveal, then transfer
-  clvm.spendCats([
-    new CatSpend(
-      eveCat,
-      clvm.standardSpend(
-        alice.pk,
-        clvm.delegatedSpend([
-          clvm.createCoin(
-            recipientPuzzleHash,
-            amount,
-            clvm.alloc([recipientPuzzleHash]),
-          ),
-          clvm.runCatTail(tail, clvm.nil()),
-        ]),
-      ),
-    ),
-  ]);
-
-  // Sign and validate
-  sim.spendCoins(clvm.coinSpends(), [alice.sk]);
-
-  return assetId;
-}
-```
-
-  </TabItem>
-  <TabItem value="python" label="Python">
-
-```python
-from chia_wallet_sdk import Clvm, Coin, CatInfo, Cat, CatSpend, Simulator
-
-def issue_and_spend_cat(recipient_puzzle_hash: bytes, amount: int):
-    clvm = Clvm()
-    sim = Simulator()
-    alice = sim.bls(amount)
-
-    # Step 1: Create TAIL and issue CAT
-    tail = clvm.nil()
-    asset_id = tail.tree_hash()
-    cat_info = CatInfo(asset_id, None, alice.puzzle_hash)
-
-    # Issue the CAT
-    clvm.spend_standard_coin(
-        alice.coin,
-        alice.pk,
-        clvm.delegated_spend([clvm.create_coin(cat_info.puzzle_hash(), amount)])
-    )
-
-    # Create eve CAT
-    eve_cat = Cat(
-        Coin(alice.coin.coin_id(), cat_info.puzzle_hash(), amount),
-        None,
-        cat_info
-    )
-
-    # Step 2: Spend the CAT with TAIL reveal, then transfer
-    clvm.spend_cats([
-        CatSpend(
-            eve_cat,
-            clvm.standard_spend(
-                alice.pk,
-                clvm.delegated_spend([
-                    clvm.create_coin(recipient_puzzle_hash, amount, clvm.alloc([recipient_puzzle_hash])),
-                    clvm.run_cat_tail(tail, clvm.nil()),
-                ])
-            )
-        ),
-    ])
-
-    # Sign and validate
-    sim.spend_coins(clvm.coin_spends(), [alice.sk])
-
-    return asset_id
-```
-
-  </TabItem>
-</Tabs>
-
-## API Reference
-
-For the complete CAT API, see [docs.rs](https://docs.rs/chia-sdk-driver/latest/chia_sdk_driver/struct.Cat.html).
+See the [`Cat` rustdoc](https://docs.rs/chia-wallet-sdk/latest/chia_wallet_sdk/driver/) for the complete
+API, and [Offers](/sdk/offers) for trading CATs.

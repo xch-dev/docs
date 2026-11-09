@@ -55,7 +55,14 @@ const config: Config = {
     [
       "@docusaurus/plugin-client-redirects",
       {
-        redirects: [{ from: "/sage", to: "/sage/getting-started" }],
+        redirects: [
+          { from: "/sage", to: "/sage/getting-started" },
+          // Wallet SDK pages that moved when the section was restructured.
+          { from: "/sdk/spend-context", to: "/sdk/concepts/spend-context" },
+          { from: "/sdk/actions", to: "/sdk/action-system" },
+          { from: "/sdk/connectivity", to: "/sdk/networking/peer" },
+          { from: "/sdk/primitives/other", to: "/sdk/primitives" },
+        ],
         // Sage pages used to be served without the /sage prefix.
         createRedirects: (existingPath: string) =>
           existingPath.startsWith("/sage/")
