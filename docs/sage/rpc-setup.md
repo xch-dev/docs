@@ -22,7 +22,7 @@ You will need to follow the [Prerequisites](https://tauri.app/start/prerequisite
 Run the following command, using whichever version number you want to install (it should be the same version as the GUI, if you were running it previously):
 
 ```bash
-cargo install --git https://github.com/xch-dev/sage --tag v0.11.1 sage-cli
+cargo install --git https://github.com/xch-dev/sage --tag v0.13.1 sage-cli
 ```
 
 Now you can run `sage rpc start` to start the Sage process in the foreground. You can also run RPC commands by passing in their request body like so:

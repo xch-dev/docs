@@ -204,7 +204,7 @@ With some DNS servers, the DNS introducers may be blocked or otherwise unreliabl
 
 ```toml
 [[networks]]
-dns_introducers = ["introducer.chia.net"]
+peer_introducers = ["introducer.chia.net"]
 ```
 
 ### inherit
@@ -226,48 +226,20 @@ For example:
 [defaults]
 delta_sync = true
 
-[defaults.change]
-mode = "same"
-
-[defaults.derivation]
-mode = "auto"
-derivation_batch_size = 1000
-
 [[wallets]]
 name = "Main"
 fingerprint = 1239439275
 network = "mainnet"
+emoji = "🌱"
 ```
 
 ### defaults.delta_sync
 
 Delta sync is enabled by default. During initial sync, the wallet will use a peer to subscribe to each of its p2 puzzle hashes (addresses) and coin ids. If delta sync is enabled, it will start from the previous peak height instead of downloading all of the coins every time. This is an optimization, but it can lead to data loss if a race condition occurs - for example, if a p2 puzzle hash or coin id is inserted into the database but the app is restarted before it finishes syncing it. In the case of lost data, a resync is required.
 
-### defaults.change
-
-The mode can be one of the following:
-
-- `default` - is currently set to `same`, but may change in the future unless manually set
-- `same` - reuses the first address among coins you are spending as the change address
-- `new` - uses the next unused address to increase transaction privacy
-
 ```toml
-[defaults.change]
-mode = "same"
-```
-
-### defaults.derivation
-
-The mode can be one of the following:
-
-- `default` - is currently set to `auto`, but may change in the future unless manually set
-- `auto` - when the number of unused unhardened addresses is running low, a new batch will be generated
-- `static` - only existing addresses will be used, no new ones will be generated automatically
-
-```toml
-[defaults.derivation]
-mode = "auto"
-derivation_batch_size = 1000
+[defaults]
+delta_sync = true
 ```
 
 ### name
@@ -294,6 +266,15 @@ This fingerprint is used for internal identification purposes, and is not consid
 fingerprint = 1239439275
 ```
 
+### network
+
+A network override, for when you want the wallet to use a different network than the `default_network` automatically. When you log into the wallet, the network you're connected to will switch, and when you log out it will switch back to the default. This is especially useful if you have a wallet that is dedicated to testing, but you want your other wallets to use mainnet.
+
+```toml
+[[wallets]]
+network = "testnet11"
+```
+
 ### delta_sync
 
 This is a per-wallet override for `defaults.delta_sync`, although it's not currently exposed to the UI to reduce complexity:
@@ -303,30 +284,24 @@ This is a per-wallet override for `defaults.delta_sync`, although it's not curre
 delta_sync = false
 ```
 
-### change
+### emoji
 
-The same as `defaults.change`, although it would take the following form (after the initial `[[wallets]]` settings):
-
-```toml
-[wallets.change]
-mode = "same"
-```
-
-### derivation
-
-The same as `defaults.derivation`, although it would take the following form (after the initial `[[wallets]]` settings):
-
-```toml
-[wallets.derivation]
-mode = "auto"
-derivation_batch_size = 1000
-```
-
-### network
-
-A network override, for when you want the wallet to use a different network than the `default_network` automatically. When you log into the wallet, the network you're connected to will switch, and when you log out it will switch back to the default. This is especially useful if you have a wallet that is dedicated to testing, but you want your other wallets to use mainnet.
+An optional emoji shown next to the wallet's name, for display purposes only. It can be set in the UI or with the `set_wallet_emoji` RPC endpoint.
 
 ```toml
 [[wallets]]
-network = "testnet11"
+emoji = "🌱"
+```
+
+### change_address
+
+An optional address that all change is sent to, instead of one of the wallet's own derived addresses. When set, it is also returned as the wallet's address by `get_wallet_address`. It can be set in the UI or with the `set_change_address` RPC endpoint.
+
+:::warning
+Sage doesn't check that this address belongs to the wallet. If you set it to an address you don't control, any change from your transactions will be sent there.
+:::
+
+```toml
+[[wallets]]
+change_address = "xch1..."
 ```
