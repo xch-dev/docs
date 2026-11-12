@@ -23,7 +23,7 @@ not compiled. `Peer`, `PeerOptions`, `Network` and the rate limiter types are al
 
 ```toml
 [dependencies]
-chia-wallet-sdk = { version = "0.37", features = ["rustls"] }
+chia-wallet-sdk = { version = "0.38", features = ["rustls"] }
 tokio = { version = "1", features = ["full"] }
 ```
 

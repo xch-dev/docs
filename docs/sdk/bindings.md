@@ -4,26 +4,37 @@ title: Bindings
 
 # Bindings
 
-The Wallet SDK is written in Rust, but most of it is also available from JavaScript and Python. The
-bindings are generated from one shared description of the API (the `chia-sdk-bindings` crate and its
-`bindings/*.json` files), so the three packages expose the same classes and functions, adjusted to each
-language's naming conventions. They are released together with the Rust crate and share its version
-number.
+The Wallet SDK is written in Rust, but most of it is also available from JavaScript, Python, Go, .NET
+and C++. The bindings are generated from one shared description of the API (the `chia-sdk-bindings`
+crate and its `bindings/*.json` files), so every package exposes the same classes and functions, adjusted
+to each language's naming conventions. The packages are released together with the Rust crate and share its
+version number. The C++ bindings are built from source.
 
-| Package                                                                      | Language                                 | Built with                                                    | Install                            |
-| ---------------------------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------- | ---------------------------------- |
-| [`chia-wallet-sdk`](https://www.npmjs.com/package/chia-wallet-sdk)           | Node.js (TypeScript types)               | [napi-rs](https://napi.rs), native addon                      | `npm install chia-wallet-sdk`      |
-| [`chia-wallet-sdk-wasm`](https://www.npmjs.com/package/chia-wallet-sdk-wasm) | Browsers and bundlers (TypeScript types) | [wasm-bindgen](https://rustwasm.github.io/docs/wasm-bindgen/) | `npm install chia-wallet-sdk-wasm` |
-| [`chia-wallet-sdk`](https://pypi.org/project/chia-wallet-sdk/)               | Python 3.8+ (`.pyi` stubs)               | [PyO3](https://pyo3.rs) and maturin                           | `pip install chia-wallet-sdk`      |
+| Package                                                                                            | Language                                 | Built with                                                           | Install                                        |
+| -------------------------------------------------------------------------------------------------- | ---------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------- |
+| [`chia-wallet-sdk`](https://www.npmjs.com/package/chia-wallet-sdk)                                 | Node.js (TypeScript types)               | [napi-rs](https://napi.rs), native addon                             | `npm install chia-wallet-sdk`                  |
+| [`chia-wallet-sdk-wasm`](https://www.npmjs.com/package/chia-wallet-sdk-wasm)                       | Browsers and bundlers (TypeScript types) | [wasm-bindgen](https://rustwasm.github.io/docs/wasm-bindgen/)        | `npm install chia-wallet-sdk-wasm`             |
+| [`chia-wallet-sdk`](https://pypi.org/project/chia-wallet-sdk/)                                     | Python 3.8+ (`.pyi` stubs)               | [PyO3](https://pyo3.rs) and maturin                                  | `pip install chia-wallet-sdk`                  |
+| [`github.com/xch-dev/chia-wallet-sdk/go`](https://github.com/xch-dev/chia-wallet-sdk/tree/main/go) | Go (cgo)                                 | [UniFFI](https://mozilla.github.io/uniffi-rs/) and uniffi-bindgen-go | `go get github.com/xch-dev/chia-wallet-sdk/go` |
+| [`ChiaWalletSdk`](https://www.nuget.org/packages/ChiaWalletSdk)                                    | .NET 8                                   | UniFFI and uniffi-bindgen-cs                                         | `dotnet add package ChiaWalletSdk`             |
+| [C++](https://github.com/xch-dev/chia-wallet-sdk/tree/main/cpp)                                    | C++20                                    | UniFFI and uniffi-bindgen-cpp                                        | Build from source                              |
 
 The Node.js package ships prebuilt binaries for Windows x64, macOS (x64 and Apple silicon) and Linux
 (x64 and arm64). The Python package has prebuilt wheels for common platforms and imports as
 `chia_wallet_sdk`. The WASM package runs anywhere WebAssembly does, including browsers, but it can't open
 raw sockets, so it has a smaller networking surface.
 
+The Go, .NET and C++ bindings are generated with [UniFFI](https://mozilla.github.io/uniffi-rs/) from a
+single library crate. Each release of the Go module (tagged `go/v<version>`) includes the generated
+bindings and prebuilt static libraries for Linux (amd64, arm64), macOS (amd64, arm64), Windows (amd64,
+arm64) and Android (arm64), so it doesn't need a Rust toolchain, only a C compiler for cgo. The NuGet
+package includes native libraries for Linux (x64, arm64), macOS (x64, arm64) and Windows (x64). The C++
+bindings aren't packaged: run `cpp/generate.sh` in the SDK repository to build the library and generate
+the header and source file, then compile them into your project.
+
 Choose the Rust crate when you can. It has the complete API, including everything that isn't exported
-to the bindings. Use the bindings when your application is already in JavaScript or Python and you need
-to build, sign, parse or validate spends there.
+to the bindings. Use the bindings when your application is in another language and you need to build,
+sign, parse or validate spends there.
 
 ## How the bindings map to Rust
 
@@ -38,7 +49,7 @@ translation:
 | `Conditions` builder                                                     | An array/list of condition `Program`s from methods like `clvm.createCoin(...)` and `clvm.reserveFee(...)`. Parse them back with `program.parseCreateCoin()` and similar |
 | `StandardLayer::new(pk).spend(ctx, coin, conditions)`                    | `clvm.spendStandardCoin(coin, pk, clvm.delegatedSpend(conditions))`                                                                                                     |
 | `StandardLayer::new(pk).spend_with_conditions(...)`                      | `clvm.standardSpend(pk, clvm.delegatedSpend(conditions))`, which returns a `Spend` to use as an inner spend (for example in `clvm.spendNft(nft, spend)`)                |
-| Primitive methods (`Cat::spend_all`, `Nft` minting, ...)                 | Methods on `Clvm`: `spendCats`, `mintNfts`, `spendNft`, `createEveDid`, `spendDid`, `mintVault`, `spendOption`, ...                                                     |
+| Primitive methods (`Cat::spend_all`, `Nft` minting, ...)                 | Methods on `Clvm`: `spendCats`, `mintNfts`, `spendNft`, `createEveDid`, `spendDid`, `mintVault`, `spendOption`, `mintPlotNft`, ...                                      |
 | [Action system](/sdk/action-system) (`Spends`, `Action`, `Id`, `Deltas`) | The same names, with `spends.apply(actions)`, `spends.prepare(deltas)` and `finished.spend()`                                                                           |
 | `Simulator`, `BlsPair`, `K1Pair`, `R1Pair`                               | The same names. Key pairs are created with `BlsPair.fromSeed(seed)`                                                                                                     |
 | `CoinsetClient` and `FullNodeClient`                                     | One `RpcClient` class: `new RpcClient(url)`, `RpcClient.mainnet()`, `RpcClient.testnet11()`, `RpcClient.local(cert, key)`                                               |
@@ -56,9 +67,29 @@ Types are converted at the boundary:
 | `async fn`                | Returns a `Promise`                            | Returns a `Promise` | Awaitable (use with `asyncio`)   |
 | `snake_case` method names | `camelCase`                                    | `camelCase`         | `snake_case`                     |
 
+The UniFFI bindings convert types like this:
+
+| Rust                      | Go                           | .NET                                | C++                             |
+| ------------------------- | ---------------------------- | ----------------------------------- | ------------------------------- |
+| `Bytes32`, `Bytes`        | `[]byte`                     | `byte[]`                            | `std::vector<uint8_t>`          |
+| `u64`                     | `uint64`                     | `ulong`                             | `uint64_t`                      |
+| `u128`, `BigInt`          | Decimal `string`             | Decimal `string`                    | Decimal `std::string`           |
+| `Option<T>`               | Pointer (`nil` when absent)  | Nullable                            | `std::optional`, or `nullptr`   |
+| `Result<T, E>`            | Returns `(T, error)`         | Returns `T`, throws `ChiaException` | Returns `T`, throws `ChiaError` |
+| `async fn`                | Blocks the calling goroutine | Returns a `Task`                    | Blocks the calling thread       |
+| `snake_case` method names | `PascalCase`                 | `PascalCase`                        | `snake_case`                    |
+
 Structs such as `Coin`, `CoinSpend`, `SpendBundle` and `CatInfo` become classes with a constructor and
 properties for their fields. Passing an object to a method doesn't consume it, so you can keep using it
 afterwards.
+
+In the UniFFI bindings, fields are read and written through methods (`coin.Amount()` and
+`coin.SetAmount(...)` in Go and .NET, `coin->amount()` in C++), and setters change the object in place.
+Use `Clone()` to copy an object. Static methods are free functions prefixed with the class name, such as
+`ConstantsCatPuzzleHash()` in Go, `Sdk.ConstantsCatPuzzleHash()` in .NET and
+`chiawalletsdk::constants_cat_puzzle_hash()` in C++. `clvm.Alloc` takes a `ClvmType` value, which covers
+nil, booleans, integers, atoms, strings and the binding classes, but not lists; use `clvm.List(...)` for
+those.
 
 ## Node.js
 
@@ -278,8 +309,106 @@ The Python package has the same networking classes as Node.js: `RpcClient`, `Pee
 `Certificate` and `FullNodeSimulator.start_server`.
 
 The binding packages are built with every feature enabled, so partial offers, auctions, the splitter,
-NFT fusion, Secure the Bag and vault signed message verification are all available, with the same names
+NFT fusion, Secure the Bag, plot NFTs and vault signed message verification are all available, with the same names
 as the Rust types (for example `PartialOffer`, `Auction`, `Fusion` and `SecureTheBag`).
+
+## Go
+
+```go
+package main
+
+import (
+	"fmt"
+
+	sdk "github.com/xch-dev/chia-wallet-sdk/go/chiawalletsdk"
+)
+
+func main() {
+	sim, _ := sdk.NewSimulator()
+	clvm, _ := sdk.NewClvm()
+	alice, _ := sim.Bls(1000)
+
+	createCoin, _ := clvm.CreateCoin(alice.PuzzleHash(), 900, nil)
+	reserveFee, _ := clvm.ReserveFee(100)
+	spend, _ := clvm.DelegatedSpend([]*sdk.Program{createCoin, reserveFee})
+
+	if err := clvm.SpendStandardCoin(alice.Coin(), alice.Pk(), spend); err != nil {
+		panic(err)
+	}
+
+	coinSpends, _ := clvm.CoinSpends()
+
+	if err := sim.SpendCoins(coinSpends, []*sdk.SecretKey{alice.Sk()}); err != nil {
+		panic(err)
+	}
+
+	coins, _ := sim.UnspentCoins(alice.PuzzleHash(), false)
+	fmt.Println("Created a coin with", coins[0].Amount(), "mojos")
+}
+```
+
+Objects are backed by Rust memory, which a finalizer frees when they're garbage collected. Call
+`Destroy()` to free one sooner; using an object after that panics. Objects are safe to share between
+goroutines. Optional objects are pointers to pointers (such as `**Program`).
+
+cgo uses `gcc` by default, which doesn't target every platform. For Windows arm64, set
+`CC=aarch64-w64-mingw32-clang` from LLVM MinGW. For Android arm64, use the Android NDK's clang for API level
+21 or later, along with `GOOS=android GOARCH=arm64 CGO_ENABLED=1`.
+
+## .NET
+
+```csharp
+using ChiaWalletSdk;
+
+using var sim = new Simulator();
+using var clvm = new Clvm();
+using var alice = sim.Bls(1000);
+
+var spend = clvm.DelegatedSpend([
+    clvm.CreateCoin(alice.PuzzleHash(), 900, null),
+    clvm.ReserveFee(100),
+]);
+
+clvm.SpendStandardCoin(alice.Coin(), alice.Pk(), spend);
+sim.SpendCoins(clvm.CoinSpends(), [alice.Sk()]);
+
+var coins = sim.UnspentCoins(alice.PuzzleHash(), false);
+Console.WriteLine($"Created a coin with {coins[0].Amount()} mojos");
+```
+
+Objects implement `IDisposable`, so `using` frees them deterministically. Otherwise a finalizer frees
+them.
+
+## C++
+
+```cpp
+#include <chiawalletsdk.hpp>
+#include <iostream>
+
+namespace sdk = chiawalletsdk;
+
+int main() {
+    auto sim = sdk::Simulator::init();
+    auto clvm = sdk::Clvm::init();
+    auto alice = sim->bls(1000);
+
+    auto spend = clvm->delegated_spend(
+        {clvm->create_coin(alice->puzzle_hash(), 900, nullptr), clvm->reserve_fee(100)});
+    clvm->spend_standard_coin(alice->coin(), alice->pk(), spend);
+    sim->spend_coins(clvm->coin_spends(), {alice->sk()});
+
+    auto coins = sim->unspent_coins(alice->puzzle_hash(), false);
+    std::cout << "Created a coin with " << coins[0]->amount() << " mojos" << std::endl;
+}
+```
+
+Objects are `std::shared_ptr`s, and constructors are named `init`. Compile the generated
+`chiawalletsdk.cpp` with C++20 and link it against the Rust library. The C++ generator doesn't support
+async functions, so the library is built with the `blocking` feature, which turns networking calls into
+blocking calls. Methods whose names are C++ keywords get a trailing underscore, such as `clvm->int_(...)`.
+
+The Go, .NET and C++ bindings have the same networking classes as Node.js: `RpcClient`, `Peer`,
+`Connector`, `Certificate` and `FullNodeSimulator` with `StartServer`.
 
 ## What isn't in the bindings
 
@@ -298,4 +427,5 @@ If you need one of these from another language, call it from Rust and expose it 
 issue on the [Wallet SDK repository](https://github.com/xch-dev/chia-wallet-sdk).
 
 For the complete API, read the type definitions that ship with each package: `index.d.ts` (Node.js),
-`chia_wallet_sdk_wasm.d.ts` (WASM) and `chia_wallet_sdk.pyi` (Python).
+`chia_wallet_sdk_wasm.d.ts` (WASM), `chia_wallet_sdk.pyi` (Python), the generated `chiawalletsdk`
+package (Go), the `ChiaWalletSdk` assembly (.NET) and `chiawalletsdk.hpp` (C++).

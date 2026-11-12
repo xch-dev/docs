@@ -11,7 +11,7 @@ edition = "2024"
 publish = false
 
 [dependencies]
-chia-wallet-sdk = { git = "https://github.com/xch-dev/chia-wallet-sdk", rev = "ad7630cbae5bc2d3c1481eb2fc797249048a16a8", features = [
+chia-wallet-sdk = { git = "https://github.com/xch-dev/chia-wallet-sdk", rev = "facc8a8984665f0ad8c13ed35ef64f456f658acc", features = [
     "rustls",
     "chip-0008",
     "chip-0021",
@@ -20,11 +20,12 @@ chia-wallet-sdk = { git = "https://github.com/xch-dev/chia-wallet-sdk", rev = "a
     "chip-0052",
     "action-layer",
     "auction",
+    "pooling",
     "offer-compression",
     "peer-simulator",
 ] }
 # The HTTP full node simulator isn't exposed by a chia-wallet-sdk feature.
-chia-sdk-test = { git = "https://github.com/xch-dev/chia-wallet-sdk", rev = "ad7630cbae5bc2d3c1481eb2fc797249048a16a8", features = [
+chia-sdk-test = { git = "https://github.com/xch-dev/chia-wallet-sdk", rev = "facc8a8984665f0ad8c13ed35ef64f456f658acc", features = [
     "full-node-simulator-http",
 ] }
 anyhow = "1"

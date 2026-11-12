@@ -416,3 +416,8 @@ fn p2_parent_coin() -> anyhow::Result<()> {
 - Keep your slot index up to date. Using a slot that was already spent (or the wrong neighbors) makes
   the spend invalid.
 - Precommit coins can't be used until `relative_block_height` blocks after they're created.
+- When you sync a registry from the chain, `ActionLayer::parse_solution` returns
+  `DriverError::InvalidActionLayerSolution` if a selector doesn't point at one of the revealed action
+  puzzles or has no solution to go with it. Extra solutions after the last selector are allowed, since
+  the puzzle ignores them. `ActionLayer::construct_solution` returns the same error if the number of
+  merkle proofs doesn't match the number of action spends.

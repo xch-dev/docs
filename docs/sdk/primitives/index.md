@@ -238,6 +238,7 @@ In practice you rarely build proofs by hand:
 | [Auctions](/sdk/primitives/auctions)                 | `Auction`, `AuctionInfo`, `AuctionSettings`                                                            | `auction`      |
 | [Splitter](/sdk/primitives/splitter)                 | `SplitterLayer`, `SplitterArgs`, `SplitterShare`                                                       | `chip-0008`    |
 | [NFT Fusion](/sdk/primitives/fusion)                 | `Fusion`, `FusionSwap`, `P2FusionLayer`                                                                | `chip-0021`    |
+| [Plot NFTs](/sdk/primitives/plot-nft)                | `PlotNft`, `PlotNftInfo`, `PoolState`                                                                  | `pooling`      |
 | [Secure the Bag](/sdk/primitives/secure-the-bag)     | `SecureTheBag`, `BagFormat`, `BagPayment`, `SecuredMint`                                               |                |
 
 All primitive types live in `chia_wallet_sdk::driver`, and the most common ones are re-exported from
