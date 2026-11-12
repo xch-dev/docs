@@ -45,7 +45,10 @@ and [linked offers](#linked-offers).
    before anything asserts its spend is visited again once a later spend asserts it, so the result
    doesn't depend on the order the spends are traversed in.
 5. Settlement payments that the transaction asserts are matched against revealed requested payments,
-   which is how offers are summarized.
+   which is how offers are summarized. A requested NFT payment is matched for each owner its settlement
+   spend was revealed with, since the settlement coin's puzzle hash commits to the NFT's current owner.
+   An asserted payment of an option contract can't be reported, so it fails with
+   `UnsupportedAssertedOptionPayment`.
 
 A revealed spend that can't be parsed is ignored if nothing links it to the vault. If the spend receives
 a vault message or the transaction asserts it, the parse error is returned. If the delegated spend
@@ -518,9 +521,12 @@ fn clear_sign_secure_the_bag() -> anyhow::Result<()> {
 
 A verified CAT spend that runs its TAIL is reported in `issuances` as an `Issuance`, with the coin id,
 asset id, `extra_delta` and `IssuanceKind`. The `extra_delta` comes from the spend's solution, which the
-vault's message doesn't cover, so `Issuance::verified` is true only if the vault also sends a message that authorizes the extra delta (for a TAIL of kind `EverythingWithSingleton`). Only
-verified extra deltas count toward the issued and melted amounts in `asset_flows`. An unverified one could
-be different when the transaction is included in a block.
+vault's message doesn't cover, so `Issuance::verified` is true only if the vault also sends a message
+that authorizes the extra delta to a CAT whose TAIL is an `EverythingWithSingleton` TAIL of that same
+vault (for a [controlled vault](#vaults-controlled-by-other-vaults), the controlled vault that sends the
+message). A message to a CAT whose TAIL belongs to another singleton doesn't match anything, so it fails
+with `UnmatchedVaultMessage`. Only verified extra deltas count toward the issued and melted amounts in
+`asset_flows`. An unverified one could be different when the transaction is included in a block.
 
 ## Signed messages
 
@@ -620,5 +626,6 @@ Parsing is conservative, so many unusual but valid transactions are rejected. Co
 | `WrongControlledVaultMessage`                                     | The controller's message doesn't match the controlled vault's delegated puzzle hash    |
 | `VaultControllerChangesVault`                                     | A vault in the authorization path doesn't recreate itself unchanged                    |
 | `DuplicateControlledVault` / `ControlledVaultTooDeep`             | A controlled vault appears twice, or the path is longer than 8 vaults                  |
+| `UnsupportedAssertedOptionPayment`                                | The transaction asserts a requested payment of an option contract                      |
 
 All of these are variants of `DriverError`.

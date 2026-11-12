@@ -322,7 +322,7 @@ the feature turned on.
 
 ```toml
 [dev-dependencies]
-chia-sdk-test = { version = "0.37", features = ["full-node-simulator-http"] }
+chia-sdk-test = { version = "0.38", features = ["full-node-simulator-http"] }
 ```
 
 :::

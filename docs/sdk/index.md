@@ -34,7 +34,7 @@ Networking needs a TLS backend, which you choose with a feature flag:
 
 ```toml
 [dependencies]
-chia-wallet-sdk = { version = "0.37", features = ["rustls"] }
+chia-wallet-sdk = { version = "0.38", features = ["rustls"] }
 ```
 
 ### Feature flags
@@ -48,6 +48,7 @@ chia-wallet-sdk = { version = "0.37", features = ["rustls"] }
 | `chip-0008`         | The [splitter](/sdk/primitives/splitter) puzzle (CHIP-0008)                                                                                 |
 | `chip-0021`         | [NFT fusion](/sdk/primitives/fusion) (CHIP-0021)                                                                                            |
 | `chip-0052`         | [Partial offers](/sdk/primitives/partial-offers) (CHIP-0052)                                                                                |
+| `pooling`           | [Plot NFTs](/sdk/primitives/plot-nft) for pooling                                                                                           |
 | `action-layer`      | [Action layer singletons](/sdk/primitives/action-layer) such as CATalog and XCHandles (implies `chip-0035`)                                 |
 | `auction`           | [Auctions](/sdk/primitives/auctions) (implies `action-layer`)                                                                               |
 | `offer-compression` | Compressing and decompressing [offer](/sdk/offers) strings                                                                                  |

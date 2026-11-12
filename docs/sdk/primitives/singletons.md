@@ -5,16 +5,18 @@ title: Singletons & Launchers
 # Singletons & Launchers
 
 A singleton is a coin with a unique, provable identity that persists as it is spent and recreated. NFTs,
-DIDs, vaults, option contracts, DataLayer stores and the action layer registries are all singletons. The
-singleton top layer (`singleton_top_layer_v1_1`) enforces that each spend creates at most one odd-amount
-child with the same identity, and that identity is the coin ID of the **launcher** coin that created it.
+DIDs, vaults, option contracts, DataLayer stores, the action layer registries and plot NFTs are all
+singletons. The singleton top layer (`singleton_top_layer_v1_1`, or v1.0 for plot NFTs) enforces that
+each spend creates at most one odd-amount child with the same identity, and that identity is the coin ID
+of the **launcher** coin that created it.
 
 This page covers the pieces every singleton shares: `Launcher` and `IntermediateLauncher` for creating
 them, the generic `Singleton<I>` type with the `SingletonInfo` trait, proofs, and melting. The specific
 singletons have their own pages: [NFT](/sdk/primitives/nft), [DID](/sdk/primitives/did),
 [Option Contracts](/sdk/primitives/options), [Vaults](/sdk/primitives/vaults),
-[DataLayer](/sdk/primitives/datalayer) and [Action Layer](/sdk/primitives/action-layer). Background on
-the puzzle is at [Singletons on chialisp.com](https://chialisp.com/singletons).
+[DataLayer](/sdk/primitives/datalayer), [Action Layer](/sdk/primitives/action-layer) and
+[Plot NFTs](/sdk/primitives/plot-nft). Background on the puzzle is at
+[Singletons on chialisp.com](https://chialisp.com/singletons).
 
 :::tip
 With the [Action System](/sdk/action-system), `Action::create_did`, `Action::mint_nft` and
@@ -68,8 +70,15 @@ fn launch_singleton() -> anyhow::Result<()> {
 
 The primitive-specific launch methods are extension methods on `Launcher`: `Launcher::mint_nft` and
 `mint_eve_nft` for NFTs, `create_did`, `create_simple_did` and `create_eve_did` for DIDs, and similar
-`mint_vault` for [vaults](/sdk/primitives/vaults), and `mint_datastore` for [DataLayer](/sdk/primitives/datalayer) stores (`chip-0035`). They take the `Launcher` by value, so each launcher can only be
-used once.
+`mint_vault` for [vaults](/sdk/primitives/vaults), `mint_datastore` for
+[DataLayer](/sdk/primitives/datalayer) stores (`chip-0035`), and `mint_plot_nft` for
+[plot NFTs](/sdk/primitives/plot-nft) (`pooling`). They take the `Launcher` by value, so each launcher
+can only be used once.
+
+`Launcher::spend` takes the singleton's inner puzzle hash and wraps it in the v1.1 singleton layer. For a
+singleton with a different top layer, calculate the full puzzle hash yourself and use
+`Launcher::spend_to_puzzle_hash(ctx, singleton_puzzle_hash, key_value_list)` instead, which returns the
+same parent conditions and eve coin.
 
 ### Launcher variants
 
@@ -157,6 +166,10 @@ The methods on `Singleton<I>` are generic:
 - `child_lineage_proof()` returns the `LineageProof` for any child of this coin.
 - `child_with(info, amount)` returns the child `Singleton` for a new info value. Construct the child from
   the new info, rather than copying the singleton and mutating `info`, so the coin's puzzle hash matches.
+
+The child's puzzle hash comes from `info.puzzle_hash()`, which wraps the inner puzzle hash in the v1.1
+singleton layer by default. An info type for a singleton with a different top layer overrides
+`puzzle_hash`, as `PlotNftInfo` does for the v1.0 layer, and the generic methods use it.
 
 ### Proofs
 

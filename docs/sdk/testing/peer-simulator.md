@@ -19,7 +19,7 @@ usually only needed in tests, so enable it in `dev-dependencies`:
 
 ```toml
 [dev-dependencies]
-chia-wallet-sdk = { version = "0.37", features = ["peer-simulator"] }
+chia-wallet-sdk = { version = "0.38", features = ["peer-simulator"] }
 tokio = { version = "1", features = ["full"] }
 ```
 

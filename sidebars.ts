@@ -88,6 +88,7 @@ const sidebars: SidebarsConfig = {
         { type: "doc", id: "sdk/primitives/auctions", label: "Auctions" },
         { type: "doc", id: "sdk/primitives/splitter", label: "Splitter" },
         { type: "doc", id: "sdk/primitives/fusion", label: "NFT Fusion" },
+        { type: "doc", id: "sdk/primitives/plot-nft", label: "Plot NFTs" },
         {
           type: "doc",
           id: "sdk/primitives/secure-the-bag",
